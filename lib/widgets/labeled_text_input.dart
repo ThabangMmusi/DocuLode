@@ -111,7 +111,7 @@ class _LabeledTextInputState extends State<LabeledTextInput> {
                       )
                     : null,
                 filled: widget.filled,
-                fillColor: Theme.of(context).colorScheme.background,
+                fillColor: Theme.of(context).colorScheme.tertiary,
                 enabledBorder: OutlineInputBorder(
                     borderRadius: Corners.lgBorder,
                     borderSide: BorderSide(

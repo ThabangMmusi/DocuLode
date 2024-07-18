@@ -4,11 +4,13 @@ part 'app_user.freezed.dart';
 part 'app_user.g.dart';
 
 @freezed
+@JsonSerializable(includeIfNull: false)
 class AppUser with _$AppUser {
   static String kDefaultImageUrl =
       "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=50&q=80";
+
   const AppUser._();
-  factory AppUser({
+  const factory AppUser({
     String? uid,
     String? names,
     String? surname,

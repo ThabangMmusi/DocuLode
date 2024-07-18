@@ -30,5 +30,6 @@ class AuthState extends Equatable {
   List<Object?> get props => [
         status,
         user,
+        courseDetails,
       ];
 }

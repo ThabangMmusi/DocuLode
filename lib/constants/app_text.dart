@@ -5,11 +5,10 @@ const String tAppName = "itsShared";
 const String tAppSlogan = "Access, Share and Save";
 const String tAppVersion = "Beta Version";
 const String tNext = "Next";
-const String tLogin = "Login";
-const String tSignup = "Signup";
+const String tLogin = "Log in";
 const String tPhoneNo = "Phone No";
 const String tFullName = "Full Name";
-const String tSignInWithMicrosoft = "Sign-In with Microsoft";
+const String tLogInWithMicrosoft = "Log in with Microsoft";
 const String tSignInWithOpenID = "Open Id Connect";
 
 // -- On Boarding Text

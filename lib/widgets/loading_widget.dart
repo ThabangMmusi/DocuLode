@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class LoadingDataWidget extends StatelessWidget {
   const LoadingDataWidget({super.key});
@@ -9,7 +8,6 @@ class LoadingDataWidget extends StatelessWidget {
       backgroundColor: Colors.white,
       body: LoadingWidget(
         text: 'Loading Data...',
-        
       ),
     );
   }
@@ -40,14 +38,14 @@ class LoadingWidget extends StatelessWidget {
   }
 }
 
-void hideLoadingIndicator() {
-  Navigator.of(Get.overlayContext!).pop();
+void hideLoadingIndicator(BuildContext context) {
+  Navigator.of(context).pop();
 }
 
-void showLoadingIndicator(String text) {
+void showLoadingIndicator(String text, BuildContext context) {
   showDialog(
     barrierColor: Colors.white54,
-    context: Get.overlayContext!,
+    context: context,
     barrierDismissible: false,
     builder: (_) => WillPopScope(
       onWillPop: () async => false,

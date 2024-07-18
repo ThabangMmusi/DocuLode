@@ -30,9 +30,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         .listen((authUser) async {
       log("Auth User: $authUser");
       if (authUser != null) {
-        add(AuthAuthenticating());
-        var course = await _authRepository.getCourseDetails();
-        add(AuthUserChanged(user: authUser, courseDetails: course));
+        // add(AuthAuthenticating());
+        // var course = await _authRepository.getCourseDetails();
+        add(AuthUserChanged(
+            user: authUser, courseDetails: _authRepository.userCourse));
         // });
       } else {
         add(const AuthUserChanged(user: null, courseDetails: null));

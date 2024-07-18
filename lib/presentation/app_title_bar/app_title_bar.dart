@@ -26,8 +26,8 @@ class _AdaptiveTitleBarContent extends StatelessWidget {
     // double appWidth = context.widthPx;
     // Mac title bar has a different layout as it's window btns are left aligned
     // bool isMac = DeviceOS.isMacOS;
-    bool isMobile = DeviceOS.isMobile;
-    bool showTouchToggle = DeviceScreen.isPhone(context) == false;
+    // bool isMobile = DeviceOS.isMobile;
+    // bool showTouchToggle = DeviceScreen.isPhone(context) == false;
     return Stack(children: [
       // Centered TitleText
       // if (appWidth > 400) Center(child: _TitleText()),

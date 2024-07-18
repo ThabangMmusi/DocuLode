@@ -12,7 +12,7 @@ part of 'app_user.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 AppUser _$AppUserFromJson(Map<String, dynamic> json) {
   return _AppUser.fromJson(json);
@@ -174,7 +174,7 @@ class __$$AppUserImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$AppUserImpl extends _AppUser {
-  _$AppUserImpl(
+  const _$AppUserImpl(
       {this.uid,
       this.names,
       this.surname,
@@ -208,7 +208,7 @@ class _$AppUserImpl extends _AppUser {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AppUserImpl &&
@@ -242,7 +242,7 @@ class _$AppUserImpl extends _AppUser {
 }
 
 abstract class _AppUser extends AppUser {
-  factory _AppUser(
+  const factory _AppUser(
       {final String? uid,
       final String? names,
       final String? surname,
@@ -250,7 +250,7 @@ abstract class _AppUser extends AppUser {
       final String? type,
       final String? token,
       final String? refreshToken}) = _$AppUserImpl;
-  _AppUser._() : super._();
+  const _AppUser._() : super._();
 
   factory _AppUser.fromJson(Map<String, dynamic> json) = _$AppUserImpl.fromJson;
 

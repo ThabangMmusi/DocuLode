@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:its_shared/presentation/app_title_bar/app_title_bar.dart';
+import 'package:its_shared/styles.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
@@ -8,19 +9,20 @@ import 'loading_widget.dart';
 import 'page_content_header.dart';
 
 class CustomDialogNew extends StatelessWidget {
-  final String header;
+  final String? header;
   final String? subHeader;
   final Widget content;
   final Widget? footer;
   final bool isInitializing;
   final bool isLoading;
+  final bool showCloseButton;
   final String? initializingText, loadingText;
   final BoxConstraints constraints;
   final VoidCallback? onClose;
   final Widget? trailing;
   const CustomDialogNew(
       {super.key,
-      required this.header,
+      this.header,
       required this.content,
       this.footer,
       this.subHeader,
@@ -30,7 +32,8 @@ class CustomDialogNew extends StatelessWidget {
       this.loadingText,
       required this.constraints,
       this.onClose,
-      this.trailing});
+      this.trailing,
+      this.showCloseButton = false});
   @override
   Widget build(BuildContext context) {
     return isInitializing
@@ -46,94 +49,98 @@ class CustomDialogNew extends StatelessWidget {
           )
         : Dialog(
             clipBehavior: Clip.antiAliasWithSaveLayer,
-            backgroundColor: Colors.white,
-            child: dialogContent(context),
+            insetAnimationDuration: const Duration(minutes: 350),
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            insetPadding: EdgeInsets.zero,
+            elevation: 0,
+            // shape: const RoundedRectangleBorder(
+            // ),
+            child: Column(
+              children: [
+                const AppTitleBar(),
+                Expanded(child: Center(child: dialogContent(context))),
+              ],
+            ),
           );
   }
 
   Widget dialogContent(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Stack(
-          children: [
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.background,
+        borderRadius: Corners.medBorder,
+      ),
+      child: Stack(
+        children: [
+          if (showCloseButton)
             Positioned(
-                right: kPaddingQuarter,
-                top: kPaddingQuarter,
+                right: Corners.lg,
+                top: Corners.lg,
                 child: CircularCloseButton(
                   onClose: () {
-                    Get.back();
+                    Navigator.pop(context);
                     if (onClose != null) {
                       onClose!.call();
                     }
                   },
                 )),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Container(
-                      constraints:
-                          BoxConstraints(maxWidth: constraints.maxWidth),
-                      padding: const EdgeInsets.only(left: kPaddingHalf),
-                      child: Row(
-                        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Container(
+                    constraints: BoxConstraints(maxWidth: constraints.maxWidth),
+                    padding: const EdgeInsets.only(left: kPaddingHalf),
+                    child: Row(
+                      children: [
+                        if (header != null)
                           Flexible(
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   top: kPaddingHalf, bottom: 3),
                               child: PageContentHeader(
-                                header: header,
+                                header: header!,
                                 subHeader: subHeader,
                               ),
                             ),
                           ),
-                          if (trailing != null) trailing!
-                        ],
-                      )),
-                ]),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(
-                          left: kPaddingHalf, right: kPaddingHalf),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              top:
-                                  BorderSide(color: tDarkColor.withOpacity(.5)),
-                              bottom: footer != null
-                                  ? BorderSide(
-                                      color: tDarkColor.withOpacity(.5))
-                                  : BorderSide.none)),
-                      child: ConstrainedBox(
-                          constraints: constraints, child: content),
+                        if (trailing != null) trailing!
+                      ],
+                    )),
+              ]),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(
+                        left: kPaddingHalf, right: kPaddingHalf),
+                    constraints: constraints,
+                    child: content,
+                  ),
+                  if (footer != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: kPaddingHalf),
+                      child: footer,
                     ),
-                    if (footer != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: kPaddingHalf),
-                        child: footer,
-                      ),
-                  ],
-                ),
-              ],
-            ),
-            if (isLoading)
-              Positioned(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                    color: Colors.white.withAlpha(235),
-                    child: LoadingWidget(text: loadingText!)),
+                ],
               ),
-          ],
-        ));
+            ],
+          ),
+          if (isLoading)
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                  color: Colors.white.withAlpha(235),
+                  child: LoadingWidget(text: loadingText!)),
+            ),
+        ],
+      ),
+    );
   }
 }
 

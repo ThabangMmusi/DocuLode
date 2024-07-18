@@ -5,13 +5,13 @@ class CourseModel extends Equatable {
   final String code;
   final String school;
   final String year;
-  final List<String>? modules;
+  final List<String> modules;
   const CourseModel({
     required this.code,
     required this.name,
     required this.school,
     required this.year,
-    this.modules,
+    required this.modules,
   });
 
   @override

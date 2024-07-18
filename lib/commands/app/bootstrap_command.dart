@@ -1,22 +1,26 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:protocol_handler/protocol_handler.dart';
+import 'package:windows_single_instance/windows_single_instance.dart';
 
 // import '../../_utils/logger.dart';
 import '../../_utils/device_info.dart';
 import '../../_utils/logger.dart';
 import '../../_utils/native_window_utils/window_utils.dart';
 import '../../_utils/time_utils.dart';
-import '../commands.dart' as commands;
+import '../../bloc/auth/auth_bloc.dart';
+import '../commands.dart';
+import 'signin_with_token_command.dart';
 
-class BootstrapCommand extends commands.BaseAppCommand {
+class BootstrapCommand extends BaseAppCommand {
   static int kMinBootstrapTimeMs = 2000;
 
-  Future<void> run(BuildContext context) async {
+  Future<void> run(BuildContext context, List<String> args) async {
     int startTime = TimeUtils.nowMillis;
-    if (commands.hasContext == false) {
-      commands.setContext(context);
+    if (hasContext == false) {
+      setContext(context);
     }
     // log(object)
     log("Bootstrap Started, v${appModel.kVersion}");
@@ -33,6 +37,9 @@ class BootstrapCommand extends commands.BaseAppCommand {
     //   // }
     // }
 
+    // log("BootstrapCommand - Init Cloud Storage");
+    // Init services
+    // cloudStorage.init();
     // Set the cacheSize so we'll use more RAM on desktop and higher spec devices.
     // log("BootstrapCommand - Configure memory cache");
     // _configureMemoryCache();
@@ -40,21 +47,23 @@ class BootstrapCommand extends commands.BaseAppCommand {
     // Once model is loaded, we can configure the desktop.
     if (DeviceOS.isDesktop) {
       log("BootstrapCommand - Configure desktop");
-      _configureDesktop();
+      _configureDesktop(args);
     }
     // Login?
     if (appModel.currentUser != null) {
       log("BootstrapCommand - Set current user");
       //helps un to get the access code as well as the refresh code
-      firebase.seCurrentUser = appModel.currentUser;
-      // if (DeviceOS.isWindows) {
-      await firebase.signInWithMicrosoft();
-      // } else {
-      //   firebase.streamUserChange();
-      // }
+      if (DeviceOS.isWindows) {
+        firebase.seCurrentUser = appModel.currentUser;
+        await firebase.signInWithMicrosoft(true);
+      } else {
+        // firebase.streamUserChange();
+      }
       // await SetCurrentUserCommand().run(appModel.currentUser);
       // log("BootstrapCommand - Refresh books");
       // RefreshAllBooks();
+    } else {
+      // firebase.streamUserChange();
     }
     // For aesthetics, we'll keep splash screen up for some min-time (skip on web)
     if (kIsWeb == false) {
@@ -66,8 +75,12 @@ class BootstrapCommand extends commands.BaseAppCommand {
     }
     appModel.hasBootstrapped = true;
     log("BootstrapCommand - Complete");
+    // firebase.streamUserChange();
   }
 
+  void notifyAuthListener() {
+    mainContext.read<AuthBloc>().add(const AuthUserChanged());
+  }
   // void _configureMemoryCache() {
   //   // Use more memory by default on desktop
   //   int cacheSize = (DeviceOS.isDesktop ? 2048 : 512) << 20;
@@ -83,11 +96,20 @@ class BootstrapCommand extends commands.BaseAppCommand {
   //   imageCache.maximumSizeBytes = cacheSize;
   // }
 
-  void _configureDesktop() async {
+  void _configureDesktop(List<String> args) async {
+    // if (DeviceOS.isWindows) {
+    await WindowsSingleInstance.ensureSingleInstance(args, "itsshared_instance",
+        onSecondWindow: (args) async {
+      //sometimes the protocol does not work
+      ///so use this
+      SignInWithTokenCommand().start(args[0]);
+      log(args.toString());
+    });
+    // }
     // /// Polish (for Windows OS), to hide any movement of the window on startup.
     IoUtils.instance.showWindowWhenReady();
     if (!DeviceOS.isMacOS) {
-      IoUtils.instance.setTitle("ItsShared");
+      IoUtils.instance.setTitle("Its Shared");
     }
     Size minSize = const Size(600, 700);
     if (kDebugMode) minSize = const Size(400, 400);

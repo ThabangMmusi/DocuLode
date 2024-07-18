@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:its_shared/_utils/logger.dart';
 
-import '../../_utils/logger.dart';
+import '../../commands/files/pick_file_command.dart';
 import '../../firebase_options.dart';
 import '../../models/app_user/app_user.dart';
 import '../../models/course_model.dart';
@@ -11,6 +16,7 @@ import 'firebase_service.dart';
 
 class NativeFirebaseService extends FirebaseService {
   FirebaseFirestore get firestore => FirebaseFirestore.instance;
+  FirebaseStorage get fireStorage => FirebaseStorage.instance;
   FirebaseAuth get auth => FirebaseAuth.instance;
 
   DocumentReference get userDoc => firestore.doc(userPath.join("/"));
@@ -20,46 +26,95 @@ class NativeFirebaseService extends FirebaseService {
     await Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform)
         .catchError((Object e) {
-      print("$e");
+      log("$e");
     });
     if (kIsWeb) {
       await auth.setPersistence(Persistence.LOCAL);
     }
-    print("InitComplete");
-    FirebaseAuth.instance.userChanges().listen((User? user) {
-      _isSignedIn = user != null;
+    // //enable emulator
+    // if (false) {
+    //   try {
+    //     String host = 'localhost';
+    //     FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
+    //     await FirebaseAuth.instance.useAuthEmulator(host, 9099);
+    //     await FirebaseStorage.instance.useStorageEmulator(host, 9199);
+    //   } catch (e) {
+    //     log(e.toString());
+    //   }
+    // }
+    // if (false) {
+    //   await FirebaseAppCheck.instance.activate(
+    //     // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
+    //     // argument for `webProvider`
+    //     webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    //     // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
+    //     // your preferred provider. Choose from:
+    //     // 1. Debug provider
+    //     // 2. Safety Net provider
+    //     // 3. Play Integrity provider
+    //     androidProvider: AndroidProvider.debug,
+    //     // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
+    //     // your preferred provider. Choose from:
+    //     // 1. Debug provider
+    //     // 2. Device Check provider
+    //     // 3. App Attest provider
+    //     // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
+    //     appleProvider: AppleProvider.appAttest,
+    //   );
+    // }
+    log("InitComplete");
+    auth.userChanges().listen((User? user) async {
+      await setNewUser(user);
     });
+    // auth
+    //     .getRedirectResult()
+    //     .then((value) async => await setNewUser(value.user));
   }
 
   // Auth
   @override
-  Future<bool> signInWithMicrosoft() async {
-    UserCredential credential;
+  Future<bool> signInWithMicrosoft([bool reauthenticate = false]) async {
+    AuthProvider provider = MicrosoftAuthProvider();
 
     try {
-      if (kIsWeb) {
-        credential = await auth.signInWithPopup(MicrosoftAuthProvider());
+      if (!reauthenticate) {
+        if (kIsWeb) {
+          // auth
+          //     .signInWithPopup(MicrosoftAuthProvider())
+          //     .then((value) => value)
+          //     .catchError((error) => print(error));
+          //TODO: USE POP UP AFTER FINDING A WAY TO PREVENT MULTIPLE POPUPS
+          // await auth.signInWithRedirect(provider);
+          await auth.signInWithPopup(provider);
+        } else {
+          await auth.signInWithProvider(provider);
+        }
       } else {
-        credential = await auth.signInWithProvider(MicrosoftAuthProvider());
+        auth.currentUser!.getIdToken();
+        streamUserChange();
       }
-      var authUser = credential.user;
-      if (authUser != null) {
-        await firestore
-            .collection("users")
-            .doc(authUser.uid)
-            .get()
-            .then((value) {
-          seCurrentUser =
-              AppUser.fromJson(value.data()!).copyWith(uid: value.id);
-        });
-        userChange();
-      }
-      return authUser != null;
+      return currentUser != null;
     } on FirebaseAuthMultiFactorException catch (e) {
-      throw Exception(e.message);
+      log(e.message! + "hhh");
+      return false;
     } catch (e) {
-      throw Exception(e.toString());
+      log(e.toString());
+      return false;
     }
+  }
+
+  Future<void> setNewUser(User? authUser) async {
+    if (authUser != null) {
+      await firestore.collection("users").doc(authUser.uid).get().then((value) {
+        seCurrentUser = AppUser.fromJson(value.data()!).copyWith(uid: value.id);
+      });
+      userCourse = await getCourseDetails();
+    } else {
+      seCurrentUser = null;
+      userCourse = null;
+    }
+
+    userChange();
   }
 
   @override
@@ -70,13 +125,13 @@ class NativeFirebaseService extends FirebaseService {
   @override
   String? get getRefreshToken => auth.currentUser!.refreshToken;
   // Future<AppUser?> signIn({required String accessToken}) async {
-  //   UserCredential userCreds;
+  //   UserCredential userCred;
   //   if (createAccount) {
-  //     userCreds = await auth.createUserWithEmailAndPassword(email: email, password: password);
+  //     userCred = await auth.createUserWithEmailAndPassword(email: email, password: password);
   //   } else {
-  //     userCreds = await auth.signInWithEmailAndPassword(email: email, password: password);
+  //     userCred = await auth.signInWithEmailAndPassword(email: email, password: password);
   //   }
-  //   User? user = userCreds.user;
+  //   User? user = userCred.user;
   //   return user == null ? null : AppUser(email: user.email ?? "", fireId: user.uid);
   // }
 
@@ -96,11 +151,16 @@ class NativeFirebaseService extends FirebaseService {
   @override
   Future<CourseModel?> getCourseDetails() async {
     try {
-      return await firestore
+      var course = await firestore
           .collection("courses")
-          .doc(currentUser!.uid)
+          .doc(currentUser!.classId)
           .get()
-          .then((snapshot) => CourseModel.fromJson(snapshot.data()!));
+          .then((snapshot) {
+        var courseMap = snapshot.data();
+        courseMap!["id"] = snapshot.id;
+        return CourseModel.fromJson(courseMap);
+      });
+      return course;
     } catch (e) {
       print("courses from firebase: $e");
     }
@@ -132,49 +192,6 @@ class NativeFirebaseService extends FirebaseService {
     // );
   }
 
-  // CRUD
-  @override
-  Future<String> addDoc(List<String> keys, Map<String, dynamic> json,
-      {String? documentId, bool addUserPath = true}) async {
-    if (documentId != null) {
-      keys.add(documentId);
-      log("Add Doc ${getPathFromKeys(keys)}");
-      await firestore
-          .doc(getPathFromKeys(keys, addUserPath: addUserPath))
-          .set(json);
-      log("Add Doc Complete");
-      return documentId;
-    }
-    CollectionReference ref =
-        firestore.collection(getPathFromKeys(keys, addUserPath: addUserPath));
-    final doc = await ref.add(json);
-    return (doc).id;
-  }
-
-  @override
-  Future<void> deleteDoc(List<String> keys) async =>
-      await firestore.doc(getPathFromKeys(keys)).delete();
-
-  @override
-  Future<void> updateDoc(List<String> keys, Map<String, dynamic> json,
-      [bool update = false]) async {
-    await firestore.doc(getPathFromKeys(keys)).update(json);
-  }
-
-  @override
-  Future<Map<String, dynamic>?> getDoc(List<String> keys) async {
-    try {
-      DocumentSnapshot? d = (await _getDoc(keys)?.get());
-      if (d != null) {
-        // return (d.data() ?? {})..['documentId'] = d.id;
-        return null;
-      }
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
-
   @override
   Future<List<Map<String, dynamic>>?> getCollection(List<String> keys) async {
     return null;
@@ -189,17 +206,6 @@ class NativeFirebaseService extends FirebaseService {
     // return snapshot?.docs.map((d) => (d.data())).toList();
   }
 
-  DocumentReference? _getDoc(List<String> keys) {
-    if (checkKeysForNull(keys) == false) return null;
-    return firestore.doc(getPathFromKeys(keys));
-  }
-
-  CollectionReference? _getCollection(List<String> keys) {
-    if (checkKeysForNull(keys) == false) return null;
-    return firestore.collection(getPathFromKeys(keys));
-  }
-
-  @override
   Stream<AppUser?> get user {
     var authUsers = auth.authStateChanges();
     var user = auth.currentUser;
@@ -209,6 +215,60 @@ class NativeFirebaseService extends FirebaseService {
         .snapshots()
         .map((snap) => user.toUser(AppUser.fromJson(snap.data()!)));
     return currentUser;
+  }
+
+  @override
+  Future<void> deleteDoc(List<String> keys) {
+    // TODO: implement deleteDoc
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getDoc(List<String> keys) {
+    // TODO: implement getDoc
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateDoc(List<String> keys, Map<String, dynamic> json) {
+    // TODO: implement updateDoc
+    throw UnimplementedError();
+  }
+
+  ///////////////////////////////////////////////////
+  // Files - uploads
+  //////////////////////////////////////////////////
+  @override
+  Future<void> uploadFile(PickedFile pickedFile) async {
+    final path = "${currentUser?.uid}/uploads/${pickedFile.name}";
+    // final file = File(pickedFile.path);
+    final user = currentUser;
+    try {
+      // String mimeType = pickedFile.asset!.mimeType!;
+      // var metaData = UploadMetadata(contentType: mimeType);
+
+      final ref = fireStorage.ref().child(path);
+      // var data = await pickedFile.asset?.readAsBytes();
+      UploadTask uploadTask = ref.putFile(File(path));
+
+      final snapshot = await uploadTask.whenComplete(() {});
+      final downloadLink = await snapshot.ref.getDownloadURL();
+      final Map<String, dynamic> data2 = {
+        "name": pickedFile.name,
+        // "moduleId": pickedFile.moduleId,
+        "url": downloadLink,
+        // "type": pickedFile.type,
+        "classId": user!.classId,
+        "likes": <String>[],
+        "dislikes": <String>[],
+        "downloads": <String>[],
+      };
+      await firestore.collection("uploads").add(data2);
+      // return downloadLink;
+    } catch (e) {
+      print('File Upload Error: $e');
+      // return null;
+    }
   }
 }
 

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:its_shared/bloc/auth/auth_bloc.dart';
 
 import '../../constants/app_constants.dart';
 import '../../constants/app_text.dart';
+import '../../routes/app_pages.dart';
 import '../../styles.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -9,8 +13,18 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildLogo2(context),
+    return BlocListener<AuthBloc, AuthState>(
+      listenWhen: (previous, current) => previous.status != current.status,
+      listener: (context, state) {
+        if (state.status == AuthStatus.unauthenticated) {
+          context.go(Routes.signIn);
+        } else if (state.status == AuthStatus.authenticated) {
+          context.go(Routes.home);
+        }
+      },
+      child: Scaffold(
+        body: _buildLogo2(context),
+      ),
     );
   }
 

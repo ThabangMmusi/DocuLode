@@ -1,28 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/app_constants.dart';
-import '../../constants/app_text.dart';
 import '../../styles.dart';
-import '../../widgets/app_textfield.dart';
 import '../../widgets/labeled_text_input.dart';
-import 'profile/profile_view.dart';
-import 'home/home_view.dart';
-import 'uploads/upload_view.dart';
-
-Widget buildPages(int index) {
-  List<Widget> widget = [
-    const HomeView(),
-    const UploadFileView(),
-    const Center(
-      child: Text("search"),
-    ),
-    const UserProfileView()
-  ];
-
-  return widget[index];
-}
+import 'home/view/home_view.dart';
+import '../../features/uploads/presentation/views/upload_file_view.dart';
 
 Widget searchBox() {
   return Row(
@@ -70,19 +52,19 @@ List<NavigationItem> get bottomTaps {
       activeIcon: Ionicons.home,
     ),
     NavigationItem(
-      label: "Uploads",
-      icon: Ionicons.file_tray_outline,
-      activeIcon: Ionicons.file_tray,
-    ),
-    NavigationItem(
       label: "Search",
       icon: Ionicons.search_outline,
       activeIcon: Ionicons.search,
     ),
     NavigationItem(
-      label: "Profile",
-      icon: Ionicons.person_outline,
-      activeIcon: Ionicons.person,
+      label: "Uploads",
+      icon: Ionicons.file_tray_outline,
+      activeIcon: Ionicons.file_tray,
+    ),
+    NavigationItem(
+      label: "Modules",
+      icon: Ionicons.book_outline,
+      activeIcon: Ionicons.book,
     )
   ];
 }

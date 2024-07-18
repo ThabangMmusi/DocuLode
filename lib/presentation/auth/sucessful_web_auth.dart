@@ -1,10 +1,12 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:its_shared/commands/app/authenticate_desktop_command.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_constants.dart';
 import '../../styles.dart';
-import 'login_screen.dart';
+import '../../widgets/my_button.dart';
 
 class SuccessfulWebAuth extends StatelessWidget {
   const SuccessfulWebAuth({super.key});
@@ -12,7 +14,6 @@ class SuccessfulWebAuth extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black12,
       body: Center(
           child: Container(
               padding: const EdgeInsets.all(kPaddingDefault * 2),
@@ -23,75 +24,51 @@ class SuccessfulWebAuth extends StatelessWidget {
                 children: [
                   // const AuthHeaderWidget(),
                   Text(
-                    "Successful!",
-                    style: TextStyles.h1,
+                    "You're logged in as",
+                    style: TextStyles.h2,
                   ),
-                  kVSpacingHalf,
+                  kVSpacingDefault,
                   const Icon(
-                    Ionicons.checkmark_circle_outline,
-                    size: 16 * 5,
-                    color: Colors.green,
+                    Ionicons.person_circle_outline,
+                    size: 16 * 4,
                   ),
+                  // kVSpacingDefault,
+                  // Text(
+                  //   "You're successfully logged in as",
+                  //   style: TextStyles.title1,
+                  // ),
                   kVSpacingDefault,
                   Text(
-                    "You have successfully authenticated",
-                    style: TextStyles.body1,
+                    "Thabang Mmusi",
+                    style: TextStyles.h3,
                   ),
                   kVSpacingDefault,
-                  const AuthButton(
+                  AppButton(
                     loading: false,
-                    title: "Copy Access Keys",
+                    title: "Continue to the app",
+                    iconToRight: true,
+                    icon: Ionicons.open_outline,
+                    onTap: () => AuthenticateDesktopCommand().run(),
                   ),
+
+                  kVSpacingDefault,
+                  RichText(
+                    text: TextSpan(
+                        text: 'Not you? ',
+                        style: TextStyles.body2.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
+                        children: [
+                          TextSpan(
+                            text: "Log in to another account",
+                            style: TextStyles.body2.copyWith(
+                                color: Theme.of(context).colorScheme.primary),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => print('Tap Here onTap'),
+                          )
+                        ]),
+                  )
                 ],
               ))),
     );
-  }
-}
-
-class AuthButton extends StatelessWidget {
-  const AuthButton({super.key, required this.loading, required this.title});
-  final bool loading;
-  final String title;
-  @override
-  Widget build(BuildContext context) {
-    return loading
-        ? const Center(
-            child: SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  color: tDarkColor,
-                  backgroundColor: Colors.black12,
-                )),
-          )
-        : Container(
-            width: 250,
-            height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: kPaddingDefault),
-            decoration: BoxDecoration(
-              color: tPrimaryColor,
-              borderRadius: BorderRadius.circular(kPaddingHalf),
-            ),
-            child: InkWell(
-                onTap: () {
-                  // context.read<LoginCubit>().logInWithCredentials();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Ionicons.key,
-                      color: tWhiteColor,
-                    ),
-                    kHSpacingHalf,
-                    Text(
-                      title,
-                      textAlign: TextAlign.start,
-                      style: TextStyles.h3.copyWith(color: tWhiteColor),
-                    ),
-                  ],
-                )),
-          );
   }
 }

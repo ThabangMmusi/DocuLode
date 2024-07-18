@@ -72,6 +72,36 @@ class Shadows {
       ];
 }
 
+class VSpace extends StatelessWidget {
+  final double size;
+
+  const VSpace(this.size, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => SizedBox(height: size);
+
+  static VSpace get xs => VSpace(Insets.xs);
+  static VSpace get sm => VSpace(Insets.sm);
+  static VSpace get med => VSpace(Insets.med);
+  static VSpace get lg => VSpace(Insets.lg);
+  static VSpace get xl => VSpace(Insets.xl);
+}
+
+class HSpace extends StatelessWidget {
+  final double size;
+
+  const HSpace(this.size, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => SizedBox(width: size);
+
+  static HSpace get xs => HSpace(Insets.xs);
+  static HSpace get sm => HSpace(Insets.sm);
+  static HSpace get med => HSpace(Insets.med);
+  static HSpace get lg => HSpace(Insets.lg);
+  static HSpace get xl => HSpace(Insets.xl);
+}
+
 /// Font Sizes
 /// You can use these directly if you need, but usually there should be a predefined style in TextStyles.
 class FontSizes {
@@ -122,6 +152,11 @@ class TextStyles {
       body1.copyWith(fontSize: FontSizes.s12, height: 1.5, letterSpacing: .2);
   static TextStyle get body3 => body1.copyWith(
       fontSize: FontSizes.s12, height: 1.5, fontWeight: FontWeight.bold);
+  static TextStyle get body4 => body1.copyWith(
+      height: 1.18,
+      fontSize: FontSizes.s10,
+      fontWeight: FontWeight.w500,
+      letterSpacing: .2);
   static TextStyle get callout1 => raleway.copyWith(
       fontWeight: FontWeight.w800,
       fontSize: FontSizes.s12,

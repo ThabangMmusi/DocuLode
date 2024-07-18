@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import '../../_utils/logger.dart';
+import '../../commands/files/pick_file_command.dart';
 import '../firebase_config.dart';
 import 'package:http/http.dart' as http;
 
@@ -49,13 +50,13 @@ class FirebaseRestApi {
               .encode({"grant_type": "refresh_token", "refresh_token": token}));
 
       if (response.statusCode == 200) {
-        // TODO : REMOVE ALL OTHER VIRIABLE
+        // TODO : REMOVE ALL OTHER VARIABLE
         ///getting the response body
         Map value = json.decode(response.body);
         //extracting the user from th body;
         log(value.toString());
         ////
-        ///STORING REUSERBLE USER INFO IN THIS API
+        ///STORING REUSEABLE USER INFO IN THIS API
         ////
         _currentUserId = value["user_id"];
         // _ref = value["localId"];
@@ -78,13 +79,13 @@ class FirebaseRestApi {
           body: json.encode({"idToken": token}));
 
       if (response.statusCode == 200) {
-        // TODO : REMOVE ALL OTHER VIRIABLE
+        // TODO : REMOVE ALL OTHER VARIABLE
         ///getting the response body
         Map value = json.decode(response.body);
         //extracting the user from th body;
         Map user = value["users"][0];
         ////
-        ///STORING REUSERBLE USER INFO IN THIS API
+        ///STORING REUSEABLE USER INFO IN THIS API
         ////
         _currentUserId = user["localId"];
         _loginToken = token;
@@ -105,6 +106,28 @@ class FirebaseRestApi {
     var userData = await getDoc("users/$_currentUserId");
     userData?["uid"] = _currentUserId;
     return userData;
+  }
+
+  /// [path] must include doc name if has any
+  Future<bool> addDoc(Map<String, dynamic> doc, String path) async {
+    try {
+      var response = await http.post(Uri.parse("${_config.firestoreApi}/$path"),
+          headers: {"Authorization": "Bearer $_loginToken"},
+          body: json.encode({
+            "fields": {
+              // "title": {"stringValue": noteModel.title},
+              // "description": {"stringValue": noteModel.description},
+              // "colorValue": {"stringValue": noteModel.colorValue.toString()},
+              //  "createdTime": {"stringValue":Utils.getServerTimeFormat(DateTime.now())}
+            }
+          }));
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } catch (err) {
+      throw err;
+    }
   }
 
   /// return a map of document from firestore
@@ -139,7 +162,7 @@ class FirebaseRestApi {
   }
 
   ///////////////////////////////////////
-  ///firestore doc praser
+  ///firestore doc parser
   //////////////////////////////////////
   String? getFireStoreProp(Map<String, dynamic> value) {
     final props = {
@@ -188,5 +211,39 @@ class FirebaseRestApi {
       }
     }
     return value;
+  }
+
+  ///////////////////////////////////////
+  ///firebase STORAGE
+  //////////////////////////////////////
+
+  Future<Map?> uploadFile(PickedFile file) async {
+    String? file2upload = file.path;
+    String bucket = _config.storageBucket;
+    String storagePath = '$_currentUserId/uploads/${file.name}';
+    // .replaceAll('/', '%2F');
+    String url2file =
+        'https://firebasestorage.googleapis.com/v0/b/$bucket/o/$storagePath';
+
+    try {
+      var response = await http.post(Uri.parse(url2file),
+          // headers: {"Content-Type": "image/png","Authorization": "Bearer $_loginToken"},
+          headers: {"Authorization": "Bearer $_loginToken"},
+          body: json.encode({"data": file2upload}));
+
+      if (response.statusCode == 200) {
+        // TODO : REMOVE ALL OTHER VARIABLE
+        ///getting the response body
+        Map value = json.decode(response.body);
+        print(value);
+        ////
+        return value;
+      }
+
+      return null;
+    } catch (err) {
+      print(err);
+      return null;
+    }
   }
 }

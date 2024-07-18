@@ -12,7 +12,14 @@ class WindowsTitleBar extends StatelessWidget {
       iconNormal: Colors.black,
       mouseOver: Colors.black.withOpacity(.2),
       mouseDown: Colors.black.withOpacity(.3),
-      normal: Colors.black.withOpacity(0),
+      normal: Theme.of(context).colorScheme.background,
+    );
+    final defaultCloseButtonColors = WindowButtonColors(
+      mouseOver: Color(0xFFD32F2F),
+      mouseDown: Color(0xFFB71C1C),
+      iconNormal: Colors.black,
+      iconMouseOver: Color(0xFFFFFFFF),
+      normal: Theme.of(context).colorScheme.background,
     );
     return SizedBox(
       height: 30,
@@ -27,7 +34,9 @@ class WindowsTitleBar extends StatelessWidget {
               children: [
                 MinimizeWindowButton(colors: btnColors),
                 MaximizeWindowButton(colors: btnColors),
-                CloseWindowButton(),
+                CloseWindowButton(
+                  colors: defaultCloseButtonColors,
+                ),
               ],
             ),
           ),

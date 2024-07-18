@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 class FadeAnimation extends StatelessWidget {
   final Animation<double> animation;
   final Widget child;
-  final Axis axis;
 
   const FadeAnimation({
     super.key,
     required this.animation,
     required this.child,
-    this.axis = Axis.horizontal,
   });
 
   @override
@@ -20,11 +18,7 @@ class FadeAnimation extends StatelessWidget {
           animation.value == 0.0 ? Container() : child!,
       child: FadeTransition(
         opacity: animation,
-        child: SizeTransition(
-          axis: axis,
-          sizeFactor: animation,
-          child: child,
-        ),
+        child: child,
       ),
     );
   }

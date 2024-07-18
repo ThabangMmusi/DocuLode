@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 
 import '../../_utils/device_info.dart';
 import '../../_utils/logger.dart';
-import '../../commands/app/authenticate_desktop_command.dart';
 import '../../commands/app/set_current_user_command.dart';
+import '../../commands/files/pick_file_command.dart';
 import '../../models/app_user/app_user.dart';
 import '../../models/course_model.dart';
 import 'firebase_service_firedart.dart';
@@ -53,25 +53,16 @@ abstract class FirebaseService {
   final StreamController<AppUser?> _controller =
       StreamController<AppUser?>.broadcast();
   AppUser? get currentUser => _currentUser;
+  String? get currentUid => _currentUser!.uid;
   set seCurrentUser(AppUser? newUser) => _currentUser = newUser;
   AppUser? _currentUser;
   bool isDesktopAuth = false;
   FirebaseService() {
     onUserChanged = _controller.stream;
   }
-
+  CourseModel? userCourse;
   String? get userId => currentUser!.uid;
   List<String> get userPath => [FireIds.users, userId ?? ""];
-  // Helper method for getting a path from keys, and optionally prepending the scope (users/email)
-  String getPathFromKeys(List<String> keys, {bool addUserPath = true}) {
-    String path =
-        addUserPath ? userPath.followedBy(keys).join("/") : keys.join("/");
-    if (FirebaseFactory.useNative) {
-      return path.replaceAll("//", "/");
-    }
-    return path;
-  }
-
   /////////////////////////////////////////////////////////
   // USERS
   /////////////////////////////////////////////////////////
@@ -85,24 +76,13 @@ abstract class FirebaseService {
     }
   }
 
-  Future<String> addUser(AppUser value) async {
-    // return await addDoc([FireIds.users], value.toJson(),
-    //     documentId: value.uid!);
-    return "";
-  }
-
-  Future<void> setUserData(AppUser value) async {
-    await updateDoc(["/"], value.toJson());
-  }
-
   ///////////////////////////////////////////////////
   // Abstract Methods
   //////////////////////////////////////////////////
   void init();
 
   // Auth
-  @mustCallSuper
-  Future<bool> signInWithMicrosoft() async {
+  Future<bool> signInWithMicrosoft([bool reauthenticate = false]) async {
     return _currentUser != null;
   }
 
@@ -125,7 +105,7 @@ abstract class FirebaseService {
   /// then Stream user change anyway;
   void userChange() {
     if (isDesktopAuth) {
-      AuthenticateDesktopCommand().run();
+      // AuthenticateDesktopCommand().run();
     } else {
       SetCurrentUserCommand().run();
     }
@@ -145,6 +125,13 @@ abstract class FirebaseService {
     return null;
   }
 
+  ///////////////////////////////////////////////////
+  // Files - Starts
+  //////////////////////////////////////////////////
+  Future<bool> addBook() async {
+    return true;
+  }
+
   Future<Map<String, dynamic>?> getDoc(List<String> keys);
   Future<List<Map<String, dynamic>>?> getCollection(List<String> keys);
 
@@ -152,6 +139,11 @@ abstract class FirebaseService {
   //     {String documentId, bool addUserPath = true});
   Future<void> updateDoc(List<String> keys, Map<String, dynamic> json);
   Future<void> deleteDoc(List<String> keys);
+
+  ///////////////////////////////////////////////////
+  // Files - uploads
+  //////////////////////////////////////////////////
+  Future<void> uploadFile(PickedFile file) async {}
 }
 
 bool checkKeysForNull(List<String> keys) {

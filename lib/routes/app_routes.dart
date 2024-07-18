@@ -9,6 +9,7 @@ abstract class Routes {
   static const home = _Paths.home;
   static const search = _Paths.search;
   static const profile = _Paths.profile;
+  static const modules = _Paths.modules;
   static const auth = _Paths.auth;
   static const signIn = auth + _Paths.signIn;
   static const webAuth = auth + _Paths.webAuth;
@@ -26,10 +27,11 @@ abstract class Routes {
 
 abstract class _Paths {
   static const loading = '/loading';
-  static const splash = '/splash';
+  static const splash = '/';
   static const home = '/home';
   static const search = "/search";
   static const uploads = '/uploads';
+  static const modules = '/modules';
   static const auth = '/auth';
   static const signIn = '/signin';
   static const webAuth = '/web-auth';

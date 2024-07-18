@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:its_shared/styles.dart';
 
 class Responsive extends StatelessWidget {
   final Widget mobile;
@@ -18,13 +19,14 @@ class Responsive extends StatelessWidget {
       MediaQuery.of(context).size.width >= 768;
 
   static bool isDesktop(context) => MediaQuery.of(context).size.width >= 1100;
-  static double responsiveSidePadding(context) {
-    double width = MediaQuery.of(context).size.width;
-    double maxWidth = 1366.0;
-    if (width < maxWidth) {
-      return 0.0;
+
+  static double sidePadding(context) {
+    if (isTablet(context)) {
+      return Insets.lg;
+    } else if (isMobile(context)) {
+      return Insets.med;
     } else {
-      return width - maxWidth;
+      return Insets.xl;
     }
   }
 

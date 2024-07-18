@@ -3,20 +3,24 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:its_shared/features/upload_progress/data/sources/upload_file_sources.dart';
+import 'package:its_shared/features/upload_progress/domain/usecases/upload_file.dart';
+import 'package:its_shared/features/upload_progress/presentation/bloc/upload_progress_bloc.dart';
+import 'package:its_shared/services/cloudinary/cloud_storage_service.dart';
 import 'package:url_strategy/url_strategy.dart';
-import 'package:windows_single_instance/windows_single_instance.dart';
 
-import '_utils/device_info.dart';
 import '_utils/logger.dart';
 import 'bloc/auth/auth_bloc.dart';
 import 'commands/app/bootstrap_command.dart';
-import 'commands/app/signin_with_token_command.dart';
 import 'constants/app_colors.dart';
+import 'cubits/desktop_auth/desktop_auth_cubit.dart';
+import 'injection_container.dart';
 import 'models/app_model.dart';
 import 'repositories/courses/courses_repository.dart';
 import 'repositories/user/user_repository.dart';
 import 'routes/app_pages.dart';
 import 'services/firebase/firebase_service.dart';
+import 'styles.dart';
 import 'themes.dart';
 
 void main(List<String> args) async {
@@ -36,33 +40,20 @@ void main(List<String> args) async {
 
     //remove # on the URL
     setPathUrlStrategy();
-    if (DeviceOS.isWindows) {
-      await WindowsSingleInstance.ensureSingleInstance(
-          args, "itsshared_instance", onSecondWindow: (args) async {
-        //sometimes the protocol does not work
-        ///so use this
-        await SignInWithTokenCommand().run(args[0]);
-        log(args.toString());
-      });
-    }
-    runApp(MyApp());
-  });
-}
 
-class MyApp extends StatelessWidget {
-  MyApp({super.key});
-
-  final FirebaseService firebase = FirebaseFactory.create();
-  @override
-  Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
+    await initDependencies();
+    // final FirebaseService firebase = FirebaseFactory.create();
+    runApp(MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
           create: (context) => AppModel(),
         ),
+        // RepositoryProvider(
+        //   create: (context) => firebase,
+        // ),
         RepositoryProvider(
-          create: (context) => firebase,
-        ),
+            create: (context) => serviceLocator<FirebaseService>()),
+        // RepositoryProvider(create: (context) => CloudStorageService()),
         RepositoryProvider(
           create: (context) => UserRepository(),
         ),
@@ -75,17 +66,26 @@ class MyApp extends StatelessWidget {
               authRepository: context.read<FirebaseService>(),
             ),
           ),
+          BlocProvider(
+            create: (context) => DesktopAuthCubit(),
+          ),
+          BlocProvider(
+            create: (context) => serviceLocator<UploadProgressBloc>(),
+          ),
+          // BlocProvider(
+          //   create: (context) => ConnectionCubit(),
+          // )
         ],
-        child: const AppBootStrapper(),
+        child: AppBootStrapper(args: args),
       ),
-    );
-  }
+    ));
+  });
 }
 
 // Bootstrap the app, initializing all Controllers and Services
 class AppBootStrapper extends StatefulWidget {
-  const AppBootStrapper({super.key});
-
+  const AppBootStrapper({super.key, required this.args});
+  final List<String> args;
   @override
   State<AppBootStrapper> createState() => _AppBootStrapperState();
 }
@@ -96,7 +96,7 @@ class _AppBootStrapperState extends State<AppBootStrapper> {
     // Run Bootstrap with scheduleMicrotask to avoid triggering any builds from init(), which would throw an error.
     scheduleMicrotask(() {
       // Bootstrap. This will initialize services, load saved data, determine initial navigation state and anything else that needs to get done at startup
-      BootstrapCommand().run(context);
+      BootstrapCommand().run(context, widget.args);
     });
     super.initState();
   }
@@ -108,15 +108,14 @@ class _AppBootStrapperState extends State<AppBootStrapper> {
     // // TODO-SNIPPET: Using visual density
     // // Generate ThemeData from our own custom AppTheme object
     // ThemeData materialTheme = theme.toThemeData();
-    ThemeData materialTheme =
-        AppTheme.fromType(ThemeType.Orange_Light).toThemeData();
+    // ThemeData materialTheme = EventLinkTheme.light;
     // Determine the density we want, based on AppModel.enableTouchMode
     bool enableTouchMode = context.select((AppModel m) => m.enableTouchMode);
     double density = enableTouchMode ? 0 : -1;
     print("enableTouchMode: $enableTouchMode");
     // Inject desired density into MaterialTheme for free animation when values change
-    materialTheme = ThemeData(
-        visualDensity: VisualDensity(horizontal: density, vertical: density));
+    // materialTheme = ThemeData(
+    //     visualDensity: VisualDensity(horizontal: density, vertical: density));
     return Builder(builder: (context) {
       return MaterialApp.router(
         title: "SPU Share",
@@ -130,16 +129,16 @@ class _AppBootStrapperState extends State<AppBootStrapper> {
       );
     });
   }
-}
+} //0861111761
 
 ThemeData toThemeData({bool isDark = false}) {
-  const Color bg1 = Color(0xffF3F3F3);
-  const Color surface1 = Colors.white;
-  const Color surface2 = Color.fromARGB(255, 21, 23, 24);
+  const Color surface1 = Color(0xffFAFAFA);
+  const Color surface2 = Color.fromARGB(55, 21, 23, 24);
   const Color accent1 = Color(0xffff392b);
+  const Color accent2 = Color.fromARGB(255, 230, 42, 29);
   const Color greyWeak = Color(0xffcccccc);
-  const Color grey = Color(0xff999999);
-  const Color greyMedium = Color(0xff747474);
+  const Color grey = Color(0xff535353);
+  const Color greyMedium = Color(0xff787878);
   const Color greyStrong = Color(0xff333333);
   const Color focus = Color(0xffd81e1e);
   Color mainTextColor = isDark ? Colors.white : Colors.black;
@@ -156,32 +155,46 @@ ThemeData toThemeData({bool isDark = false}) {
     return hslc.withLightness(lightness).toColor(); // Convert back to Color
   }
 
-  var t = ThemeData.from(
+  ThemeData t = ThemeData.from(
+    // fontFamily: Fonts.raleway,
     // Use the .dark() and .light() constructors to handle the text themes
     // textTheme: (isDark ? ThemeData.dark() : ThemeData.light()).textTheme,
     // Use ColorScheme to generate the bulk of the color theme
-    useMaterial3: true,
+    useMaterial3: false,
     colorScheme: ColorScheme(
         brightness: isDark ? Brightness.dark : Brightness.light,
         primary: accent1,
         primaryContainer: shift(accent1, .1),
-        secondary: accent1,
-        secondaryContainer: shift(accent1, .1),
-        background: bg1,
+        secondary: accent2,
+        secondaryContainer: shift(accent2, .1),
         surface: surface1,
-        onBackground: mainTextColor,
         onSurface: mainTextColor,
         onError: mainTextColor,
         onPrimary: inverseTextColor,
         onSecondary: inverseTextColor,
-        inverseSurface: surface2,
+        inversePrimary: greyStrong,
+        inverseSurface: grey,
+        onInverseSurface: greyMedium,
         tertiary: greyWeak,
+        tertiaryContainer: const Color(0XFFE8E8E8),
+        onTertiaryContainer: const Color(0xFFFCFCFC),
         error: focus),
   );
+
   // Apply additional styling that is missed by ColorScheme
   t.copyWith(
+      inputDecorationTheme: const InputDecorationTheme(
+        enabledBorder: OutlineInputBorder(
+            borderRadius: Corners.lgBorder,
+            borderSide: BorderSide(
+                color: greyWeak, width: 1, style: BorderStyle.solid)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: Corners.lgBorder,
+            borderSide:
+                BorderSide(color: accent1, width: 1, style: BorderStyle.solid)),
+      ),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textSelectionTheme: TextSelectionThemeData(
+      textSelectionTheme: const TextSelectionThemeData(
         cursorColor: surface1,
         selectionHandleColor: Colors.transparent,
         selectionColor: surface1,

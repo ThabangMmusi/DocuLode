@@ -1,5 +1,9 @@
+import 'package:firedart/firedart.dart';
+
+import '../../commands/files/pick_file_command.dart';
 import '../../models/app_user/app_user.dart';
 import '../../models/course_model.dart';
+import '../firebase_config.dart';
 import 'firebase_rest_api.dart';
 import 'firebase_service.dart';
 
@@ -13,7 +17,7 @@ class DartFirebaseService extends FirebaseService {
   @override
   Future<void> init() async {
     // final prefsStore = await PreferencesStore.create();
-    FirebaseRestApi.initialize();
+    // FirebaseRestApi.initialize();
   }
 
   @override
@@ -52,13 +56,16 @@ class DartFirebaseService extends FirebaseService {
   }
 
   @override
-  Future<bool> signInWithMicrosoft() async {
+  Future<bool> signInWithMicrosoft([bool reauthenticate = false]) async {
     if (currentUser!.token != null) {
       ///for reauthenticate when program start
       ///will be saved along with the user;
       var accessToken = currentUser!.token;
       var refreshToken = currentUser!.refreshToken!;
       //try reauthenticate with the existing access token
+//       FirebaseAuth.initialize( FirebaseConfig().apiKey, VolatileStore());
+// await FirebaseAuth.instance.;
+// var user = await FirebaseAuth.instance.getUser();
       if (await firebase.signInWithToken(accessToken!) == null) {
         accessToken = await firebase.reauthenticate(refreshToken);
       }
@@ -72,8 +79,10 @@ class DartFirebaseService extends FirebaseService {
       } on Exception catch (e) {
         print(e);
       }
-
-      userChange();
+      userCourse = await getCourseDetails();
+      if (!reauthenticate) {
+        userChange();
+      }
     }
     return super.signInWithMicrosoft();
   }
@@ -112,11 +121,10 @@ class DartFirebaseService extends FirebaseService {
   //   return null;
   // }
 
-  // @override
-  // Future<void> signOut() async {
-  //   super.signOut();
-  //   _isSignedIn = false;
-  // }
+  @override
+  Future<void> signOut() async {
+    super.signOut();
+  }
 
   // @override
   // bool get isSignedIn => _isSignedIn;
@@ -187,4 +195,41 @@ class DartFirebaseService extends FirebaseService {
   //   //print("Got path: " + colRef.path);
   //   return colRef;
   // }
+
+  ///////////////////////////////////////////////////
+  // Files - uploads
+  //////////////////////////////////////////////////
+  @override
+  Future<void> uploadFile(PickedFile pickedFile) async {
+    final path = "${currentUser?.uid}/uploads/${pickedFile.name}";
+    // final file = File(pickedFile.path);
+    final user = currentUser;
+    try {
+      // String mimeType = pickedFile.asset!.mimeType!;
+      // var metaData = UploadMetadata(contentType: mimeType);
+
+      // final ref = fireStorage.ref().child(path);
+      // var data = await pickedFile.asset?.readAsBytes();
+      // UploadTask uploadTask = ref.putData(data!);
+      // firebase.getDoc(docID)
+      firebase.uploadFile(pickedFile);
+      // final snapshot = await uploadTask.whenComplete(() {});
+      // final downloadLink = await snapshot.ref.getDownloadURL();
+      final Map<String, dynamic> data2 = {
+        "name": pickedFile.name,
+        // "moduleId": pickedFile.moduleId,
+        // "url": downloadLink,
+        // "type": pickedFile.type,
+        "classId": user!.classId,
+        "likes": <String>[],
+        "dislikes": <String>[],
+        "downloads": <String>[],
+      };
+      // await firestore.collection("uploads").add(data2);
+      // return downloadLink;
+    } catch (e) {
+      print('File Upload Error: $e');
+      // return null;
+    }
+  }
 }

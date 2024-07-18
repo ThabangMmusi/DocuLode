@@ -1,72 +1,104 @@
 import 'package:flutter/material.dart';
 
-import '../constants/app_colors.dart';
-import '../constants/app_constants.dart';
+import '../styles.dart';
 
-class MyButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onPressed;
-  final bool isLoading;
-  final bool isEnabled;
-  final bool isRed;
-  final bool excludeFocus;
-
-  const MyButton(
+class AppButton extends StatefulWidget {
+  const AppButton(
       {super.key,
-      required this.text,
-      required this.onPressed,
-      this.isLoading = false,
-      this.isEnabled = true,
-      this.isRed = false,
-      this.excludeFocus = false});
+      this.loading = false,
+      required this.title,
+      this.iconToRight = false,
+      this.outline = false,
+      required this.onTap,
+      this.icon});
+  final bool loading;
+  final String title;
+  final bool iconToRight;
+  final bool outline;
+  final Function() onTap;
+  final IconData? icon;
 
   @override
-  Widget build(BuildContext context) {
-    return ExcludeFocus(
-      excluding: excludeFocus,
-      child: AbsorbPointer(
-        absorbing: !isEnabled,
-        child: Stack(
-          children: [
-            Visibility(
-              visible: !isLoading,
-              child: ElevatedButton(
-                onPressed: onPressed,
-                style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    backgroundColor: isEnabled
-                        ? isRed
-                            ? Colors.red
-                            : tPrimaryColor
-                        : Colors.grey,
-                    disabledForegroundColor: tSecondaryColor.withOpacity(0.38),
-                    disabledBackgroundColor: tSecondaryColor.withOpacity(0.12)),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: kPaddingDefault / 2,
-                      horizontal: kPaddingDefault),
-                  child: Text(
-                    text.toUpperCase(),
-                  ),
-                ),
-                // color: Colors.blue,
-              ),
-            ),
-            SizedBox(
-              width: 40,
-              height: 50,
-              child: Visibility(
-                visible: isLoading,
-                child: const Padding(
-                  padding: EdgeInsets.only(top: 6),
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  State<AppButton> createState() => _AppButtonState();
+}
+
+class _AppButtonState extends State<AppButton> {
+  bool _hovered = false;
+
+  @override
+  void initState() {
+    super.initState();
   }
+
+  late Color primaryColor;
+  late Color onPrimaryColor;
+  late Color onSecondaryColor;
+  late Color secondaryColor;
+  @override
+  Widget build(BuildContext context) {
+    primaryColor = Theme.of(context).colorScheme.primary;
+    onPrimaryColor = Theme.of(context).colorScheme.onPrimary;
+    onSecondaryColor = Theme.of(context).colorScheme.onSecondary;
+    secondaryColor = Theme.of(context).colorScheme.secondary;
+    return widget.loading
+        ? Center(
+            child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.inverseSurface,
+                  backgroundColor: Colors.black12,
+                )),
+          )
+        : InkWell(
+            onHover: (value) => setState(() => _hovered = value),
+            onTap: widget.onTap,
+            highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            focusColor: Colors.transparent,
+            borderRadius: Corners.medBorder,
+            child: Container(
+              height: 42,
+              padding: EdgeInsets.symmetric(horizontal: Insets.lg),
+              decoration: BoxDecoration(
+                  border:
+                      widget.outline ? Border.all(color: primaryColor) : null,
+                  borderRadius: Corners.medBorder,
+                  color: _hovered
+                      ? widget.outline
+                          ? primaryColor.withAlpha(20)
+                          : secondaryColor
+                      : widget.outline
+                          ? Colors.transparent
+                          : primaryColor),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (!widget.iconToRight && widget.icon != null) ...[
+                    buildIcon(),
+                    HSpace.sm,
+                  ],
+                  Text(
+                    widget.title,
+                    textAlign: TextAlign.start,
+                    style: TextStyles.h3.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: widget.outline ? onSecondaryColor : onPrimaryColor,
+                    ),
+                  ),
+                  if (widget.iconToRight) ...[
+                    HSpace.sm,
+                    buildIcon(),
+                  ],
+                ],
+              ),
+            ),
+          );
+  }
+
+  Icon buildIcon() => Icon(
+        widget.icon,
+        color: widget.outline ? onSecondaryColor : onPrimaryColor,
+      );
 }

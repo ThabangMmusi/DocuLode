@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:its_shared/styles.dart';
+import 'package:its_shared/widgets/decorated_container.dart';
 
 import '../../../animated/animated.dart';
 import '../../../bloc/auth/auth_bloc.dart';
-import '../../../constants/app_colors.dart';
-import '../../../constants/app_constants.dart';
 import '../../../constants/responsive.dart';
 
 class UserProfileView extends StatefulWidget {
@@ -23,7 +23,7 @@ class _UserProfileViewState extends State<UserProfileView>
   void initState() {
     _animationController = AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 300),
         reverseDuration: const Duration(milliseconds: 100));
     _animationController.forward();
     super.initState();
@@ -38,58 +38,57 @@ class _UserProfileViewState extends State<UserProfileView>
   @override
   Widget build(BuildContext context) {
     final user = context.select((AuthBloc bloc) => bloc.state.user);
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
     return SlideFadeAnimation(
         animation: _animationController,
         child: Container(
           height: double.infinity,
-          width: Responsive.isDesktop(context) ? 280 : double.infinity,
-          padding: const EdgeInsets.all(kPaddingDefault),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
+          width: Responsive.isDesktop(context) ? 300 : double.infinity,
+          margin: EdgeInsets.all(Insets.med).copyWith(left: 0),
+          decoration: BoxDecoration(
+              color: colorScheme.surface, borderRadius: Corners.medBorder),
           child: SingleChildScrollView(
+            padding: EdgeInsets.all(Insets.lg),
             child: Column(
               children: [
                 // SignOutButton(),
                 // kVSpacingDefault,
-                kVSpacingHalf,
+                VSpace.lg,
                 CircleAvatar(
-                  radius: 82,
-                  backgroundColor: tPrimaryColor.withAlpha(40),
+                  radius: 52,
+                  backgroundColor: colorScheme.tertiaryContainer,
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
-                    foregroundColor: tPrimaryColor.withAlpha(100),
-                    radius: 80,
+                    foregroundColor: colorScheme.tertiaryContainer,
+                    radius: 50,
                     child: const Icon(
                       Ionicons.person,
-                      size: 96,
+                      size: 72,
                     ),
                   ),
                 ),
-                kVSpacingDefault,
+                VSpace.lg,
                 Text(user!.getFullNames,
                     style: const TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 16,
                     )),
-                kVSpacingDefault,
+                VSpace.lg,
                 const _UserStatsWidget(),
-                const Padding(
-                  padding: EdgeInsets.only(top: kPaddingHalf),
-                  child: Divider(),
-                ),
-                const UserCourseWidget(),
-                TextButton(
-                    onPressed: () async {
-                      // final token = await Authuser!.getIdToken();
-                      // print(token);
-                      // Process.start('grep', ['-i', 'main', 'notepad.exe'])
-                      //     .then((result) {
-                      //   stdout.write(result.stdout);
-                      //   stderr.write(result.stderr);
-                      // });
-                    },
-                    child: const Text("Token")),
+                VSpace.sm,
+                const Divider(),
+                UserCourseWidget(),
+                // TextButton(
+                //     onPressed: () async {
+                //       // final token = await Authuser!.getIdToken();
+                //       // print(token);
+                //       // Process.start('grep', ['-i', 'main', 'notepad.exe'])
+                //       //     .then((result) {
+                //       //   stdout.write(result.stdout);
+                //       //   stderr.write(result.stderr);
+                //       // });
+                //     },
+                //     child: const Text("Token")),
               ],
             ),
           ),
@@ -98,42 +97,45 @@ class _UserProfileViewState extends State<UserProfileView>
 }
 
 class UserCourseWidget extends StatelessWidget {
-  const UserCourseWidget({
+  UserCourseWidget({
     super.key,
   });
+
+  late ColorScheme colorScheme;
   @override
   Widget build(BuildContext context) {
-    final course = context.select((AuthBloc bloc) => bloc.state.courseDetails!);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        valueBuilder("Course", course.name),
-        valueBuilder("Course Code", course.code),
-        valueBuilder("Course Year", "${course.year} year"),
-        valueBuilder("School", course.schoolFullName),
-        valueBuilder("Total Modules", course.modules!.length.toString()),
-      ],
-    );
+    final course = context.select((AuthBloc bloc) => bloc.state.courseDetails);
+    colorScheme = Theme.of(context).colorScheme;
+    return course == null
+        ? Container()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              valueBuilder("Course", course.name),
+              valueBuilder("Course Code", course.code),
+              valueBuilder("Course Year", "${course.year} year"),
+              valueBuilder("School", course.schoolFullName),
+              valueBuilder("Total Modules", course.modules!.length.toString()),
+            ],
+          );
   }
 
   Widget valueBuilder(String title, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        kVSpacingHalf,
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: kPaddingQuarter),
-          child: Text(
-            title,
-            style: const TextStyle(color: Colors.black45, fontSize: 12),
-          ),
+        VSpace.lg,
+        Text(
+          title,
+          style: const TextStyle(color: Colors.black45, fontSize: 12),
         ),
+        VSpace.xs,
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(kPaddingQuarter),
+          padding: EdgeInsets.all(Insets.sm),
           decoration: BoxDecoration(
-              color: tPrimaryColor.withOpacity(0.06),
-              borderRadius: BorderRadius.circular(kPaddingQuarter)),
+              color: colorScheme.tertiaryContainer,
+              borderRadius: Corners.medBorder),
           child: Text(
             value,
           ),
@@ -148,15 +150,20 @@ class _UserStatsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const IntrinsicHeight(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _StatsButton(icon: Ionicons.share, title: "2"),
-          _StatsButton(icon: Ionicons.download, title: "50"),
-          _StatsButton(icon: Ionicons.heart, title: "46"),
-          _StatsButton(icon: Ionicons.heart_dislike, title: "5"),
-        ],
+    return IntrinsicHeight(
+      child: DecoratedContainer(
+        // borderRadius: Corners.med,
+        // padding: EdgeInsets.all(Insets.med),
+        // color: Theme.of(context).colorScheme.tertiaryContainer,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _StatsButton(icon: Ionicons.share, title: "2"),
+            // _StatsButton(icon: Ionicons.download, title: "50"),
+            _StatsButton(icon: Ionicons.heart, title: "46"),
+            _StatsButton(icon: Ionicons.heart_dislike, title: "5"),
+          ],
+        ),
       ),
     );
   }
@@ -169,18 +176,19 @@ class _StatsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+    return Row(
       children: [
         CircleAvatar(
           radius: 16,
-          backgroundColor: Colors.black87,
-          foregroundColor: tWhiteColor,
+          backgroundColor: colorScheme.onSurface,
+          foregroundColor: colorScheme.onPrimary,
           child: Icon(
             icon,
             size: 16,
           ),
         ),
-        kVSpacingQuarter,
+        HSpace.med,
         Text(title)
       ],
     );

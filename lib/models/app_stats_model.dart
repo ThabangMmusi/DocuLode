@@ -38,10 +38,10 @@ List<AppStatsModel> tempStats() {
       color: Color.fromARGB(255, 252, 199, 119),
       icon: Ionicons.heart,
     ),
-    const AppStatsModel(
-        title: "Current Users",
-        counts: 3300,
-        color: Color.fromARGB(255, 159, 197, 97),
-        icon: Ionicons.person),
+    // const AppStatsModel(
+    //     title: "Current Users",
+    //     counts: 3300,
+    //     color: Color.fromARGB(255, 159, 197, 97),
+    //     icon: Ionicons.person),
   ];
 }

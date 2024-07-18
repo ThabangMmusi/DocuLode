@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -45,17 +42,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyAsQTEqU_9yvKvKuXhqv8NntPMEmo3SDsw',
-    appId: '1:830312586949:web:beadb0243c7f3084269aac',
+    appId: '1:830312586949:web:2dd7224c44f7c301269aac',
     messagingSenderId: '830312586949',
     projectId: 'spushare-2023',
     authDomain: 'spushare-2023.firebaseapp.com',
     storageBucket: 'spushare-2023.appspot.com',
-    measurementId: 'G-T16E2ZT312',
+    measurementId: 'G-3WE3XSBMWP',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCPVt361KUEBiQp2Sl-md1g712wSiggvO4',
-    appId: '1:830312586949:android:1812b7ede71c1c59269aac',
+    appId: '1:830312586949:android:156af1f80c3e2b25269aac',
     messagingSenderId: '830312586949',
     projectId: 'spushare-2023',
     storageBucket: 'spushare-2023.appspot.com',
@@ -63,13 +60,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAj9yuIHhxBWnEo1UyZbWPDt07ctBToyGk',
-    appId: '1:830312586949:ios:069d8f88f87a7441269aac',
+    appId: '1:830312586949:ios:590fe652e5f243a3269aac',
     messagingSenderId: '830312586949',
     projectId: 'spushare-2023',
     storageBucket: 'spushare-2023.appspot.com',
-    iosClientId:
-        '830312586949-2452d4p2h0pguaa2a04hqdqqik37gqms.apps.googleusercontent.com',
-    iosBundleId: 'com.example.spuShare',
+    androidClientId: '830312586949-30po7899i95jj82p5h5r4gra4oi5k69m.apps.googleusercontent.com',
+    iosClientId: '830312586949-igs9r5kncjvb0ge13k39v2259o6imrem.apps.googleusercontent.com',
+    iosBundleId: 'com.rva.itsshared',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -82,4 +79,15 @@ class DefaultFirebaseOptions {
         '830312586949-2452d4p2h0pguaa2a04hqdqqik37gqms.apps.googleusercontent.com',
     iosBundleId: 'com.example.spuShare',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyAsQTEqU_9yvKvKuXhqv8NntPMEmo3SDsw',
+    appId: '1:830312586949:web:2dd7224c44f7c301269aac',
+    messagingSenderId: '830312586949',
+    projectId: 'spushare-2023',
+    authDomain: 'spushare-2023.firebaseapp.com',
+    storageBucket: 'spushare-2023.appspot.com',
+    measurementId: 'G-3WE3XSBMWP',
+  );
+
 }
