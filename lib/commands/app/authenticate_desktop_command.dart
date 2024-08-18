@@ -37,10 +37,10 @@ class AuthenticateDesktopCommand extends BaseAppCommand {
   }
 
   Future<void> openLoginTab() async {
-    var _url = Uri.parse("http://localhost:23429/auth/web-auth");
-    if (!await launchUrl(_url)) {
+    var url = Uri.parse("http://localhost:23429/auth/web-auth");
+    if (!await launchUrl(url)) {
       log("Could not launch");
-      throw Exception('Could not launch $_url');
+      throw Exception('Could not launch $url');
     }
   }
 }

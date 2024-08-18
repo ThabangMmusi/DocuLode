@@ -1,9 +1,10 @@
-import 'package:firedart/firedart.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:its_shared/features/setup/data/models/module_model/module_model.dart';
 
-import '../../commands/files/pick_file_command.dart';
-import '../../models/app_user/app_user.dart';
-import '../../models/course_model.dart';
-import '../firebase_config.dart';
+import '../../core/core.dart';
+import '../../core/common/models/app_user/app_user.dart';
+import '../../core/common/models/course_model.dart';
+import '../../features/setup/data/models/course_model/course_model.dart';
 import 'firebase_rest_api.dart';
 import 'firebase_service.dart';
 
@@ -91,16 +92,29 @@ class DartFirebaseService extends FirebaseService {
   //  Course Details
   //////////////////////////////////////////////////
   @override
-  Future<CourseModel?> getCourseDetails() async {
+  Future<CourseDetailsModel?> getCourseDetails() async {
     try {
       var classID = currentUser!.classId;
       var courseMap = await firebase.getDoc("courses/$classID");
       courseMap!["id"] = classID;
-      return CourseModel.fromJson(courseMap);
+      return CourseDetailsModel.fromJson(courseMap);
     } catch (e) {
       print("courses from firebase: $e");
     }
     return null;
+  }
+
+  @override
+  Future<List<CourseModel>> getAllCourses() async {
+    return [];
+  }
+
+  @override
+  Future<List<ModuleModel>> getSortedModules({
+    required int maxLevel,
+    required String courseId,
+  }) async {
+    return [];
   }
 
   /// //////////////////////////////
@@ -200,8 +214,8 @@ class DartFirebaseService extends FirebaseService {
   // Files - uploads
   //////////////////////////////////////////////////
   @override
-  Future<void> uploadFile(PickedFile pickedFile) async {
-    final path = "${currentUser?.uid}/uploads/${pickedFile.name}";
+  Stream<double> uploadFile(String name, [String? path, XFile? asset]) async* {
+    // final path = "${currentUser?.uid}/uploads/$name";
     // final file = File(pickedFile.path);
     final user = currentUser;
     try {
@@ -212,11 +226,11 @@ class DartFirebaseService extends FirebaseService {
       // var data = await pickedFile.asset?.readAsBytes();
       // UploadTask uploadTask = ref.putData(data!);
       // firebase.getDoc(docID)
-      firebase.uploadFile(pickedFile);
+      // firebase.uploadFile(pickedFile);
       // final snapshot = await uploadTask.whenComplete(() {});
       // final downloadLink = await snapshot.ref.getDownloadURL();
       final Map<String, dynamic> data2 = {
-        "name": pickedFile.name,
+        "name": name,
         // "moduleId": pickedFile.moduleId,
         // "url": downloadLink,
         // "type": pickedFile.type,
@@ -231,5 +245,11 @@ class DartFirebaseService extends FirebaseService {
       print('File Upload Error: $e');
       // return null;
     }
+  }
+
+  @override
+  Future<FetchedRemoteDocs> getUserUploads() {
+    // TODO: implement getUserUploads
+    throw UnimplementedError();
   }
 }

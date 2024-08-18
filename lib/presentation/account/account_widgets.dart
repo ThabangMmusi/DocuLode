@@ -3,8 +3,6 @@ import 'package:ionicons/ionicons.dart';
 
 import '../../styles.dart';
 import '../../widgets/labeled_text_input.dart';
-import 'home/view/home_view.dart';
-import '../../features/uploads/presentation/views/upload_file_view.dart';
 
 Widget searchBox() {
   return Row(

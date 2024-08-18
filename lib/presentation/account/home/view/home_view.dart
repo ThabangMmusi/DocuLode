@@ -6,7 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../../../../constants/responsive.dart';
-import '../../../../models/app_stats_model.dart';
+import '../../../../core/common/models/app_stats_model.dart';
+import '../../../../core/core.dart';
 import '../../../../styles.dart';
 import '../../shared/shared.dart';
 import '../../home/home.dart';
@@ -14,14 +15,14 @@ import '../../home/home.dart';
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate({
     required this.child,
-    this.backColor,
+    // this.backColor
   });
   final PreferredSize child;
-  final Color? backColor;
+  // final Color? backColor;
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    Color bgColor = backColor ?? Theme.of(context).colorScheme.onSecondary;
+    Color bgColor = Theme.of(context).colorScheme.onSecondary;
     return SizedBox.expand(
         child: Container(
             decoration: BoxDecoration(
@@ -85,8 +86,8 @@ class HomeView extends StatelessWidget {
       slivers: [
         SliverPersistentHeader(
             pinned: true,
-            delegate: _MySliverAppBar(
-                // event: event,
+            delegate: MySliverAppBar(
+                title: "Dashboard",
                 minTopBarHeight: minTopBarHeight,
                 maxTopBarHeight: minTopBarHeight)
             // delegate: kSliverAppbar(title: "title"),
@@ -260,9 +261,9 @@ class _AppBar extends StatelessWidget {
 
 class SearchButtonNative extends StatefulWidget {
   const SearchButtonNative({
-    Key? key,
+    super.key,
     required this.onTap,
-  }) : super(key: key);
+  });
   final VoidCallback? onTap;
 
   @override
@@ -281,7 +282,7 @@ class _SearchButtonNativeState extends State<SearchButtonNative> {
       viewHintText: hint,
       viewLeading: Row(
         children: [
-          BackButton(),
+          const BackButton(),
           searchIcon(theme),
         ],
       ),
@@ -292,7 +293,7 @@ class _SearchButtonNativeState extends State<SearchButtonNative> {
           padding:
               EdgeInsets.symmetric(vertical: Insets.sm, horizontal: Insets.med),
           decoration: BoxDecoration(
-              color: colorScheme.background, borderRadius: Corners.medBorder),
+              color: colorScheme.surface, borderRadius: Corners.medBorder),
           child: Row(children: [
             searchIcon(theme),
             Padding(
@@ -330,8 +331,8 @@ class _SearchButtonNativeState extends State<SearchButtonNative> {
 
 class SearchButton extends StatelessWidget {
   const SearchButton({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
@@ -368,102 +369,6 @@ class SearchButton extends StatelessWidget {
   }
 }
 
-class _MySliverAppBar extends SliverPersistentHeaderDelegate {
-  final double minTopBarHeight;
-  final double maxTopBarHeight;
-  _MySliverAppBar({
-    required this.minTopBarHeight,
-    required this.maxTopBarHeight,
-  });
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
-    var shrinkFactor = min(1, shrinkOffset / (maxTopBarHeight - 1));
-    var topBar = SizedBox(
-      height: max(maxTopBarHeight * (1 - shrinkFactor), maxTopBarHeight),
-      child: Stack(
-        children: [
-          Opacity(
-            opacity: shrinkFactor > 0.0 ? 1 : 0,
-            child: ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(
-                    sigmaX: 50, sigmaY: 50, tileMode: TileMode.repeated),
-                child: ClipRect(
-                  child: Container(
-                    color: colorScheme.tertiaryContainer.withOpacity(.1),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Opacity(
-            opacity: shrinkFactor > 0.0 ? 1 : 0,
-            child: ClipRect(
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: colorScheme.tertiaryContainer, width: 1.2))),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.all(Insets.lg),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // const AppBackButton(),
-
-                  Opacity(
-                    opacity: min(1, (shrinkFactor) * 1),
-                    child: Text(
-                      "Dashboard",
-                      style: TextStyles.h2,
-                    ),
-                  ),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.person)),
-
-                  // AppIconButton(
-                  //   onTap: () {},
-                  //   icon: Ionicons.bookmark_outline,
-                  // ),
-
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   children: [
-                  //     SizedBox(
-                  //       height: max(26.0 * (1 - shrinkFactor), 15),
-                  //     )
-                  //   ],
-                  // ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-    return topBar;
-  }
-
-  @override
-  double get maxExtent => maxTopBarHeight;
-  @override
-  double get minExtent => minTopBarHeight;
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
-}
-
 class kSliverAppbar extends SliverPersistentHeaderDelegate {
   final double minTopBarHeight = 100;
   final double maxTopBarHeight = 320;
@@ -495,6 +400,19 @@ class kSliverAppbar extends SliverPersistentHeaderDelegate {
         alignment: Alignment.center,
         height: max(maxTopBarHeight * (1 - shrinkFactor), minTopBarHeight),
         width: 100,
+        decoration: BoxDecoration(
+            color: Colors.amber,
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(26),
+              bottomRight: Radius.circular(26),
+            ),
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(0, 10),
+                blurRadius: 10.0,
+                color: Colors.green.withOpacity(0.3),
+              )
+            ]),
         child: Stack(
           children: [
             Center(
@@ -547,19 +465,6 @@ class kSliverAppbar extends SliverPersistentHeaderDelegate {
             ),
           ],
         ),
-        decoration: BoxDecoration(
-            color: Colors.amber,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(26),
-              bottomRight: Radius.circular(26),
-            ),
-            boxShadow: [
-              BoxShadow(
-                offset: const Offset(0, 10),
-                blurRadius: 10.0,
-                color: Colors.green.withOpacity(0.3),
-              )
-            ]),
       ),
     );
     return SizedBox(
@@ -576,8 +481,6 @@ class kSliverAppbar extends SliverPersistentHeaderDelegate {
               ),
               child: Container(
                 alignment: Alignment.center,
-                child:
-                    AbsorbPointer(absorbing: shrinkFactor > 0.5, child: child),
                 width: MediaQuery.of(context).size.width * 0.75,
                 height: 50,
                 decoration: BoxDecoration(
@@ -591,6 +494,8 @@ class kSliverAppbar extends SliverPersistentHeaderDelegate {
                             .withOpacity(0.23 - (0.23 * shrinkFactor)),
                       )
                     ]),
+                child:
+                    AbsorbPointer(absorbing: shrinkFactor > 0.5, child: child),
               ),
             ),
           ),

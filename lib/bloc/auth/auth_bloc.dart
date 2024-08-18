@@ -4,8 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../_utils/logger.dart';
-import '../../models/app_user/app_user.dart';
-import '../../models/course_model.dart';
+import '../../core/common/models/app_user/app_user.dart';
+import '../../core/common/models/course_model.dart';
 import '../../services/firebase/firebase_service.dart';
 
 part 'auth_event.dart';
@@ -48,7 +48,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(
       event.user != null
           ? AuthState.authenticated(
-              user: event.user!, courseDetails: event.courseDetails!)
+              user: event.user!,
+              courseDetails:
+                  const CourseDetailsModel(code: "", name: "", year: ""))
+          // user: event.user!, courseDetails: event.courseDetails!)
           : const AuthState.unauthenticated(),
     );
   }

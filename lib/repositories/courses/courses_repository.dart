@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../_utils/logger.dart';
 import '../../commands/commands.dart';
-import '../../models/course_model.dart';
+import '../../core/common/models/course_model.dart';
 
 class CoursesRepository extends BaseAppCommand {
-  late CourseModel? course;
-  Future<CourseModel?> getCourseDetails() async {
+  late CourseDetailsModel? course;
+  Future<CourseDetailsModel?> getCourseDetails() async {
     try {
       course = await firebase.getCourseDetails();
       return course;

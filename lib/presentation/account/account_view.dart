@@ -13,7 +13,6 @@ import '../../constants/responsive.dart';
 import '../../styles.dart';
 import '../../widgets/category_button.dart';
 import '../../widgets/decorated_container.dart';
-import '../app_logo.dart';
 import '../app_title_bar/app_title_bar.dart';
 import 'account_widgets.dart';
 import 'profile/profile_view.dart';
@@ -316,12 +315,12 @@ class CourseCategory extends StatelessWidget {
         surfaceTintColor: Colors.amber,
         child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: course.modules!.length,
+            itemCount: course.modules.length,
             separatorBuilder: (context, index) => kHSpacingHalf,
             itemBuilder: (listContext, index) => CategoryButton(
                   index: index,
-                  onPressed: () => log(course.modules![index]),
-                  title: course.modules![index],
+                  onPressed: () => log(course.modules[index]),
+                  title: course.modules[index],
                 )));
   }
 }

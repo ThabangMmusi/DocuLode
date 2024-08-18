@@ -1,6 +1,4 @@
-import 'package:cloudinary_public/cloudinary_public.dart';
 
-import '../../_utils/logger.dart';
 import '../commands.dart';
 import 'pick_file_command.dart';
 

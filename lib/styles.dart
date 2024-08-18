@@ -49,6 +49,10 @@ class Corners {
   static const double lg = 12;
   static const BorderRadius lgBorder = BorderRadius.all(lgRadius);
   static const Radius lgRadius = Radius.circular(lg);
+
+  static const double xl = 16;
+  static const Radius xlRadius = Radius.circular(xl);
+  static const BorderRadius xlBorder = BorderRadius.all(xlRadius);
 }
 
 class Strokes {
@@ -75,7 +79,7 @@ class Shadows {
 class VSpace extends StatelessWidget {
   final double size;
 
-  const VSpace(this.size, {Key? key}) : super(key: key);
+  const VSpace(this.size, {super.key});
 
   @override
   Widget build(BuildContext context) => SizedBox(height: size);
@@ -90,7 +94,7 @@ class VSpace extends StatelessWidget {
 class HSpace extends StatelessWidget {
   final double size;
 
-  const HSpace(this.size, {Key? key}) : super(key: key);
+  const HSpace(this.size, {super.key});
 
   @override
   Widget build(BuildContext context) => SizedBox(width: size);
@@ -107,6 +111,7 @@ class HSpace extends StatelessWidget {
 class FontSizes {
   /// Provides the ability to nudge the app-wide font scale in either direction
   static double get scale => 1;
+  static double get s8 => 8 * scale;
   static double get s10 => 10 * scale;
   static double get s11 => 11 * scale;
   static double get s12 => 12 * scale;
@@ -118,8 +123,8 @@ class FontSizes {
 
 /// Fonts - A list of Font Families, this is uses by the TextStyles class to create concrete styles.
 class Fonts {
-  static const String raleway = "Raleway";
-  static const String fraunces = "Fraunces";
+  static const String poppins = "Poppins";
+  // static const String fraunces = "Fraunces";
 }
 
 /// TextStyles - All the core text styles for the app should be declared here.
@@ -128,12 +133,12 @@ class Fonts {
 /// `newStyle = TextStyles.body1.copyWith(lineHeight: 2, color: Colors.red)`
 class TextStyles {
   /// Declare a base style for each Family
-  static const TextStyle raleway = TextStyle(
-      fontFamily: Fonts.raleway, fontWeight: FontWeight.w400, height: 1);
-  static const TextStyle fraunces = TextStyle(
-      fontFamily: Fonts.fraunces, fontWeight: FontWeight.w400, height: 1);
+  static const TextStyle poppins = TextStyle(
+      fontFamily: Fonts.poppins, fontWeight: FontWeight.w400, height: 1);
+  // static const TextStyle fraunces = TextStyle(
+  //     fontFamily: Fonts.fraunces, fontWeight: FontWeight.w400, height: 1);
 
-  static TextStyle get h1 => fraunces.copyWith(
+  static TextStyle get h1 => poppins.copyWith(
       fontWeight: FontWeight.w700,
       fontSize: FontSizes.s32,
       letterSpacing: -1,
@@ -142,28 +147,35 @@ class TextStyles {
       h1.copyWith(fontSize: FontSizes.s24, letterSpacing: -.5, height: 1.16);
   static TextStyle get h3 =>
       h1.copyWith(fontSize: FontSizes.s16, letterSpacing: .05, height: 1.29);
-  static TextStyle get title1 => raleway.copyWith(
+  static TextStyle get title1 => poppins.copyWith(
       fontWeight: FontWeight.bold, fontSize: FontSizes.s16, height: 1.31);
   static TextStyle get title2 => title1.copyWith(
       fontWeight: FontWeight.w500, fontSize: FontSizes.s14, height: 1.36);
-  static TextStyle get body1 => raleway.copyWith(
-      fontWeight: FontWeight.normal, fontSize: FontSizes.s14, height: 1.71);
-  static TextStyle get body2 =>
-      body1.copyWith(fontSize: FontSizes.s12, height: 1.5, letterSpacing: .2);
+  static TextStyle get body1 => poppins.copyWith(
+      fontWeight: FontWeight.normal, fontSize: FontSizes.s16, height: 1.71);
+  static TextStyle get body2 => body1.copyWith(
+      fontSize: FontSizes.s14,
+      fontWeight: FontWeight.w500,
+      height: 1.5,
+      letterSpacing: .2);
   static TextStyle get body3 => body1.copyWith(
-      fontSize: FontSizes.s12, height: 1.5, fontWeight: FontWeight.bold);
+      fontSize: FontSizes.s12, height: 1.5, fontWeight: FontWeight.w600);
   static TextStyle get body4 => body1.copyWith(
       height: 1.18,
-      fontSize: FontSizes.s10,
+      fontSize: FontSizes.s11,
       fontWeight: FontWeight.w500,
       letterSpacing: .2);
-  static TextStyle get callout1 => raleway.copyWith(
+  static TextStyle get callout1 => poppins.copyWith(
       fontWeight: FontWeight.w800,
       fontSize: FontSizes.s12,
       height: 1.17,
       letterSpacing: .5);
   static TextStyle get callout2 =>
       callout1.copyWith(fontSize: FontSizes.s10, height: 1, letterSpacing: .25);
-  static TextStyle get caption => raleway.copyWith(
-      fontWeight: FontWeight.w500, fontSize: FontSizes.s11, height: 1.36);
+  static TextStyle get caption => poppins.copyWith(
+      color: Colors.grey[400],
+      fontWeight: FontWeight.w400,
+      fontSize: FontSizes.s8,
+      letterSpacing: .25,
+      height: 1.36);
 }

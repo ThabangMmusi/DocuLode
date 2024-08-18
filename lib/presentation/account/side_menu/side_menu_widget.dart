@@ -11,7 +11,6 @@ import '../../../constants/app_text.dart';
 import '../../../styles.dart';
 import '../../../widgets/my_button.dart';
 import '../account_widgets.dart';
-import '../../../features/uploads/presentation/upload_file_dialog.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({super.key, required this.selected, required this.onTap});
@@ -54,7 +53,7 @@ class SideMenu extends StatelessWidget {
 
                   ///fix the trailing
                   trailing: InkWell(
-                    child: Icon(Ionicons.add_circle_outline),
+                    child: const Icon(Ionicons.add_circle_outline),
                     onTap: () {},
                   ),
                 )

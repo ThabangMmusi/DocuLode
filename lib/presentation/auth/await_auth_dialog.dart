@@ -83,7 +83,6 @@ class _AwaitAuthDialogState extends State<AwaitAuthDialog>
                                   ..onTap = () async {
                                     await AuthenticateDesktopCommand()
                                         .openLoginTab();
-                                    ;
                                   }),
                           ],
                         ),
@@ -93,7 +92,8 @@ class _AwaitAuthDialogState extends State<AwaitAuthDialog>
                 );
         },
       ),
-      constraints: const BoxConstraints(maxHeight: 280, maxWidth: 500),
+      //todo: verify if constraints are still required on this desktop and also manage them;
+      // constraints: const BoxConstraints(maxHeight: 280, maxWidth: 500),
     );
   }
 }

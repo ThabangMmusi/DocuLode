@@ -145,7 +145,7 @@ Future<Uint8List> generateMembershipFormFilled(List<String> data,
                       border: pw.Border.all(width: 2),
                     ),
                     child: pw.Center(
-                        child: pw.Text("Ticket #" + e,
+                        child: pw.Text("Ticket #$e",
                             style: pw.TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)))))
                 .toList()),

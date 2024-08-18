@@ -1,24 +1,25 @@
 import 'dart:async';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:its_shared/features/setup/data/models/module_model/module_model.dart';
 
 import '../../_utils/device_info.dart';
 import '../../_utils/logger.dart';
-import '../../commands/app/set_current_user_command.dart';
-import '../../commands/files/pick_file_command.dart';
-import '../../models/app_user/app_user.dart';
-import '../../models/course_model.dart';
+import '../../core/core.dart';
+import '../../core/common/models/app_user/app_user.dart';
+import '../../core/common/models/course_model.dart';
+import '../../features/setup/data/models/course_model/course_model.dart';
 import 'firebase_service_firedart.dart';
 import 'firebase_service_native.dart';
 
 // CollectionKeys
 class FireIds {
   static const String users = "users";
-  static const String books = "books";
-  static const String pages = "pages";
-  static const String pageBoxes = "boxes";
-  static const String scraps = "scraps";
+  static const String uploads = "uploads";
+  static const String courses = "courses";
+  static const String modules = "modules";
 }
 
 // Returns the correct Firebase instance depending on platform
@@ -60,7 +61,7 @@ abstract class FirebaseService {
   FirebaseService() {
     onUserChanged = _controller.stream;
   }
-  CourseModel? userCourse;
+  CourseDetailsModel? userCourse;
   String? get userId => currentUser!.uid;
   List<String> get userPath => [FireIds.users, userId ?? ""];
   /////////////////////////////////////////////////////////
@@ -107,7 +108,7 @@ abstract class FirebaseService {
     if (isDesktopAuth) {
       // AuthenticateDesktopCommand().run();
     } else {
-      SetCurrentUserCommand().run();
+      // SetCurrentUserCommand().run();
     }
     streamUserChange();
   }
@@ -121,15 +122,27 @@ abstract class FirebaseService {
   ///////////////////////////////////////////////////
   // Course Details
   //////////////////////////////////////////////////
-  Future<CourseModel?> getCourseDetails() async {
+  Future<CourseDetailsModel?> getCourseDetails() async {
     return null;
   }
 
+  Future<List<CourseModel>> getAllCourses();
+
+  Future<List<ModuleModel>> getSortedModules({
+    required int maxLevel,
+    required String courseId,
+  });
+
   ///////////////////////////////////////////////////
-  // Files - Starts
+  // DOCUMENTS
   //////////////////////////////////////////////////
-  Future<bool> addBook() async {
-    return true;
+  final int documentsPerPage = 20;
+  Future<FetchedRemoteDocs> getUserUploads();
+
+  Future<void> updateUpload(Map<String, dynamic> json) async {
+    final id = json["id"];
+    json.remove("id");
+    return await updateDoc([FireIds.uploads, id], json);
   }
 
   Future<Map<String, dynamic>?> getDoc(List<String> keys);
@@ -142,13 +155,12 @@ abstract class FirebaseService {
 
   ///////////////////////////////////////////////////
   // Files - uploads
-  //////////////////////////////////////////////////
-  Future<void> uploadFile(PickedFile file) async {}
+  Stream<double> uploadFile(String name, [String? path, XFile? asset]);
 }
 
 bool checkKeysForNull(List<String> keys) {
   if (keys.contains(null)) {
-    print("ERROR: invalid key was passed to firestore: $keys");
+    log("ERROR: invalid key was passed to firestore: $keys");
     return false;
   }
   return true;

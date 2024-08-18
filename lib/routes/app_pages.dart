@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../bloc/auth/auth_bloc.dart';
-import '../presentation/Account/account_widgets.dart';
+import '../features/setup/presentation/views/setup_view.dart';
 import '../presentation/account/account_view.dart';
 import '../presentation/account/home/home.dart';
 import '../features/uploads/presentation/views/upload_file_view.dart';
@@ -94,10 +94,10 @@ class AppRouter {
         path: Routes.splash,
         builder: (context, state) => const SplashScreen(),
       ),
-      // GoRoute(
-      //   path: Routes.signIn,
-      //   builder: (context, state) => const MyHomePage(title: "Tickets"),
-      // ),
+      GoRoute(
+        path: Routes.setup,
+        builder: (context, state) => const SetupView(),
+      ),
       GoRoute(
         path: Routes.signIn,
         builder: (context, state) => const LoginScreen(),
@@ -142,8 +142,11 @@ class AppRouter {
       if (!loggedIn) {
         return loggingIn ? null : Routes.signIn;
       }
-      if (loggingIn & !authenticating) {
-        return Routes.home;
+      if (loggedIn & !authenticating) {
+        // if (authBloc.state.courseDetails!.moduleSs.isEmpty) {
+        //   return Routes.home;
+        // }
+        return Routes.setup;
       }
       return null;
     },

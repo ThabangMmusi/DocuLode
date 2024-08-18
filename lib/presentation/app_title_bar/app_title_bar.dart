@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../_utils/device_info.dart';
 import '../../_utils/native_window_utils/window_utils.dart';
 
 class AppTitleBar extends StatelessWidget {
@@ -28,7 +27,7 @@ class _AdaptiveTitleBarContent extends StatelessWidget {
     // bool isMac = DeviceOS.isMacOS;
     // bool isMobile = DeviceOS.isMobile;
     // bool showTouchToggle = DeviceScreen.isPhone(context) == false;
-    return Stack(children: [
+    return const Stack(children: [
       // Centered TitleText
       // if (appWidth > 400) Center(child: _TitleText()),
       // Btns

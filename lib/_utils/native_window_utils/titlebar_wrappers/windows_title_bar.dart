@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 /// Native TitleBar for Windows, uses BitDojo platform
 class WindowsTitleBar extends StatelessWidget {
-  const WindowsTitleBar(this.child, {Key? key}) : super(key: key);
+  const WindowsTitleBar(this.child, {super.key});
   final Widget child;
 
   @override
@@ -12,14 +12,14 @@ class WindowsTitleBar extends StatelessWidget {
       iconNormal: Colors.black,
       mouseOver: Colors.black.withOpacity(.2),
       mouseDown: Colors.black.withOpacity(.3),
-      normal: Theme.of(context).colorScheme.background,
+      normal: Theme.of(context).colorScheme.surface,
     );
     final defaultCloseButtonColors = WindowButtonColors(
-      mouseOver: Color(0xFFD32F2F),
-      mouseDown: Color(0xFFB71C1C),
+      mouseOver: const Color(0xFFD32F2F),
+      mouseDown: const Color(0xFFB71C1C),
       iconNormal: Colors.black,
-      iconMouseOver: Color(0xFFFFFFFF),
-      normal: Theme.of(context).colorScheme.background,
+      iconMouseOver: const Color(0xFFFFFFFF),
+      normal: Theme.of(context).colorScheme.surface,
     );
     return SizedBox(
       height: 30,

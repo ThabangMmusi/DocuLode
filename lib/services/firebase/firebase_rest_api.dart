@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:file_selector/file_selector.dart';
+
 import '../../_utils/logger.dart';
-import '../../commands/files/pick_file_command.dart';
 import '../firebase_config.dart';
 import 'package:http/http.dart' as http;
 
@@ -69,7 +70,7 @@ class FirebaseRestApi {
 
       return null;
     } catch (err) {
-      throw err;
+      rethrow;
     }
   }
 
@@ -96,7 +97,7 @@ class FirebaseRestApi {
 
       return null;
     } catch (err) {
-      throw err;
+      rethrow;
     }
   }
 
@@ -126,7 +127,7 @@ class FirebaseRestApi {
       }
       return false;
     } catch (err) {
-      throw err;
+      rethrow;
     }
   }
 
@@ -157,7 +158,7 @@ class FirebaseRestApi {
       }
     } catch (err) {
       print('getNotes catch $err');
-      throw (err);
+      rethrow;
     }
   }
 
@@ -217,10 +218,10 @@ class FirebaseRestApi {
   ///firebase STORAGE
   //////////////////////////////////////
 
-  Future<Map?> uploadFile(PickedFile file) async {
-    String? file2upload = file.path;
+  Future<Map?> uploadFile(String name, [String? path, XFile? asset]) async {
+    String? file2upload = path;
     String bucket = _config.storageBucket;
-    String storagePath = '$_currentUserId/uploads/${file.name}';
+    String storagePath = '$_currentUserId/uploads/$name';
     // .replaceAll('/', '%2F');
     String url2file =
         'https://firebasestorage.googleapis.com/v0/b/$bucket/o/$storagePath';

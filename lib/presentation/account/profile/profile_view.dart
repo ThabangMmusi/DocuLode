@@ -114,8 +114,8 @@ class UserCourseWidget extends StatelessWidget {
               valueBuilder("Course", course.name),
               valueBuilder("Course Code", course.code),
               valueBuilder("Course Year", "${course.year} year"),
-              valueBuilder("School", course.schoolFullName),
-              valueBuilder("Total Modules", course.modules!.length.toString()),
+              // valueBuilder("School", course.schoolFullName),
+              valueBuilder("Total Modules", course.modules.length.toString()),
             ],
           );
   }
@@ -150,7 +150,7 @@ class _UserStatsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
+    return const IntrinsicHeight(
       child: DecoratedContainer(
         // borderRadius: Corners.med,
         // padding: EdgeInsets.all(Insets.med),

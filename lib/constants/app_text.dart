@@ -1,7 +1,7 @@
 /* -- App Text Strings -- */
 
 // -- GLOBAL Texts
-const String tAppName = "itsShared";
+const String tAppName = "DocuLode";
 const String tAppSlogan = "Access, Share and Save";
 const String tAppVersion = "Beta Version";
 const String tNext = "Next";

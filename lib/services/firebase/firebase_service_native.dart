@@ -1,17 +1,17 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:its_shared/_utils/logger.dart';
+import 'package:its_shared/core/core.dart';
 
-import '../../commands/files/pick_file_command.dart';
+import '../../features/setup/data/models/course_model/course_model.dart';
+import '../../features/setup/data/models/module_model/module_model.dart';
 import '../../firebase_options.dart';
-import '../../models/app_user/app_user.dart';
-import '../../models/course_model.dart';
+import '../../core/common/models/app_user/app_user.dart';
+import '../../core/common/models/course_model.dart';
 import 'firebase_service.dart';
 
 class NativeFirebaseService extends FirebaseService {
@@ -95,7 +95,7 @@ class NativeFirebaseService extends FirebaseService {
       }
       return currentUser != null;
     } on FirebaseAuthMultiFactorException catch (e) {
-      log(e.message! + "hhh");
+      log("${e.message!}hhh");
       return false;
     } catch (e) {
       log(e.toString());
@@ -141,7 +141,7 @@ class NativeFirebaseService extends FirebaseService {
     super.signOut();
   }
 
-  bool _isSignedIn = false;
+  final bool _isSignedIn = false;
   @override
   bool get isSignedIn => _isSignedIn;
 
@@ -149,7 +149,7 @@ class NativeFirebaseService extends FirebaseService {
   //  Course Details
   //////////////////////////////////////////////////
   @override
-  Future<CourseModel?> getCourseDetails() async {
+  Future<CourseDetailsModel?> getCourseDetails() async {
     try {
       var course = await firestore
           .collection("courses")
@@ -158,7 +158,7 @@ class NativeFirebaseService extends FirebaseService {
           .then((snapshot) {
         var courseMap = snapshot.data();
         courseMap!["id"] = snapshot.id;
-        return CourseModel.fromJson(courseMap);
+        return CourseDetailsModel.fromJson(courseMap);
       });
       return course;
     } catch (e) {
@@ -167,29 +167,75 @@ class NativeFirebaseService extends FirebaseService {
     return null;
   }
 
-  // Streams
   @override
-  Stream<Map<String, dynamic>>? getDocStream(List<String> keys) {
-    return null;
-
-    // return _getDoc(keys)?.snapshots().map((doc) {
-    //   final data = doc.data() ?? Map<String, dynamic>(){};
-    //   return data..['documentId'] = doc.id;
-    // });
+  Future<List<CourseModel>> getAllCourses() async {
+    try {
+      final course = await firestore.collection(FireIds.courses).get();
+      return course.docs
+          .map((doc) => CourseModel.fromJson(doc.data()).copyWith(id: doc.id))
+          .toList();
+    } catch (e) {
+      print("courses from firebase: $e");
+    }
+    return [];
   }
 
   @override
-  Stream<List<Map<String, dynamic>>>? getListStream(List<String> keys) {
-    return null;
+  Future<List<ModuleModel>> getSortedModules({
+    required int maxLevel,
+    required String courseId,
+  }) async {
+    try {
+      final course = await firestore
+          .collection(FireIds.modules)
+          .where(FireIds.courses, arrayContains: courseId)
+          .where("level", isLessThanOrEqualTo: maxLevel)
+          .get();
+      return course.docs
+          .map((doc) => ModuleModel.fromJson(doc.data()).copyWith(id: doc.id))
+          .toList();
+    } catch (e) {
+      print("courses from firebase: $e");
+    }
+    return [];
+  }
 
-    // return _getCollection(keys)?.snapshots().map(
-    //   (QuerySnapshot snapshot) {
-    //     return snapshot.docs.map((d) {
-    //       final data = d.data();
-    //       return data..['documentId'] = d.id;
-    //     }).toList();
-    //   },
-    // );
+///////////////////////////////////////////////////
+  // DOCUMENTS
+  //////////////////////////////////////////////////
+
+  DocumentSnapshot? lastDocument;
+  @override
+  Future<FetchedRemoteDocs> getUserUploads() async {
+    try {
+      Query query = firestore
+          .collection(FireIds.uploads)
+          .where("uid", isEqualTo: currentUid)
+          .orderBy("uploaded", descending: true)
+          .limit(documentsPerPage);
+
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument!);
+      }
+
+      final querySnapshot = await query.get();
+      final documents = querySnapshot.docs;
+
+      if (documents.isNotEmpty) {
+        lastDocument = documents.last;
+      }
+      return FetchedRemoteDocs(
+        docs: documents
+            .map((doc) =>
+                RemoteDocModel.fromJson(doc.data() as Map<String, dynamic>))
+            .toList(),
+        hasMore: documents.length == documentsPerPage,
+      );
+    } catch (e) {
+      logError(e.toString());
+      ServerException(e.toString());
+      return FetchedRemoteDocs();
+    }
   }
 
   @override
@@ -207,7 +253,6 @@ class NativeFirebaseService extends FirebaseService {
   }
 
   Stream<AppUser?> get user {
-    var authUsers = auth.authStateChanges();
     var user = auth.currentUser;
     var currentUser = firestore
         .collection("users")
@@ -239,35 +284,21 @@ class NativeFirebaseService extends FirebaseService {
   // Files - uploads
   //////////////////////////////////////////////////
   @override
-  Future<void> uploadFile(PickedFile pickedFile) async {
-    final path = "${currentUser?.uid}/uploads/${pickedFile.name}";
-    // final file = File(pickedFile.path);
-    final user = currentUser;
+  Stream<double> uploadFile(String name, [String? path, XFile? asset]) async* {
     try {
-      // String mimeType = pickedFile.asset!.mimeType!;
-      // var metaData = UploadMetadata(contentType: mimeType);
-
-      final ref = fireStorage.ref().child(path);
-      // var data = await pickedFile.asset?.readAsBytes();
-      UploadTask uploadTask = ref.putFile(File(path));
-
-      final snapshot = await uploadTask.whenComplete(() {});
-      final downloadLink = await snapshot.ref.getDownloadURL();
-      final Map<String, dynamic> data2 = {
-        "name": pickedFile.name,
-        // "moduleId": pickedFile.moduleId,
-        "url": downloadLink,
-        // "type": pickedFile.type,
-        "classId": user!.classId,
-        "likes": <String>[],
-        "dislikes": <String>[],
-        "downloads": <String>[],
-      };
-      await firestore.collection("uploads").add(data2);
-      // return downloadLink;
-    } catch (e) {
-      print('File Upload Error: $e');
-      // return null;
+      var data = await asset?.readAsBytes();
+      final uploadTask =
+          fireStorage.ref('uploads/${currentUid!}/$name').putData(
+                data!,
+                SettableMetadata(customMetadata: {'uid': currentUid!}),
+              );
+      await for (var event in uploadTask.snapshotEvents) {
+        double progress = event.bytesTransferred / event.totalBytes;
+        log("$name : $progress");
+        yield progress;
+      }
+    } on FirebaseException catch (e) {
+      throw ServerException(e.toString());
     }
   }
 }

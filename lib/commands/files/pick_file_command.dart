@@ -1,6 +1,4 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:file_selector/file_selector.dart';
-import 'package:flutter/material.dart';
 
 import '../../_utils/device_info.dart';
 import '../commands.dart';

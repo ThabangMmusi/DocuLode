@@ -15,7 +15,7 @@ class AuthUserChanged extends AuthEvent {
   const AuthUserChanged({this.user, this.courseDetails});
 
   final AppUser? user;
-  final CourseModel? courseDetails;
+  final CourseDetailsModel? courseDetails;
   // final User? authUser;
 
   @override

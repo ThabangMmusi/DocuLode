@@ -8,5 +8,8 @@ class LocalDoc {
   });
   final String? path;
   final String name;
+
+  /// the actual file containing bytes and other stuff
+  /// used only my mobile and web
   final XFile? asset;
 }

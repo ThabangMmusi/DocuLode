@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../models/app_user/app_user.dart';
+import '../../core/common/models/app_user/app_user.dart';
 import 'base_user_repository.dart';
 
 class UserRepository extends BaseUserRepository {

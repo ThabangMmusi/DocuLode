@@ -23,7 +23,7 @@ class UploadProgressView extends StatelessWidget {
         borderRadius: Corners.lgBorder,
         boxShadow: Shadows.universal,
       ),
-      //todo: make sure the list view dont overlap
+      //todo: make sure the list view don't overlap
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -67,10 +67,10 @@ class UploadProgressView extends StatelessWidget {
               height: 1,
             ),
             SizedBox(
-              height: state.itemsCount >= 5 ? 60 * 5 : state.itemsCount * 60,
+              height: state.itemsCount >= 5 ? 65 * 5 : null,
               child: ListView.separated(
                 padding: EdgeInsets.symmetric(vertical: Insets.med),
-                // shrinkWrap: true,
+                shrinkWrap: state.itemsCount >= 5 ? false : true,
                 itemCount: state.progressMap.length,
                 separatorBuilder: (context, index) => VSpace.sm,
                 itemBuilder: (context, index) {

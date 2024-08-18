@@ -12,24 +12,9 @@ class UploadFile {
   UploadFile(this.uploadFileRepository);
 
   Stream<Either<Failure, double>> upload(LocalDoc file) async* {
+    file.asset;
     yield* uploadFileRepository.uploadFile(file);
   }
-
-  // void call(UploadBlogParams params) async {
-  //   // Perform validation or any additional logic here before uploading
-  //   // You can emit events or updates using _controller
-  //   _controller.add(await blogRepository.uploadBlog(
-  //     image: params.image,
-  //     title: params.title,
-  //     content: params.content,
-  //     posterId: params.posterId,
-  //     topics: params.topics,
-  //   ));
-  // }
-
-  // void dispose() {
-  //   _controller.close();
-  // }
 }
 
 class UploadFileParams {

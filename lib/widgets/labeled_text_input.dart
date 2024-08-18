@@ -26,7 +26,8 @@ class LabeledTextInput extends StatefulWidget {
       this.radius = Corners.lgBorder,
       this.suffix,
       this.prefix,
-      this.prefixIcon});
+      this.prefixIcon,
+      this.focusNode});
 
   final String label;
   final String? text;
@@ -46,6 +47,7 @@ class LabeledTextInput extends StatefulWidget {
   final Widget? suffix;
   final Widget? prefix;
   final Widget? prefixIcon;
+  final FocusNode? focusNode;
 
   @override
   _LabeledTextInputState createState() => _LabeledTextInputState();
@@ -55,7 +57,8 @@ class _LabeledTextInputState extends State<LabeledTextInput> {
   bool _viewPassword = true;
   @override
   Widget build(BuildContext context) {
-    VisualDensity visualDensity = Theme.of(context).visualDensity;
+    ThemeData theme = Theme.of(context);
+    ColorScheme colorScheme = theme.colorScheme;
     return Theme(
       data: Theme.of(context),
       child: Column(
@@ -65,16 +68,18 @@ class _LabeledTextInputState extends State<LabeledTextInput> {
           if (StringUtils.isNotEmpty(widget.label)) ...[
             UiText(
                 text: widget.label,
-                style: widget.labelStyle ?? TextStyles.caption),
-            kVSpacingHalf,
+                style: widget.labelStyle ?? theme.textTheme.bodyMedium),
+            VSpace.xs,
           ],
           // TextField
           TextFormField(
+            focusNode: widget.focusNode,
             controller: widget.controller,
             autofillHints: widget.autofillHints,
             inputFormatters: [
               LengthLimitingTextInputFormatter(widget.maxLength),
             ],
+            textInputAction: TextInputAction.done,
             onFieldSubmitted: widget.onSubmit,
             onChanged: widget.onChanged,
             initialValue: widget.text,
@@ -84,56 +89,34 @@ class _LabeledTextInputState extends State<LabeledTextInput> {
             maxLines: widget.numLines,
             obscureText: widget.obscureText,
             decoration: InputDecoration(
-                hintText: widget.hintText ?? "",
-                hintStyle: (widget.style ?? TextStyles.body2)
-                    .copyWith(color: Theme.of(context).colorScheme.tertiary),
-                prefix: widget.prefix,
-                prefixIcon: widget.prefixIcon,
-                suffixIcon: widget.obscureText || widget.suffix != null
-                    ? ExcludeFocus(
-                        child: widget.suffix != null
-                            ? widget.suffix!
-                            : SizedBox(
-                                height: 20,
-                                child: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _viewPassword = !_viewPassword;
-                                      });
-                                    },
-                                    color: Theme.of(context)
-                                        .primaryColor
-                                        .withAlpha(_viewPassword ? 75 : 255),
-                                    icon: const Icon(
-                                      Icons.visibility,
-                                      size: 18,
-                                    ))),
-                      )
-                    : null,
-                filled: widget.filled,
-                fillColor: Theme.of(context).colorScheme.tertiary,
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: Corners.lgBorder,
-                    borderSide: BorderSide(
-                        color: widget.filled
-                            ? Theme.of(context).colorScheme.background
-                            : Theme.of(context).colorScheme.tertiary,
-                        width: 1,
-                        style: BorderStyle.solid)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: Corners.lgBorder,
-                    borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
-                        width: 1,
-                        style: BorderStyle.solid)),
-                contentPadding: EdgeInsets.only(
-                  left: Insets.med,
-                  right: Insets.med,
-                  top: 0,
-                  bottom: 0,
-                ),
-                constraints: const BoxConstraints(maxHeight: 42),
-                isDense: false),
+              hintText: widget.hintText ?? "",
+              hintStyle: (widget.style ?? TextStyles.body2)
+                  .copyWith(color: Theme.of(context).colorScheme.tertiary),
+              prefix: widget.prefix,
+              prefixIcon: widget.prefixIcon,
+              suffixIcon: widget.obscureText || widget.suffix != null
+                  ? ExcludeFocus(
+                      child: widget.suffix != null
+                          ? widget.suffix!
+                          : SizedBox(
+                              height: 20,
+                              child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _viewPassword = !_viewPassword;
+                                    });
+                                  },
+                                  color: Theme.of(context)
+                                      .primaryColor
+                                      .withAlpha(_viewPassword ? 75 : 255),
+                                  icon: const Icon(
+                                    Icons.visibility,
+                                    size: 18,
+                                  ))),
+                    )
+                  : null,
+              filled: widget.filled,
+            ),
           ),
         ],
       ),

@@ -3,11 +3,10 @@ import 'package:ionicons/ionicons.dart';
 import 'package:its_shared/presentation/app_title_bar/app_title_bar.dart';
 import 'package:its_shared/styles.dart';
 
-import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
 import 'loading_widget.dart';
-import 'page_content_header.dart';
 
+//todo : clean codebase
 class CustomDialogNew extends StatelessWidget {
   final String? header;
   final String? subHeader;
@@ -17,7 +16,6 @@ class CustomDialogNew extends StatelessWidget {
   final bool isLoading;
   final bool showCloseButton;
   final String? initializingText, loadingText;
-  final BoxConstraints constraints;
   final VoidCallback? onClose;
   final Widget? trailing;
   const CustomDialogNew(
@@ -30,7 +28,6 @@ class CustomDialogNew extends StatelessWidget {
       this.initializingText,
       this.isLoading = false,
       this.loadingText,
-      required this.constraints,
       this.onClose,
       this.trailing,
       this.showCloseButton = false});
@@ -54,8 +51,6 @@ class CustomDialogNew extends StatelessWidget {
             shadowColor: Colors.transparent,
             insetPadding: EdgeInsets.zero,
             elevation: 0,
-            // shape: const RoundedRectangleBorder(
-            // ),
             child: Column(
               children: [
                 const AppTitleBar(),
@@ -68,7 +63,7 @@ class CustomDialogNew extends StatelessWidget {
   Widget dialogContent(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: Corners.medBorder,
       ),
       child: Stack(
@@ -89,43 +84,31 @@ class CustomDialogNew extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(
-                    constraints: BoxConstraints(maxWidth: constraints.maxWidth),
-                    padding: const EdgeInsets.only(left: kPaddingHalf),
-                    child: Row(
-                      children: [
-                        if (header != null)
-                          Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: kPaddingHalf, bottom: 3),
-                              child: PageContentHeader(
-                                header: header!,
-                                subHeader: subHeader,
-                              ),
-                            ),
-                          ),
-                        if (trailing != null) trailing!
-                      ],
-                    )),
-              ]),
-              Column(
+              Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.only(
-                        left: kPaddingHalf, right: kPaddingHalf),
-                    constraints: constraints,
-                    child: content,
-                  ),
-                  if (footer != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: kPaddingHalf),
-                      child: footer,
+                  if (header != null)
+                    Flexible(
+                      child: Padding(
+                        padding: EdgeInsets.all(Insets.xl),
+                        child: Text(
+                          header!,
+                          style: TextStyles.h2,
+                        ),
+                      ),
                     ),
+                  if (trailing != null) trailing!
                 ],
               ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: Insets.xl),
+                child: content,
+              ),
+              if (footer != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: kPaddingHalf),
+                  child: footer,
+                ),
             ],
           ),
           if (isLoading)
