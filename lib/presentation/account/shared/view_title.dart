@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:its_shared/animated/animated.dart';
 
 import '../../../styles.dart';
 

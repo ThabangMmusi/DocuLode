@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -27,12 +28,40 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>its_shared</title>
   <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/build/pdf.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/build/pdf.worker.min.js";
+    pdfRenderOptions = {
+      cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.12.313/cmaps/',
+      cMapPacked: true,
+    }
+  </script>
   <script src="flutter_bootstrap.js" async></script>
+  <!-- <script  type="module" src="firebase/firebase-app.js" async></script> -->
+  <!-- <script type="module" src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+
+  <script  type="module" src="firebase/firebase-auth.js" async></script>
+  <script src="firebase/firebase-firestore.js" async></script>--?
+  <script>
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: 'AIzaSyAsQTEqU_9yvKvKuXhqv8NntPMEmo3SDsw',
+      appId: '1:830312586949:web:2dd7224c44f7c301269aac',
+      messagingSenderId: '830312586949',
+      projectId: 'spushare-2023',
+      authDomain: 'spushare-2023.firebaseapp.com',
+      storageBucket: 'spushare-2023.appspot.com',
+      measurementId: 'G-3WE3XSBMWP',
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script> -->
 </body>
+
 </html>

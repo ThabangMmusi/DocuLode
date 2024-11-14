@@ -3,14 +3,12 @@ import 'dart:async';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:its_shared/features/setup/data/models/module_model/module_model.dart';
+import 'dart:html' as html;
 
 import '../../_utils/device_info.dart';
 import '../../_utils/logger.dart';
+import '../../core/common/models/models.dart';
 import '../../core/core.dart';
-import '../../core/common/models/app_user/app_user.dart';
-import '../../core/common/models/course_model.dart';
-import '../../features/setup/data/models/course_model/course_model.dart';
 import 'firebase_service_firedart.dart';
 import 'firebase_service_native.dart';
 
@@ -18,8 +16,11 @@ import 'firebase_service_native.dart';
 class FireIds {
   static const String users = "users";
   static const String uploads = "uploads";
+  static const String course = "course";
   static const String courses = "courses";
   static const String modules = "modules";
+  static const String level = "level";
+  static const String increaseDownload = "increaseDownload";
 }
 
 // Returns the correct Firebase instance depending on platform
@@ -31,13 +32,14 @@ class FirebaseFactory {
       DeviceOS.isMobileOrWeb; // || UniversalPlatform.isMacOS;
 
   static FirebaseService create() {
-    FirebaseService service =
-        useNative ? NativeFirebaseService() : DartFirebaseService();
+    // FirebaseService service =
+    //     useNative ? NativeFirebaseService() : DartFirebaseService();
+    FirebaseService service = NativeFirebaseService();
     if (_initComplete == false) {
       _initComplete = true;
       service.init();
     }
-    print("firestore-${useNative ? "NATIVE" : "DART"} Initialized");
+    log("firestore-${useNative ? "NATIVE" : "DART"} Initialized");
     return service;
   }
 }
@@ -54,16 +56,25 @@ abstract class FirebaseService {
   final StreamController<AppUser?> _controller =
       StreamController<AppUser?>.broadcast();
   AppUser? get currentUser => _currentUser;
-  String? get currentUid => _currentUser!.uid;
+  String? get userId => currentUser!.id;
   set seCurrentUser(AppUser? newUser) => _currentUser = newUser;
   AppUser? _currentUser;
   bool isDesktopAuth = false;
   FirebaseService() {
     onUserChanged = _controller.stream;
   }
-  CourseDetailsModel? userCourse;
-  String? get userId => currentUser!.uid;
   List<String> get userPath => [FireIds.users, userId ?? ""];
+
+  // Helper method for getting a path from keys, and optionally prepending the scope (users/email)
+  String getPathFromKeys(List<String> keys, {bool addUserPath = false}) {
+    String path =
+        addUserPath ? userPath.followedBy(keys).join("/") : keys.join("/");
+    if (FirebaseFactory.useNative) {
+      return path.replaceAll("//", "/");
+    }
+    return path;
+  }
+
   /////////////////////////////////////////////////////////
   // USERS
   /////////////////////////////////////////////////////////
@@ -72,9 +83,41 @@ abstract class FirebaseService {
       Map<String, dynamic>? data = await getDoc([]);
       return data == null ? null : AppUser.fromJson(data);
     } catch (e) {
-      print(e);
+      log(e.toString());
       return null;
     }
+  }
+
+  Future<void> setNewUser(String? uid) async {
+    if (uid != null) {
+      final userMap = await getDoc([FireIds.users, uid]);
+      AppUser user = AppUser.fromJson(userMap!);
+      final userModules = user.modules;
+      List<ModuleModel> modules = await getModuleNames(userModules);
+      if (modules.isNotEmpty) {
+        user = user.copyWith(modules: modules);
+      }
+      seCurrentUser = user;
+    } else {
+      seCurrentUser = null;
+    }
+
+    userChange();
+  }
+
+  /////////////////////////////////////////////////////////
+  // MODULES
+  /////////////////////////////////////////////////////////
+  Future<List<ModuleModel>> getModuleNames(
+      List<ModuleModel>? userModules) async {
+    List<ModuleModel> modules = [];
+    if (userModules != null) {
+      for (final module in userModules) {
+        final json = await getDoc([FireIds.modules, module.id]);
+        modules.add(ModuleModel.fromJson(json!));
+      }
+    }
+    return modules;
   }
 
   ///////////////////////////////////////////////////
@@ -82,7 +125,9 @@ abstract class FirebaseService {
   //////////////////////////////////////////////////
   void init();
 
+  ///////////////////////////////////////////////////
   // Auth
+  //////////////////////////////////////////////////
   Future<bool> signInWithMicrosoft([bool reauthenticate = false]) async {
     return _currentUser != null;
   }
@@ -96,6 +141,7 @@ abstract class FirebaseService {
 
   void streamUserChange() {
     log("Streaming current user");
+
     _controller.add(currentUser);
     log("Done streaming current user");
   }
@@ -122,34 +168,128 @@ abstract class FirebaseService {
   ///////////////////////////////////////////////////
   // Course Details
   //////////////////////////////////////////////////
-  Future<CourseDetailsModel?> getCourseDetails() async {
-    return null;
+  Future<List<CourseModel>> getAllCourses() async {
+    final course = await getCollection([FireIds.courses]);
+    // const newCourse = CourseModel(id: "amAcKVBOPCZeblwjf804T3zvpXWG",
+    // duration: 3,
+    // name: "Diploma in ICT",
+    // modules: [
+    //   ModuleModel(id: "2lix5obvhr9OlYsrjg0P",level: 2,semester: 1),
+    //   ModuleModel(id: "5B1SyMXfj0cqXwDM0ibm",level: 2,semester: 1),
+    //   ModuleModel(id: "m1VSUOQpac1cl8EnIr7d",level: 2,semester: 1),
+    //   ModuleModel(id: "v7oRxsSiFqmtjPG1SaUr",level: 2,semester: 1),
+    //   ModuleModel(id: "yXvdul1lx84xKydArgJ9",level: 2,semester: 1),
+    // ]);
+    // await addDoc([FireIds.course,"amAcKVBOPCZeblwjf804T3zvpXWG"], newCourse.toJson());
+    return course?.map((doc) => CourseModel.fromJson(doc)).toList() ?? [];
   }
 
-  Future<List<CourseModel>> getAllCourses();
-
+  //todo :: add temp module to avoid re reading them again and again
   Future<List<ModuleModel>> getSortedModules({
-    required int maxLevel,
-    required String courseId,
-  });
+    int? maxLevel,
+    List<ModuleModel>? modules,
+  }) async {
+    // List<ModuleModel> modules = [];
+
+    if (maxLevel == null) {
+      maxLevel = currentUser!.level;
+      if (currentUser!.course!.modules == null) {
+        final json = await getDoc([FireIds.courses, currentUser!.course!.id]);
+        seCurrentUser = currentUser!.copyWith(
+          course: CourseModel.fromJson(json!),
+        );
+      }
+      modules = currentUser!.course!.modules!;
+    }
+    return await Future.wait(modules!
+        .where(
+      (element) => element.level! <= maxLevel!,
+    )
+        .map(
+      (e) async {
+        final json = await getDoc([FireIds.modules, e.id]);
+        return e.copyWith(name: json!["name"]);
+      },
+    ).toList());
+    // for (var e in course.modules) {
+    //   final json = await getDoc([FireIds.modules, e.id]);
+    //   modules.add(e.copyWith(name: json!["name"]));
+    // }
+    // return modules;
+  }
+
+  Future<void> updateUser(Map<String, dynamic> json) async {
+    await updateDoc(userPath, json);
+  }
 
   ///////////////////////////////////////////////////
   // DOCUMENTS
   //////////////////////////////////////////////////
+  Future<RemoteDocModel?> getUploadedFile(String id) async {
+    try {
+      Map<String, dynamic>? data = await getDoc([FireIds.uploads, id]);
+      if (data == null) {
+        return null;
+      } else {
+        final doc = RemoteDocModel.fromJson(data);
+        return doc.copyWith(modules: await getModuleNames(doc.modules));
+      }
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
   final int documentsPerPage = 20;
   Future<FetchedRemoteDocs> getUserUploads();
 
+  ///on uploads
+  final uploadsStreamController = StreamController<int>.broadcast();
+  Stream<int> get uploadsStream => uploadsStreamController.stream;
+
+  ///editing
+  final _uploadEditStreamController =
+      StreamController<RemoteDocModel>.broadcast();
+  Stream<RemoteDocModel> get uploadEditStream =>
+      _uploadEditStreamController.stream;
+
+  Future<void> addProduct(Map<String, dynamic> product) async {
+    // Add product to database
+    _updateProductStream();
+  }
+
+  void _updateProductStream() {
+    // final updatedProducts = getProductsFromDatabase();
+    // _uploadsStreamController.add(updatedProducts);
+  }
+
   Future<void> updateUpload(Map<String, dynamic> json) async {
+    //create something to work with after uploads
+    //prevent losing the id/reinserting it again
+    final edited = RemoteDocModel.fromJson(json);
     final id = json["id"];
     json.remove("id");
-    return await updateDoc([FireIds.uploads, id], json);
+    await updateDoc([FireIds.uploads, id], json);
+    final editedFinal =
+        edited.copyWith(modules: await getModuleNames(edited.modules));
+    _uploadEditStreamController.add(editedFinal);
+  }
+
+  Future<void> downloadFile(Map<String, dynamic> json) async {
+    final url = json['url'];
+    json.remove('url');
+    await addDoc([FireIds.increaseDownload], json);
+    // Use the download URL to trigger a browser download
+    html.AnchorElement(href: url)
+      ..setAttribute('download', '_blank')
+      ..click();
   }
 
   Future<Map<String, dynamic>?> getDoc(List<String> keys);
   Future<List<Map<String, dynamic>>?> getCollection(List<String> keys);
 
-  // Future<String> addDoc(List<String> keys, Map<String, dynamic> json,
-  //     {String documentId, bool addUserPath = true});
+  Future<String> addDoc(List<String> keys, Map<String, dynamic> json,
+      {String documentId, bool addUserPath = false});
   Future<void> updateDoc(List<String> keys, Map<String, dynamic> json);
   Future<void> deleteDoc(List<String> keys);
 

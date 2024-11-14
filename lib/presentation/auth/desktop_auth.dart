@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:its_shared/_utils/logger.dart';
 import 'package:protocol_handler/protocol_handler.dart';
 
 import '../../commands/app/signin_with_token_command.dart';
@@ -70,7 +71,7 @@ class _DesktopAuthScreenState extends State<DesktopAuthScreen>
                             style: TextStyles.h3.copyWith(color: Colors.black),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                print('trying again');
+                                log('trying again');
                               }),
                       ],
                     ),

@@ -32,7 +32,6 @@ class FirebaseRestApi {
   }
 
   late String _loginToken;
-  late String _refreshToken;
 
   /// Stored the currently logged in user
   late String _currentUserId;
@@ -144,20 +143,20 @@ class FirebaseRestApi {
         Map<String, dynamic> newMap = {};
         for (var key in map.keys.toList()) {
           var newValue = fireStoreParser(map[key]);
-          print(newValue);
+          log(newValue);
           newMap[key] = newValue;
         }
-        print(newMap);
+        log(newMap.toString());
 
         return newMap;
       } else {
         Map map = json.decode(response.body);
-        print(map);
+        log(map.toString());
         // throw (UserMessageException(map['error']['status']));
         return null;
       }
     } catch (err) {
-      print('getNotes catch $err');
+      log('getNotes catch $err');
       rethrow;
     }
   }

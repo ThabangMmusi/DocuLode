@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:its_shared/_utils/logger.dart';
+import 'package:its_shared/widgets/buttons/styled_buttons.dart';
 import 'package:rich_ui/rich_ui.dart';
 
-import '../../../bloc/auth/auth_bloc.dart';
+import '../../../core/bloc/auth/auth_bloc.dart';
 import '../../../constants/app_constants.dart';
 import '../../../constants/app_text.dart';
 import '../../../styles.dart';
-import '../../../widgets/my_button.dart';
 import '../account_widgets.dart';
 
 class SideMenu extends StatelessWidget {
@@ -18,71 +18,69 @@ class SideMenu extends StatelessWidget {
   final Function(BuildContext context, int index) onTap;
   @override
   Widget build(BuildContext context) {
-    final course = context.select((AuthBloc bloc) => bloc.state.courseDetails);
-    return Padding(
-      padding: EdgeInsets.all(Insets.med),
-      child: RUiSideMenu(
-        padding: EdgeInsets.symmetric(horizontal: Insets.lg),
-        decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: Corners.medBorder),
-        desktopViewWidth: 260,
-        mainItemTheme: itemsTheme(context),
-        subitemTheme: subItemsTheme(context),
-        headerBuilder: (showIconOnly) => _buildLogo2(context, showIconOnly),
-        footerBuilder: (showIconOnly) => Padding(
-          padding: EdgeInsets.only(bottom: Insets.lg),
-          child: AppButton(
-            title: 'Sign out',
-            iconToRight: true,
-            icon: Ionicons.log_out_outline,
-            outline: true,
-            onTap: () {
-              // Signing out the user
-              context.read<AuthBloc>().add(AuthLogoutRequested());
-            },
-          ),
+    final state = context.watch<AuthBloc>().state;
+    final modules = state.user!.modules!;
+    return RUiSideMenu(
+      padding: EdgeInsets.symmetric(horizontal: Insets.lg),
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: Corners.medBorder),
+      desktopViewWidth: 260,
+      mainItemTheme: itemsTheme(context),
+      subitemTheme: subItemsTheme(context),
+      headerBuilder: (showIconOnly) => _buildLogo2(context, showIconOnly),
+      footerBuilder: (showIconOnly) => Padding(
+        padding: EdgeInsets.only(bottom: Insets.lg),
+        child: SecondaryBtn(
+          label: 'Sign out',
+          leadingIcon: true,
+          icon: Ionicons.log_out_outline,
+          isCompact: true,
+          onPressed: () {
+            // Signing out the user
+            context.read<AuthBloc>().add(AuthLogoutRequested());
+          },
         ),
-        builder: () => List.generate(4, (index) {
-          return index == 2
-              ? RUiSideButton(
-                  iconData: bottomTaps[index].icon,
-                  activeIcon: bottomTaps[index].activeIcon,
-                  title: bottomTaps[index].label,
-                  onPress: onTap,
-
-                  ///fix the trailing
-                  trailing: InkWell(
-                    child: const Icon(Ionicons.add_circle_outline),
-                    onTap: () {},
-                  ),
-                )
-              : index == 3
-                  ? RUiSideButton(
-                      useExpandableMenu: true,
-                      iconData: bottomTaps[index].icon,
-                      activeIcon: bottomTaps[index].activeIcon,
-                      title: bottomTaps[index].label,
-                      onPress: onTap,
-                      items: course?.modules
-                          .map(
-                            (module) => RUiSideButton(
-                              title: module,
-                              onPress: (context, index) {
-                                log("pressed module:$module");
-                              },
-                            ),
-                          )
-                          .toList())
-                  : RUiSideButton(
-                      iconData: bottomTaps[index].icon,
-                      activeIcon: bottomTaps[index].activeIcon,
-                      title: bottomTaps[index].label,
-                      onPress: onTap,
-                    );
-        }),
-        showIconOnly: false,
       ),
+      builder: () => List.generate(4, (index) {
+        return index == 1
+            ? RUiSideButton(
+                iconData: bottomTaps[index].icon,
+                activeIcon: bottomTaps[index].activeIcon,
+                title: bottomTaps[index].label,
+                onPress: onTap,
+
+                ///fix the trailing
+                trailing: InkWell(
+                  child: const Icon(Ionicons.add_circle_outline),
+                  onTap: () {},
+                ),
+              )
+            : index == 3
+                ? RUiSideButton(
+                    useExpandableMenu: true,
+                    iconData: bottomTaps[index].icon,
+                    activeIcon: bottomTaps[index].activeIcon,
+                    title: bottomTaps[index].label,
+                    onPress: onTap,
+                    items: modules
+                        .map(
+                          (module) => RUiSideButton(
+                            title: module.name!,
+                            onPress: (context, index) {
+                              log("pressed module:$module");
+                            },
+                          ),
+                        )
+                        .toList())
+                : RUiSideButton(
+                    iconData: bottomTaps[index].icon,
+                    activeIcon: bottomTaps[index].activeIcon,
+                    title: bottomTaps[index].label,
+                    onPress: onTap,
+                  );
+      }),
+      showIconOnly: false,
     );
   }
 

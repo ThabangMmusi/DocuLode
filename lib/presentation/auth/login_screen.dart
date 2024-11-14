@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../../_utils/device_info.dart';
-import '../../bloc/auth/auth_bloc.dart';
+import '../../core/bloc/auth/auth_bloc.dart';
 import '../../commands/app/authenticate_desktop_command.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/app_text.dart';
 import '../../cubits/cubits_enum.dart';
 import '../../services/firebase/firebase_service.dart';
-import '../../widgets/my_button.dart';
+import '../../widgets/buttons/styled_buttons.dart';
 import '../app_logo.dart';
 import '../app_title_bar/app_title_bar.dart';
 import '/cubits/cubits.dart';
@@ -93,14 +93,15 @@ class _LoginButton extends StatelessWidget {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return AppButton(
-          loading: state.status == CubitStatus.submitting,
+        return PrimaryBtn(
+          loading: state.status == CubitStatus.submitting ||
+              state.status == CubitStatus.success,
           icon: DeviceOS.isDesktop
               ? Ionicons.open_outline
               : Ionicons.logo_microsoft,
-          iconToRight: DeviceOS.isDesktop,
-          title: DeviceOS.isDesktop ? tLogin : tLogInWithMicrosoft,
-          onTap: () async {
+          leadingIcon: !DeviceOS.isDesktop,
+          label: DeviceOS.isDesktop ? tLogin : tLogInWithMicrosoft,
+          onPressed: () async {
             if (DeviceOS.isMobileOrWeb) {
               context.read<LoginCubit>().logInWithCredentials(isDesktopAuth);
             } else {

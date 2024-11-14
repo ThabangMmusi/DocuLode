@@ -12,46 +12,57 @@ extension EditFileStatusX on UploadEditStatus {
 final class UploadEditState extends Equatable {
   const UploadEditState({
     this.status = UploadEditStatus.initial,
-    required this.semester,
-    this.year = 2,
     this.id = "",
     this.ext = "",
     this.name = "",
-    this.types = const [],
+    this.access = AccessType.unpublished,
+    this.type,
     this.modules = const [],
+    this.selectedModules = const [],
   });
 
   final UploadEditStatus status;
   final String id;
   final String ext;
   final String name;
-  final List<int> types;
-  final Set<int> semester;
-  final int year;
-  final List<String> modules;
+  final AccessType access;
+  final UploadCategory? type;
+  final List<Module> modules;
+  final List<Module> selectedModules;
 
   UploadEditState copyWith({
     UploadEditStatus? status,
     String? id,
     String? ext,
     String? name,
-    List<int>? types,
-    Set<int>? semester,
+    AccessType? access,
+    UploadCategory? type,
     int? year,
-    List<String>? modules,
+    List<Module>? selectedModules,
+    List<Module>? modules,
   }) {
     return UploadEditState(
-      status: status ?? this.status,
-      semester: semester ?? this.semester,
-      year: year ?? this.year,
       id: id ?? this.id,
       ext: ext ?? this.ext,
       name: name ?? this.name,
-      types: types ?? this.types,
+      type: type ?? this.type,
+      status: status ?? this.status,
+      access: access ?? this.access,
       modules: modules ?? this.modules,
+      selectedModules: selectedModules ?? this.selectedModules,
     );
   }
 
+  String get fileFullName => '$name.$ext';
   @override
-  List<Object?> get props => [status, id, name, types, modules];
+  List<Object?> get props => [
+        id,
+        ext,
+        name,
+        type,
+        status,
+        access,
+        modules,
+        selectedModules,
+      ];
 }

@@ -49,15 +49,20 @@ List<NavigationItem> get bottomTaps {
       icon: Ionicons.home_outline,
       activeIcon: Ionicons.home,
     ),
-    NavigationItem(
-      label: "Search",
-      icon: Ionicons.search_outline,
-      activeIcon: Ionicons.search,
-    ),
+    // NavigationItem(
+    //   label: "Search",
+    //   icon: Ionicons.search_outline,
+    //   activeIcon: Ionicons.search,
+    // ),
     NavigationItem(
       label: "Uploads",
       icon: Ionicons.file_tray_outline,
       activeIcon: Ionicons.file_tray,
+    ),
+    NavigationItem(
+      label: "Saved",
+      icon: Ionicons.bookmark_outline,
+      activeIcon: Ionicons.bookmark,
     ),
     NavigationItem(
       label: "Modules",

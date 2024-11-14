@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:its_shared/widgets/styled_load_spinner.dart';
 
 import '../../_utils/string_utils.dart';
 import '../../styles.dart';
@@ -12,25 +13,26 @@ class BtnColors {
   final Color? outline;
 }
 
-enum BtnTheme { Primary, Secondary, Raw }
+enum BtnTheme { primary, secondary, raw }
 
 // A core btn that takes a child and wraps it in a btn that has a FocusNode.
 // Colors are required. By default there is no padding.
 // It takes care of adding a visual indicator  when the btn is Focused.
 class RawBtn extends StatefulWidget {
-  const RawBtn(
-      {Key? key,
-      required this.child,
-      required this.onPressed,
-      this.normalColors,
-      this.hoverColors,
-      this.padding,
-      this.focusMargin,
-      this.enableShadow = true,
-      this.enableFocus = true,
-      this.ignoreDensity = false,
-      this.cornerRadius})
-      : super(key: key);
+  const RawBtn({
+    super.key,
+    required this.child,
+    required this.onPressed,
+    this.normalColors,
+    this.hoverColors,
+    this.padding,
+    this.focusMargin,
+    this.enableShadow = true,
+    this.enableFocus = true,
+    this.ignoreDensity = false,
+    this.cornerRadius,
+    this.loading = false,
+  });
   final Widget child;
   final VoidCallback? onPressed;
   final BtnColors? normalColors;
@@ -41,9 +43,10 @@ class RawBtn extends StatefulWidget {
   final bool enableFocus;
   final double? cornerRadius;
   final bool ignoreDensity;
+  final bool loading;
 
   @override
-  _RawBtnState createState() => _RawBtnState();
+  State<RawBtn> createState() => _RawBtnState();
 }
 
 class _RawBtnState extends State<RawBtn> {
@@ -70,11 +73,11 @@ class _RawBtnState extends State<RawBtn> {
 
   @override
   Widget build(BuildContext context) {
-    MaterialStateProperty<T> getMaterialState<T>(
+    WidgetStateProperty<T> getMaterialState<T>(
             {required T normal, required T hover}) =>
-        MaterialStateProperty.resolveWith<T>((Set states) {
-          if (states.contains(MaterialState.hovered)) return hover;
-          if (states.contains(MaterialState.focused)) return hover;
+        WidgetStateProperty.resolveWith<T>((Set states) {
+          if (states.contains(WidgetState.hovered)) return hover;
+          if (states.contains(WidgetState.focused)) return hover;
           return normal;
         });
     ColorScheme theme = Theme.of(context).colorScheme;
@@ -86,60 +89,69 @@ class _RawBtnState extends State<RawBtn> {
     BtnColors hoverColors = widget.hoverColors ??
         BtnColors(fg: AppTheme.focus, bg: AppTheme.focus.withOpacity(.1));
     double focusMargin = widget.focusMargin ?? -5;
-    return AnimatedOpacity(
-      duration: Times.fast,
-      opacity: widget.onPressed == null ? .7 : 1,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          /// Core Btn
-          DecoratedContainer(
-            borderRadius: widget.cornerRadius ?? Corners.med,
-            shadows: shadows,
-            child: TextButton(
-              focusNode: _focusNode,
-              onPressed: widget.onPressed,
-              style: ElevatedButton.styleFrom(
-                visualDensity: density,
-                disabledMouseCursor: SystemMouseCursors.basic,
-              ).copyWith(
-                minimumSize: MaterialStateProperty.all(Size.zero),
-                padding: widget.ignoreDensity
-                    ? MaterialStateProperty.all(EdgeInsets.zero)
-                    : null,
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(widget.cornerRadius ?? Corners.med),
-                )),
-                side: getMaterialState(
-                    normal: BorderSide(
-                        color: normalColors.outline ?? Colors.transparent),
-                    hover: BorderSide(
-                        color: hoverColors.outline ?? Colors.transparent)),
-                overlayColor: MaterialStateProperty.all(Colors.transparent),
-                foregroundColor: getMaterialState(
-                    normal: normalColors.fg, hover: hoverColors.fg),
-                backgroundColor: getMaterialState(
-                    normal: normalColors.bg, hover: hoverColors.bg),
-              ),
-              child: Padding(padding: EdgeInsets.zero, child: widget.child),
-            ),
-          ),
+    return widget.loading
+        ? AnimatedOpacity(
+            duration: Times.fast,
+            opacity: widget.onPressed == null ? .7 : 1,
+            child: const StyledLoadSpinner(),
+          )
+        : AnimatedOpacity(
+            duration: Times.fast,
+            opacity: widget.onPressed == null ? .7 : 1,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                /// Core Btn
+                DecoratedContainer(
+                  borderRadius: widget.cornerRadius ?? Corners.med,
+                  shadows: shadows,
+                  child: TextButton(
+                    focusNode: _focusNode,
+                    onPressed: widget.onPressed,
+                    style: ElevatedButton.styleFrom(
+                      visualDensity: density,
+                      disabledMouseCursor: SystemMouseCursors.basic,
+                    ).copyWith(
+                      minimumSize: WidgetStateProperty.all(Size.zero),
+                      padding: widget.ignoreDensity
+                          ? WidgetStateProperty.all(EdgeInsets.zero)
+                          : null,
+                      shape: WidgetStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            widget.cornerRadius ?? Corners.med),
+                      )),
+                      side: getMaterialState(
+                          normal: BorderSide(
+                              color:
+                                  normalColors.outline ?? Colors.transparent),
+                          hover: BorderSide(
+                              color:
+                                  hoverColors.outline ?? Colors.transparent)),
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      foregroundColor: getMaterialState(
+                          normal: normalColors.fg, hover: hoverColors.fg),
+                      backgroundColor: getMaterialState(
+                          normal: normalColors.bg, hover: hoverColors.bg),
+                    ),
+                    child:
+                        Padding(padding: EdgeInsets.zero, child: widget.child),
+                  ),
+                ),
 
-          /// Focus Decoration
-          if (_focusNode.hasFocus) ...[
-            PositionedAll(
-              // Use negative margin for the focus state, so it lands outside our buttons actual footprint and doesn't mess up our alignments/paddings.
-              all: focusMargin,
-              child: RoundedBorder(
-                  radius:
-                      widget.cornerRadius ?? (Corners.med - (focusMargin * .6)),
-                  color: AppTheme.focus),
-            )
-          ],
-        ],
-      ),
-    );
+                /// Focus Decoration
+                if (_focusNode.hasFocus) ...[
+                  PositionedAll(
+                    // Use negative margin for the focus state, so it lands outside our buttons actual footprint and doesn't mess up our alignments/paddings.
+                    all: focusMargin,
+                    child: RoundedBorder(
+                        radius: widget.cornerRadius ??
+                            (Corners.med - (focusMargin * .6)),
+                        color: AppTheme.focus),
+                  )
+                ],
+              ],
+            ),
+          );
   }
 }
 
@@ -147,14 +159,13 @@ class _RawBtnState extends State<RawBtn> {
 // Accepts label, icon and child, with child taking precedence.
 class BtnContent extends StatelessWidget {
   const BtnContent(
-      {Key? key,
+      {super.key,
       this.label,
       this.icon,
       this.child,
       this.leadingIcon = false,
       this.isCompact = false,
-      this.labelStyle})
-      : super(key: key);
+      this.labelStyle});
   final bool leadingIcon;
   final bool isCompact;
   final Widget? child;
@@ -167,8 +178,7 @@ class BtnContent extends StatelessWidget {
     bool hasIcon = icon != null;
     bool hasLbl = StringUtils.isNotEmpty(label);
     return Padding(
-      padding:
-          EdgeInsets.symmetric(horizontal: Insets.med, vertical: Insets.sm),
+      padding: EdgeInsets.symmetric(horizontal: Insets.sm, vertical: Insets.xs),
       child: child ??
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -176,11 +186,9 @@ class BtnContent extends StatelessWidget {
             children: [
               /// Label?
               if (hasLbl) ...[
-                Text((label ?? "").toUpperCase(),
+                Text((label ?? ""),
                     style: labelStyle ??
-                        (isCompact
-                            ? TextStyles.callout2
-                            : TextStyles.callout1)),
+                        (isCompact ? TextStyles.callout2 : TextStyles.body2)),
               ],
 
               /// Spacer - Show if both pieces of content are visible
@@ -198,13 +206,12 @@ class BtnContent extends StatelessWidget {
 
 class RoundedBorder extends StatelessWidget {
   const RoundedBorder(
-      {Key? key,
+      {super.key,
       this.color,
       this.width,
       this.radius,
       this.ignorePointer = true,
-      this.child})
-      : super(key: key);
+      this.child});
   final Color? color;
   final double? width;
   final double? radius;
@@ -226,8 +233,7 @@ class RoundedBorder extends StatelessWidget {
 }
 
 class PositionedAll extends StatelessWidget {
-  const PositionedAll({Key? key, this.all = 0, required this.child})
-      : super(key: key);
+  const PositionedAll({super.key, this.all = 0, required this.child});
   final Widget child;
   final double all;
 

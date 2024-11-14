@@ -2,8 +2,6 @@ import 'package:get_it/get_it.dart';
 import 'package:its_shared/features/setup/data/repositories/setup_repositories_impl.dart';
 import 'package:its_shared/features/setup/data/source/setup_data_source.dart';
 import 'package:its_shared/features/setup/domain/repositories/setup_repositories.dart';
-import 'package:its_shared/features/setup/domain/usecases/get_all_courses.dart';
-import 'package:its_shared/features/setup/domain/usecases/get_sorted_modules.dart';
 import 'package:its_shared/features/setup/presentation/bloc/setup_bloc.dart';
 import 'package:its_shared/features/upload_progress/data/sources/upload_file_sources.dart';
 import 'package:its_shared/features/upload_progress/domain/domain.dart';
@@ -11,9 +9,19 @@ import 'package:its_shared/features/upload_progress/presentation/bloc/upload_pro
 import 'package:its_shared/features/uploads/domain/repositories/uploads_repositories.dart';
 import 'package:its_shared/features/uploads/domain/usecases/get_uploads.dart';
 
+import 'core/bloc/auth/auth_bloc.dart';
+import 'core/common/models/models.dart';
+import 'features/setup/domain/usecases/setup_usecases.dart';
+import 'features/shared/data/repositories/shared_repositories_impl.dart';
+import 'features/shared/data/source/shared_source.dart';
+import 'features/shared/domain/repositories/shared_repositories.dart';
+import 'features/shared/domain/usecases/download_file.dart';
+import 'features/shared/domain/usecases/get_shared_file.dart';
+import 'features/shared/presentation/bloc/shared_bloc.dart';
 import 'features/upload_edit/data/repositories/upload_edit_repositories_impl.dart';
 import 'features/upload_edit/data/source/upload_edit_source.dart';
 import 'features/upload_edit/domain/repositories/upload_edit_repositories.dart';
+import 'features/upload_edit/domain/usecases/get_sorted_modules.dart';
 import 'features/upload_edit/domain/usecases/update_file.dart';
 import 'features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
 import 'features/upload_progress/data/repositories/upload_file_repository_impl.dart';
@@ -28,13 +36,14 @@ Future<void> initDependencies() async {
   final FirebaseService firebase = FirebaseFactory.create();
 
   serviceLocator.registerLazySingleton(() => firebase);
-
-  // _initAuth();
+  serviceLocator.registerLazySingleton(() => AppModel());
+  _initAuth();
   _initSetup();
   _initFilesUploads();
   _initFilesUploadEdit();
   _initFilesUploadProgress();
 
+  _initSharedFiles();
   // serviceLocator.registerFactory(() => InternetConnection());
 
   // core
@@ -48,47 +57,57 @@ Future<void> initDependencies() async {
   // );
 }
 
-// void _initAuth() {
-//   // Datasource
-//   serviceLocator
-//     ..registerFactory<AuthRemoteDataSource>(
-//       () => AuthRemoteDataSourceImpl(
-//         serviceLocator(),
-//       ),
-//     )
-//     // Repository
-//     ..registerFactory<AuthRepository>(
-//       () => AuthRepositoryImpl(
-//         serviceLocator(),
-//         serviceLocator(),
-//       ),
-//     )
-//     // Usecases
-//     ..registerFactory(
-//       () => UserSignUp(
-//         serviceLocator(),
-//       ),
-//     )
-//     ..registerFactory(
-//       () => UserLogin(
-//         serviceLocator(),
-//       ),
-//     )
-//     ..registerFactory(
-//       () => CurrentUser(
-//         serviceLocator(),
-//       ),
-//     )
-//     // Bloc
-//     ..registerLazySingleton(
-//       () => AuthBloc(
-//         userSignUp: serviceLocator(),
-//         userLogin: serviceLocator(),
-//         currentUser: serviceLocator(),
-//         appUserCubit: serviceLocator(),
-//       ),
-//     );
-// }
+void _initAuth() {
+  // Datasource
+  // serviceLocator
+  //   ..registerFactory<AuthRemoteDataSource>(
+  //     () => AuthRemoteDataSourceImpl(
+  //       serviceLocator(),
+  //     ),
+  //   )
+  //   // Repository
+  //   ..registerFactory<AuthRepository>(
+  //     () => AuthRepositoryImpl(
+  //       serviceLocator(),
+  //       serviceLocator(),
+  //     ),
+  //   )
+  //   // Usecases
+  //   ..registerFactory(
+  //     () => UserSignUp(
+  //       serviceLocator(),
+  //     ),
+  //   )
+  //   ..registerFactory(
+  //     () => UserLogin(
+  //       serviceLocator(),
+  //     ),
+  //   )
+  //   ..registerFactory(
+  //     () => CurrentUser(
+  //       serviceLocator(),
+  //     ),
+  //   )
+  // Bloc
+  serviceLocator.registerLazySingleton(() => AuthBloc());
+}
+
+void _initFilesUploadEdit() {
+  // Datasource
+  serviceLocator
+    ..registerFactory<UploadEditSource>(
+      () => UploadEditSourceImpl(serviceLocator()),
+    )
+    // Repository
+    ..registerFactory<UploadEditRepository>(
+      () => UploadEditRepositoryImpl(serviceLocator()),
+    )
+    // Usecases
+    ..registerFactory(() => UploadUpdate())
+    ..registerFactory(() => GetSortedModules())
+    // Bloc
+    ..registerLazySingleton(() => UploadEditBloc());
+}
 
 void _initFilesUploads() {
   // Datasource
@@ -110,30 +129,6 @@ void _initFilesUploads() {
     ..registerLazySingleton(
       () => UploadsBloc(
         getUploads: serviceLocator(),
-      ),
-    );
-}
-
-void _initFilesUploadEdit() {
-  // Datasource
-  serviceLocator
-    ..registerFactory<UploadEditSource>(
-      () => UploadEditSourceImpl(serviceLocator()),
-    )
-    // Repository
-    ..registerFactory<UploadEditRepository>(
-      () => UploadEditRepositoryImpl(serviceLocator()),
-    )
-    // Usecases
-    ..registerFactory(
-      () => UploadEdit(
-        serviceLocator(),
-      ),
-    )
-    // Bloc
-    ..registerLazySingleton(
-      () => UploadEditBloc(
-        uploadFile: serviceLocator(),
       ),
     );
 }
@@ -173,7 +168,26 @@ void _initSetup() {
     ..registerFactory<SetUpRepository>(() => SetupRepositoriesImpl())
     // Usecases
     ..registerFactory(() => GetAllCourses())
-    ..registerFactory(() => GetSortedModules())
+    ..registerFactory(() => GetCourseModules())
+    ..registerFactory(() => UpdateUser())
     // Bloc
     ..registerLazySingleton(() => SetupBloc());
+}
+
+void _initSharedFiles() {
+  // Datasource
+  serviceLocator
+    ..registerFactory<SharedSource>(
+      () => SharedSourceImpl(serviceLocator()),
+    )
+    // Repository
+    ..registerFactory<SharedRepository>(
+      () => SharedRepositoryImpl(serviceLocator()),
+    )
+    // Usecases
+    ..registerFactory(() => GetSharedFile())
+    ..registerFactory(() => DownloadFile())
+    // ..registerFactory(() => UploadUpdate())
+    // Bloc
+    ..registerLazySingleton(() => SharedBloc());
 }

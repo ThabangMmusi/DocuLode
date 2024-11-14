@@ -2,15 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:its_shared/features/upload_edit/presentation/views/upload_edit_view.dart';
+import 'package:its_shared/features/upload_preview/presentation/views/upload_preview.dart';
 
-import '../bloc/auth/auth_bloc.dart';
+import '../core/bloc/auth/auth_bloc.dart';
 import '../features/setup/presentation/views/setup_view.dart';
+import '../features/shared/presentation/views/shared_view.dart';
 import '../presentation/account/account_view.dart';
 import '../presentation/account/home/home.dart';
 import '../features/uploads/presentation/views/upload_file_view.dart';
 import '../presentation/auth/desktop_auth.dart';
 import '../presentation/auth/login_screen.dart';
-import '../presentation/auth/sucessful_web_auth.dart';
+import '../presentation/auth/successful_web_auth.dart';
 import '../presentation/loaders/splash_screen.dart';
 import '../services/firebase/firebase_service.dart';
 part 'app_routes.dart';
@@ -24,6 +27,7 @@ class AppRouter {
   AppRouter({required this.fireService, required this.authBloc});
   final FirebaseService fireService;
   final AuthBloc authBloc;
+  String? intendedRoute;
   late final GoRouter router = GoRouter(
     initialLocation: Routes.splash,
     debugLogDiagnostics: true,
@@ -52,7 +56,36 @@ class AppRouter {
             ],
           ),
 
+          // The route branch for the third tab of the bottom navigation bar.
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              GoRoute(
+                path: Routes.uploads,
+                builder: (context, state) => const UploadFileView(),
+                routes: [
+                  GoRoute(
+                    path: ":id",
+                    builder: (context, state) => const UploadPreview(
+                        url:
+                            "https://storage.googleapis.com/spushare-2023.appspot.com/uploads/5ZxhOl3PGTbPIvKUJPaKBn0UHe72/00206BF92355240717090418.pdf"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
           // The route branch for the second tab of the bottom navigation bar.
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              GoRoute(
+                path: Routes.search,
+                builder: (context, state) => const Center(
+                  child: Text("Saved"),
+                ),
+              ),
+            ],
+          ),
+// The route branch for the second tab of the bottom navigation bar.
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
@@ -70,17 +103,6 @@ class AppRouter {
               GoRoute(
                 // The screen to display as the root in the third tab of the
                 // bottom navigation bar.
-                path: Routes.uploads,
-                builder: (context, state) => const UploadFileView(),
-              ),
-            ],
-          ),
-          // The route branch for the third tab of the bottom navigation bar.
-          StatefulShellBranch(
-            routes: <RouteBase>[
-              GoRoute(
-                // The screen to display as the root in the third tab of the
-                // bottom navigation bar.
                 path: Routes.modules,
                 builder: (context, state) => const Center(
                   child: Text("modules"),
@@ -89,6 +111,19 @@ class AppRouter {
             ],
           ),
         ],
+      ),
+      // GoRoute(
+      //     path: Routes.shared,
+      //     builder: (context, state) => Text("data"),
+      //     routes: [
+
+      //     ]),
+      GoRoute(
+        path: Routes.shared,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return SharedView(id);
+        },
       ),
       GoRoute(
         path: Routes.splash,
@@ -119,34 +154,40 @@ class AppRouter {
     ],
     redirect: (context, state) {
       final bool authUnknown = authBloc.state.status == AuthStatus.unknown;
-      final bool authenticating =
-          authBloc.state.status == AuthStatus.authenticating;
       final bool loggedIn = fireService.currentUser != null;
       final bool loggingIn = state.fullPath == Routes.signIn;
       final bool onAuthUnknown = state.fullPath == Routes.splash;
-      final bool webLoggingIn = state.fullPath == Routes.webAuth;
+      final bool webAuth = state.fullPath == Routes.webAuth;
       final bool desktopLoggingIn = state.fullPath == Routes.awaitingWebAuth;
 
       if (desktopLoggingIn) {
         return loggedIn ? Routes.home : null;
       }
-      if (webLoggingIn && loggedIn) {
+      if (webAuth && loggedIn) {
         return Routes.webAuthSuccessful;
       }
-      if (webLoggingIn && !loggedIn) {
+      if (webAuth && !loggedIn) {
         return null;
       }
-      if (authUnknown) return Routes.splash;
       if (authUnknown && onAuthUnknown) return null;
+      if (authUnknown) {
+        intendedRoute = state.matchedLocation;
+        return Routes.splash;
+      }
 
       if (!loggedIn) {
         return loggingIn ? null : Routes.signIn;
       }
-      if (loggedIn & !authenticating) {
-        // if (authBloc.state.courseDetails!.moduleSs.isEmpty) {
-        //   return Routes.home;
-        // }
+      if (loggedIn && intendedRoute != null) {
+        final intendedRouteFinal = intendedRoute;
+        intendedRoute = null;
+        return intendedRouteFinal;
+      }
+      if (loggedIn && fireService.currentUser!.needSetup) {
         return Routes.setup;
+      }
+      if (loggedIn && loggingIn) {
+        return Routes.home;
       }
       return null;
     },

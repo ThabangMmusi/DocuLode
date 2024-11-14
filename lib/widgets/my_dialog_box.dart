@@ -52,6 +52,7 @@ class CustomDialogNew extends StatelessWidget {
             insetPadding: EdgeInsets.zero,
             elevation: 0,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const AppTitleBar(),
                 Expanded(child: Center(child: dialogContent(context))),
@@ -62,24 +63,13 @@ class CustomDialogNew extends StatelessWidget {
 
   Widget dialogContent(BuildContext context) {
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: Corners.medBorder,
       ),
       child: Stack(
         children: [
-          if (showCloseButton)
-            Positioned(
-                right: Corners.lg,
-                top: Corners.lg,
-                child: CircularCloseButton(
-                  onClose: () {
-                    Navigator.pop(context);
-                    if (onClose != null) {
-                      onClose!.call();
-                    }
-                  },
-                )),
           Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,6 +101,19 @@ class CustomDialogNew extends StatelessWidget {
                 ),
             ],
           ),
+          if (showCloseButton)
+            Positioned(
+              right: Corners.lg,
+              top: Corners.lg,
+              child: CircularCloseButton(
+                onClose: () {
+                  Navigator.pop(context);
+                  if (onClose != null) {
+                    onClose!.call();
+                  }
+                },
+              ),
+            ),
           if (isLoading)
             Positioned(
               top: 0,

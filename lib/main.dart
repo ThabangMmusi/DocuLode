@@ -1,51 +1,47 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:its_shared/features/setup/presentation/bloc/setup_bloc.dart';
 import 'package:its_shared/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
 import 'package:its_shared/features/upload_progress/presentation/bloc/upload_progress_bloc.dart';
 import 'package:its_shared/features/uploads/presentation/bloc/uploads_bloc.dart';
 import 'package:its_shared/themes.dart';
-import 'package:url_strategy/url_strategy.dart';
 
 import '_utils/logger.dart';
-import 'bloc/auth/auth_bloc.dart';
+import 'core/bloc/auth/auth_bloc.dart';
 import 'commands/app/bootstrap_command.dart';
-import 'constants/app_colors.dart';
 import 'cubits/desktop_auth/desktop_auth_cubit.dart';
+import 'features/shared/presentation/bloc/shared_bloc.dart';
 import 'injection_container.dart';
-import 'core/common/models/app_model.dart';
-import 'repositories/courses/courses_repository.dart';
-import 'repositories/user/user_repository.dart';
+import 'core/common/models/src/app_model.dart';
 import 'routes/app_pages.dart';
 import 'services/firebase/firebase_service.dart';
 
 void main(List<String> args) async {
   initLogger(() async {
-    await initDependencies();
     WidgetsFlutterBinding.ensureInitialized();
-    // Status bar style on Android/iOS
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.dark,
-        statusBarColor: tWhiteColor,
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: tWhiteColor,
-        // systemNavigationBarDividerColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
-      ),
-    );
-
+    await initDependencies();
     //remove # on the URL
-    setPathUrlStrategy();
+    // setUrlStrategy(PathUrlStrategy());
+    // Status bar style on Android/iOS
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   const SystemUiOverlayStyle(
+    //     statusBarBrightness: Brightness.dark,
+    //     statusBarColor: tWhiteColor,
+    //     statusBarIconBrightness: Brightness.dark,
+    //     systemNavigationBarColor: tWhiteColor,
+    //     // systemNavigationBarDividerColor: Colors.white,
+    //     systemNavigationBarIconBrightness: Brightness.dark,
+    //   ),
+    // );
 
     // final FirebaseService firebase = FirebaseFactory.create();
     runApp(MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
-          create: (context) => AppModel(),
+          create: (context) => serviceLocator<AppModel>(),
         ),
         // RepositoryProvider(
         //   create: (context) => firebase,
@@ -53,17 +49,11 @@ void main(List<String> args) async {
         RepositoryProvider(
             create: (context) => serviceLocator<FirebaseService>()),
         // RepositoryProvider(create: (context) => CloudStorageService()),
-        RepositoryProvider(
-          create: (context) => UserRepository(),
-        ),
-        RepositoryProvider(create: (context) => CoursesRepository()),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => AuthBloc(
-              authRepository: context.read<FirebaseService>(),
-            ),
+            create: (context) => serviceLocator<AuthBloc>(),
           ),
           BlocProvider(
             create: (context) => DesktopAuthCubit(),
@@ -76,6 +66,7 @@ void main(List<String> args) async {
           ),
           BlocProvider(create: (context) => serviceLocator<UploadEditBloc>()),
           BlocProvider(create: (context) => serviceLocator<SetupBloc>()),
+          BlocProvider(create: (context) => serviceLocator<SharedBloc>()),
           // BlocProvider(
           //   create: (context) => ConnectionCubit(),
           // )
@@ -115,8 +106,8 @@ class _AppBootStrapperState extends State<AppBootStrapper> {
     // ThemeData materialTheme = EventLinkTheme.light;
     // Determine the density we want, based on AppModel.enableTouchMode
     bool enableTouchMode = context.select((AppModel m) => m.enableTouchMode);
-    double density = enableTouchMode ? 0 : -1;
-    print("enableTouchMode: $enableTouchMode");
+    // double density = enableTouchMode ? 0 : -1;
+    log("enableTouchMode: $enableTouchMode");
     // Inject desired density into MaterialTheme for free animation when values change
     // materialTheme = ThemeData(
     //     visualDensity: VisualDensity(horizontal: density, vertical: density));

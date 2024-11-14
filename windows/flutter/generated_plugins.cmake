@@ -11,6 +11,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   firebase_auth
   firebase_core
   firebase_storage
+  pdfx
   protocol_handler_windows
   url_launcher_windows
   windows_single_instance

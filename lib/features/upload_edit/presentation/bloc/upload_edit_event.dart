@@ -1,13 +1,13 @@
 part of 'upload_edit_bloc.dart';
 
-sealed class EditTodoEvent extends Equatable {
-  const EditTodoEvent();
+sealed class UploadEditEvent extends Equatable {
+  const UploadEditEvent();
 
   @override
   List<Object> get props => [];
 }
 
-final class UploadEditNameChanged extends EditTodoEvent {
+final class UploadEditNameChanged extends UploadEditEvent {
   const UploadEditNameChanged(this.name);
 
   final String name;
@@ -16,38 +16,40 @@ final class UploadEditNameChanged extends EditTodoEvent {
   List<Object> get props => [name];
 }
 
-final class UploadEditTypesChanged extends EditTodoEvent {
-  const UploadEditTypesChanged(this.types);
+final class UploadEditTypesChanged extends UploadEditEvent {
+  const UploadEditTypesChanged(this.type);
 
-  final List<int> types;
-
-  @override
-  List<Object> get props => [types];
-}
-
-final class UploadEditModulesChanged extends EditTodoEvent {
-  const UploadEditModulesChanged(this.modules);
-
-  final List<String> modules;
+  final UploadCategory type;
 
   @override
-  List<Object> get props => [modules];
+  List<Object> get props => [type];
 }
 
-final class UploadEditSubmitted extends EditTodoEvent {
-  const UploadEditSubmitted();
+final class UploadEditSubmit extends UploadEditEvent {
+  const UploadEditSubmit();
 }
 
-final class UploadEditLoaded extends EditTodoEvent {
+final class UploadEditStart extends UploadEditEvent {
   final RemoteDocModel doc;
-  const UploadEditLoaded(this.doc);
+  const UploadEditStart(this.doc);
+  @override
+  List<Object> get props => [doc];
 }
 
-final class UploadEditSemesterChanged extends EditTodoEvent {
+final class UploadEditSemesterChanged extends UploadEditEvent {
   const UploadEditSemesterChanged(this.semester);
 
   final Set<int> semester;
 
   @override
   List<Object> get props => [semester];
+}
+
+final class UploadEditSelectModule extends UploadEditEvent {
+  final Module module;
+
+  const UploadEditSelectModule(this.module);
+
+  @override
+  List<Object> get props => [module];
 }

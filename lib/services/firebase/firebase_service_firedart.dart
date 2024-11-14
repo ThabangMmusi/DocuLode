@@ -1,10 +1,7 @@
 import 'package:file_selector/file_selector.dart';
-import 'package:its_shared/features/setup/data/models/module_model/module_model.dart';
 
+import '../../core/common/models/models.dart';
 import '../../core/core.dart';
-import '../../core/common/models/app_user/app_user.dart';
-import '../../core/common/models/course_model.dart';
-import '../../features/setup/data/models/course_model/course_model.dart';
 import 'firebase_rest_api.dart';
 import 'firebase_service.dart';
 
@@ -21,12 +18,12 @@ class DartFirebaseService extends FirebaseService {
     // FirebaseRestApi.initialize();
   }
 
-  @override
-  Future<String> addDoc(List<String> keys, Map<String, dynamic> json,
-      {required String documentId, bool addUserPath = true}) {
-    // TODO: implement addDoc
-    throw UnimplementedError();
-  }
+  // @override
+  // Future<String> addDoc(List<String> keys, Map<String, dynamic> json,
+  //     {required String documentId, bool addUserPath = true}) {
+  //   // TODO: implement addDoc
+  //   throw UnimplementedError();
+  // }
 
   @override
   Future<void> deleteDoc(List<String> keys) {
@@ -80,41 +77,12 @@ class DartFirebaseService extends FirebaseService {
       } on Exception catch (e) {
         print(e);
       }
-      userCourse = await getCourseDetails();
+      // userCourse = await getCourseDetails();
       if (!reauthenticate) {
         userChange();
       }
     }
     return super.signInWithMicrosoft();
-  }
-
-  ///////////////////////////////////////////////////
-  //  Course Details
-  //////////////////////////////////////////////////
-  @override
-  Future<CourseDetailsModel?> getCourseDetails() async {
-    try {
-      var classID = currentUser!.classId;
-      var courseMap = await firebase.getDoc("courses/$classID");
-      courseMap!["id"] = classID;
-      return CourseDetailsModel.fromJson(courseMap);
-    } catch (e) {
-      print("courses from firebase: $e");
-    }
-    return null;
-  }
-
-  @override
-  Future<List<CourseModel>> getAllCourses() async {
-    return [];
-  }
-
-  @override
-  Future<List<ModuleModel>> getSortedModules({
-    required int maxLevel,
-    required String courseId,
-  }) async {
-    return [];
   }
 
   /// //////////////////////////////
@@ -169,20 +137,21 @@ class DartFirebaseService extends FirebaseService {
   //   return docs?.map((d) => d.map).toList();
   // }
 
-  // @override
-  // Future<String> addDoc(List<String> keys, Map<String, dynamic> json,
-  //     {String? documentId, bool addUserPath = true}) async {
-  //   if (documentId != null) {
-  //     keys.add(documentId);
-  //     //safePrint("Add Doc ${getPathFromKeys(keys)}");
-  //     await firestore.document(getPathFromKeys(keys, addUserPath: addUserPath)).update(json);
-  //     //safePrint("Add Doc Complete");
-  //     return documentId;
-  //   }
-  //   CollectionReference ref = firestore.collection(getPathFromKeys(keys, addUserPath: addUserPath));
-  //   final doc = await ref.add(json);
-  //   return (doc).id;
-  // }
+  @override
+  Future<String> addDoc(List<String> keys, Map<String, dynamic> json,
+      {String? documentId, bool addUserPath = true}) async {
+    // if (documentId != null) {
+    //   keys.add(documentId);
+    //   //safePrint("Add Doc ${getPathFromKeys(keys)}");
+    //   await firestore.document(getPathFromKeys(keys, addUserPath: addUserPath)).update(json);
+    //   //safePrint("Add Doc Complete");
+    //   return documentId;
+    // }
+    // CollectionReference ref = firestore.collection(getPathFromKeys(keys, addUserPath: addUserPath));
+    // final doc = await ref.add(json);
+    // return (doc).id;
+    return "";
+  }
 
   // @override
   // Future<void> deleteDoc(List<String> keys) async {
@@ -234,7 +203,7 @@ class DartFirebaseService extends FirebaseService {
         // "moduleId": pickedFile.moduleId,
         // "url": downloadLink,
         // "type": pickedFile.type,
-        "classId": user!.classId,
+        // "classId": user!.classId,
         "likes": <String>[],
         "dislikes": <String>[],
         "downloads": <String>[],

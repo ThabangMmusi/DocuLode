@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../constants/responsive.dart';
 import '../../styles.dart';
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
@@ -50,15 +51,21 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
             child: ClipRect(
               child: Container(
                 decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: colorScheme.tertiaryContainer, width: 1.2))),
+                    color: !Responsive.isMobile(context)
+                        ? null
+                        : Theme.of(context).colorScheme.surface,
+                    border: shrinkFactor > .4
+                        ? Border(
+                            bottom: BorderSide(
+                                color: colorScheme.tertiaryContainer,
+                                width: 1.2))
+                        : null),
               ),
             ),
           ),
           if (leading != null)
             Align(
-              alignment: Alignment.topLeft,
+              alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.all(Insets.lg),
                 child: leading,
@@ -76,10 +83,14 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
             alignment: Alignment.bottomCenter,
             child: SizedBox(
               height: 50 * min(1, (shrinkFactor) * 1),
+              width: 200,
               child: Opacity(
                 opacity: min(1, (shrinkFactor) * 1),
                 child: Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
                   style: TextStyles.h2,
                 ),
               ),

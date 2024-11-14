@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:its_shared/_utils/logger.dart';
 
 class MessageModel {
   String title, message;
@@ -17,7 +18,7 @@ class ErrorStrings {
   static const String invalidCode = 'invalid-action-code';
 
   static MessageModel interpretErrorMessage(String baseError, [int left = 8]) {
-    print(baseError);
+    log(baseError);
 
     if (baseError == wrongPassword) {
       return MessageModel(

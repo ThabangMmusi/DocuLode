@@ -66,4 +66,28 @@ class StringUtils {
     // Append the percentage symbol
     return '$formattedPercentage%';
   }
+
+  // returns get ordinal Numbers:: 1st 2nd 3rd 4th  ans so on
+  // max/range at this point is hundred
+  static String getOrdinal(int number) {
+    if (!(number >= 1 && number <= 100)) {
+      //here you change the range
+      throw Exception('Invalid number');
+    }
+
+    if (number >= 11 && number <= 13) {
+      return 'th';
+    }
+
+    switch (number % 10) {
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
+    }
+  }
 }

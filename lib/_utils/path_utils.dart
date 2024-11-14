@@ -1,3 +1,4 @@
+import 'package:its_shared/_utils/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PathUtil {
@@ -7,7 +8,7 @@ class PathUtil {
     try {
       return (await getApplicationSupportDirectory()).path;
     } catch (e) {
-      print("$e");
+      log("$e");
     }
     return result;
   }

@@ -7,11 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:its_shared/_utils/logger.dart';
 import 'package:its_shared/core/core.dart';
 
-import '../../features/setup/data/models/course_model/course_model.dart';
-import '../../features/setup/data/models/module_model/module_model.dart';
 import '../../firebase_options.dart';
-import '../../core/common/models/app_user/app_user.dart';
-import '../../core/common/models/course_model.dart';
+import '../../core/common/models/src/app_user/app_user.dart';
 import 'firebase_service.dart';
 
 class NativeFirebaseService extends FirebaseService {
@@ -24,23 +21,25 @@ class NativeFirebaseService extends FirebaseService {
   @override
   Future<void> init() async {
     await Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform)
-        .catchError((Object e) {
-      log("$e");
-    });
+        options: DefaultFirebaseOptions.currentPlatform);
+    //     .catchError() {
+    //   log("$e");
+    //   return e;
+    // });
     if (kIsWeb) {
       await auth.setPersistence(Persistence.LOCAL);
     }
     // //enable emulator
     // if (false) {
-    //   try {
-    //     String host = 'localhost';
-    //     FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
-    //     await FirebaseAuth.instance.useAuthEmulator(host, 9099);
-    //     await FirebaseStorage.instance.useStorageEmulator(host, 9199);
-    //   } catch (e) {
-    //     log(e.toString());
-    //   }
+    // try {
+    //   String host = 'localhost';
+    //   // String host = '192.168.220.41';
+    //   FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
+    //   await FirebaseAuth.instance.useAuthEmulator(host, 9099);
+    //   await FirebaseStorage.instance.useStorageEmulator(host, 9199);
+    // } catch (e) {
+    //   log(e.toString());
+    // }
     // }
     // if (false) {
     //   await FirebaseAppCheck.instance.activate(
@@ -64,7 +63,9 @@ class NativeFirebaseService extends FirebaseService {
     // }
     log("InitComplete");
     auth.userChanges().listen((User? user) async {
-      await setNewUser(user);
+      _isSignedIn = user != null;
+      // await auth.signOut();
+      await setNewUser(user?.uid);
     });
     // auth
     //     .getRedirectResult()
@@ -82,11 +83,14 @@ class NativeFirebaseService extends FirebaseService {
           // auth
           //     .signInWithPopup(MicrosoftAuthProvider())
           //     .then((value) => value)
-          //     .catchError((error) => print(error));
+          //     .catchError((error) => print(error));z
           //TODO: USE POP UP AFTER FINDING A WAY TO PREVENT MULTIPLE POPUPS
           // await auth.signInWithRedirect(provider);
-          await auth.signInWithPopup(provider);
+          await auth.signInWithPopup(provider).then((value) {
+            log(value.toString());
+          });
         } else {
+          // await auth.signInWithPopup(provider);
           await auth.signInWithProvider(provider);
         }
       } else {
@@ -101,20 +105,6 @@ class NativeFirebaseService extends FirebaseService {
       log(e.toString());
       return false;
     }
-  }
-
-  Future<void> setNewUser(User? authUser) async {
-    if (authUser != null) {
-      await firestore.collection("users").doc(authUser.uid).get().then((value) {
-        seCurrentUser = AppUser.fromJson(value.data()!).copyWith(uid: value.id);
-      });
-      userCourse = await getCourseDetails();
-    } else {
-      seCurrentUser = null;
-      userCourse = null;
-    }
-
-    userChange();
   }
 
   @override
@@ -141,64 +131,33 @@ class NativeFirebaseService extends FirebaseService {
     super.signOut();
   }
 
-  final bool _isSignedIn = false;
+  bool _isSignedIn = false;
   @override
   bool get isSignedIn => _isSignedIn;
 
   ///////////////////////////////////////////////////
   //  Course Details
   //////////////////////////////////////////////////
-  @override
-  Future<CourseDetailsModel?> getCourseDetails() async {
-    try {
-      var course = await firestore
-          .collection("courses")
-          .doc(currentUser!.classId)
-          .get()
-          .then((snapshot) {
-        var courseMap = snapshot.data();
-        courseMap!["id"] = snapshot.id;
-        return CourseDetailsModel.fromJson(courseMap);
-      });
-      return course;
-    } catch (e) {
-      print("courses from firebase: $e");
-    }
-    return null;
-  }
-
-  @override
-  Future<List<CourseModel>> getAllCourses() async {
-    try {
-      final course = await firestore.collection(FireIds.courses).get();
-      return course.docs
-          .map((doc) => CourseModel.fromJson(doc.data()).copyWith(id: doc.id))
-          .toList();
-    } catch (e) {
-      print("courses from firebase: $e");
-    }
-    return [];
-  }
-
-  @override
-  Future<List<ModuleModel>> getSortedModules({
-    required int maxLevel,
-    required String courseId,
-  }) async {
-    try {
-      final course = await firestore
-          .collection(FireIds.modules)
-          .where(FireIds.courses, arrayContains: courseId)
-          .where("level", isLessThanOrEqualTo: maxLevel)
-          .get();
-      return course.docs
-          .map((doc) => ModuleModel.fromJson(doc.data()).copyWith(id: doc.id))
-          .toList();
-    } catch (e) {
-      print("courses from firebase: $e");
-    }
-    return [];
-  }
+  //Todo: Delete course details
+  // @override
+  // Future<List<ModuleModel>> getSortedModules({
+  //   required int maxLevel,
+  //   required String courseId,
+  // }) async {
+  //   try {
+  //     final course = await firestore
+  //         .collection(FireIds.modules)
+  //         .where(FireIds.courses, arrayContains: courseId)
+  //         .where("level", isLessThanOrEqualTo: maxLevel)
+  //         .get();
+  //     return course.docs
+  //         .map((doc) => ModuleModel.fromJson(doc.data()).copyWith(id: doc.id))
+  //         .toList();
+  //   } catch (e) {
+  //     print("courses from firebase: $e");
+  //   }
+  //   return [];
+  // }
 
 ///////////////////////////////////////////////////
   // DOCUMENTS
@@ -210,13 +169,13 @@ class NativeFirebaseService extends FirebaseService {
     try {
       Query query = firestore
           .collection(FireIds.uploads)
-          .where("uid", isEqualTo: currentUid)
+          .where("uid", isEqualTo: userId)
           .orderBy("uploaded", descending: true)
           .limit(documentsPerPage);
 
-      if (lastDocument != null) {
-        query = query.startAfterDocument(lastDocument!);
-      }
+      // if (lastDocument != null) {
+      //   query = query.startAfterDocument(lastDocument!);
+      // }
 
       final querySnapshot = await query.get();
       final documents = querySnapshot.docs;
@@ -227,7 +186,8 @@ class NativeFirebaseService extends FirebaseService {
       return FetchedRemoteDocs(
         docs: documents
             .map((doc) =>
-                RemoteDocModel.fromJson(doc.data() as Map<String, dynamic>))
+                RemoteDocModel.fromJson(doc.data() as Map<String, dynamic>)
+                    .copyWith(id: doc.id))
             .toList(),
         hasMore: documents.length == documentsPerPage,
       );
@@ -240,16 +200,20 @@ class NativeFirebaseService extends FirebaseService {
 
   @override
   Future<List<Map<String, dynamic>>?> getCollection(List<String> keys) async {
+    try {
+      log("getDocCollection: ${keys.toString()}");
+      QuerySnapshot? snapshot = await _getCollection(keys)?.get();
+      if (snapshot != null) {
+        return snapshot.docs.map((d) {
+          final data = d.data() as Map<String, dynamic>;
+          data['id'] = d.id;
+          return data;
+        }).toList();
+      }
+    } catch (e) {
+      log(e.toString());
+    }
     return null;
-
-    //print("getDocStream: ${keys.toString()}");
-    // QuerySnapshot? snapshot = (await _getCollection(keys)?.get());
-    // if (snapshot != null) {
-    //   for (final d in snapshot.docs) {
-    //     (d.data())['documentId'] = d.id;
-    //   }
-    // }
-    // return snapshot?.docs.map((d) => (d.data())).toList();
   }
 
   Stream<AppUser?> get user {
@@ -258,26 +222,50 @@ class NativeFirebaseService extends FirebaseService {
         .collection("users")
         .doc(user!.uid)
         .snapshots()
-        .map((snap) => user.toUser(AppUser.fromJson(snap.data()!)));
+        .map((snap) => AppUser.fromJson(snap.data()!));
     return currentUser;
   }
 
   @override
-  Future<void> deleteDoc(List<String> keys) {
-    // TODO: implement deleteDoc
-    throw UnimplementedError();
+  Future<Map<String, dynamic>?> getDoc(List<String> keys) async {
+    try {
+      DocumentSnapshot? d = await _getDoc(keys)?.get();
+      if (d != null && d.data() != null) {
+        final data = d.data() as Map<String, dynamic>;
+        data['id'] = d.id;
+        return data;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
   }
 
   @override
-  Future<Map<String, dynamic>?> getDoc(List<String> keys) {
-    // TODO: implement getDoc
-    throw UnimplementedError();
+  Future<String> addDoc(List<String> keys, Map<String, dynamic> json,
+      {String? documentId, bool addUserPath = false}) async {
+    if (documentId != null) {
+      keys.add(documentId);
+      log("Add Doc ${getPathFromKeys(keys)}");
+      await firestore
+          .doc(getPathFromKeys(keys, addUserPath: addUserPath))
+          .set(json);
+      log("Add Doc Complete");
+      return documentId;
+    }
+    CollectionReference ref =
+        firestore.collection(getPathFromKeys(keys, addUserPath: addUserPath));
+    final doc = await ref.add(json);
+    return (doc).id;
   }
 
   @override
-  Future<void> updateDoc(List<String> keys, Map<String, dynamic> json) {
-    // TODO: implement updateDoc
-    throw UnimplementedError();
+  Future<void> deleteDoc(List<String> keys) async =>
+      await firestore.doc(getPathFromKeys(keys)).delete();
+
+  @override
+  Future<void> updateDoc(List<String> keys, Map<String, dynamic> json) async {
+    await firestore.doc(getPathFromKeys(keys)).update(json);
   }
 
   ///////////////////////////////////////////////////
@@ -287,30 +275,45 @@ class NativeFirebaseService extends FirebaseService {
   Stream<double> uploadFile(String name, [String? path, XFile? asset]) async* {
     try {
       var data = await asset?.readAsBytes();
-      final uploadTask =
-          fireStorage.ref('uploads/${currentUid!}/$name').putData(
-                data!,
-                SettableMetadata(customMetadata: {'uid': currentUid!}),
-              );
+      final uploadTask = fireStorage.ref('uploads/${userId!}/$name').putData(
+            data!,
+            SettableMetadata(customMetadata: {'uid': userId!}),
+          );
       await for (var event in uploadTask.snapshotEvents) {
         double progress = event.bytesTransferred / event.totalBytes;
         log("$name : $progress");
         yield progress;
+        if (progress == 1.0) {
+          uploadsStreamController.add(0);
+        }
       }
     } on FirebaseException catch (e) {
       throw ServerException(e.toString());
     }
   }
-}
 
-extension on User {
-  AppUser toUser(AppUser currentUser) {
-    return AppUser(
-      uid: uid,
-      names: currentUser.names,
-      surname: currentUser.surname,
-      classId: currentUser.classId,
-      type: currentUser.type,
-    );
+  ///////////////////////////////////////////////////
+  // native firebase helper
+  //////////////////////////////////////////////////
+  DocumentReference? _getDoc(List<String> keys) {
+    if (checkKeysForNull(keys) == false) return null;
+    return firestore.doc(getPathFromKeys(keys));
+  }
+
+  CollectionReference? _getCollection(List<String> keys) {
+    if (checkKeysForNull(keys) == false) return null;
+    return firestore.collection(getPathFromKeys(keys));
   }
 }
+
+// extension on User {
+//   AppUser toUser(AppUser currentUser) {
+//     return AppUser(
+//       uid: uid,
+//       names: currentUser.names,
+//       surname: currentUser.surname,
+//       classId: currentUser.classId,
+//       type: currentUser.type,
+//     );
+//   }
+// }

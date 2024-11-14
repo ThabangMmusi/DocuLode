@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:its_shared/services/cloudinary/cloud_storage_service.dart';
-
-import '../core/common/models/app_model.dart';
+import '../core/common/models/src/app_model.dart';
 import '../services/firebase/firebase_service.dart';
 
 BuildContext? _mainContext;
@@ -24,6 +22,6 @@ class BaseAppCommand {
 
   AppModel get appModel => _mainContext!.read<AppModel>();
   FirebaseService get firebase => _mainContext!.read<FirebaseService>();
-  CloudStorageService get cloudStorage =>
-      _mainContext!.read<CloudStorageService>();
+  // CloudStorageService get cloudStorage =>
+  //     _mainContext!.read<CloudStorageService>();
 }

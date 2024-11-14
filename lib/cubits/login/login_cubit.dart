@@ -19,6 +19,7 @@ class LoginCubit extends Cubit<LoginState> {
       _authRepository.isDesktopAuth = isDesktopAuth;
       bool success = await _authRepository.signInWithMicrosoft();
       if (success) {
+        await Future.delayed(const Duration(seconds: 2));
         status = CubitStatus.success;
       }
       emit(state.copyWith(status: status));

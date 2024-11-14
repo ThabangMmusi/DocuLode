@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:its_shared/core/common/entities/src/module.dart';
 import 'package:its_shared/features/upload_edit/data/source/upload_edit_source.dart';
 
 import '../../../../core/core.dart';
@@ -13,17 +14,29 @@ class UploadEditRepositoryImpl implements UploadEditRepository {
   Future<Either<Failure, void>> updateDoc({
     required String id,
     required String name,
-    required List<int> types,
+    required int access,
+    required int type,
     required List<String> modules,
   }) async {
     try {
       final uploads = await uploadEditSource.updateDoc({
         'id': id,
         'name': name,
-        'type': types,
+        'type': type,
         'modules': modules,
+        'access': access,
       });
       return right(uploads);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Module>>> getSortedModules() async {
+    try {
+      final modules = await uploadEditSource.getCourseModules();
+      return right(modules);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }

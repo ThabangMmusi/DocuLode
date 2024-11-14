@@ -98,29 +98,6 @@ class AppTheme {
         // shape: MaterialStateProperty.all(RoundedRectangleBorder(
         //     side: dInputBS, borderRadius: Corners.medBorder))
       ),
-      inputDecorationTheme: InputDecorationTheme(
-          filled: false,
-          fillColor: colorScheme.tertiary,
-          enabledBorder: OutlineInputBorder(
-              borderRadius: Corners.smBorder,
-              borderSide: BorderSide(
-                  color: colorScheme.tertiary,
-                  width: 1,
-                  style: BorderStyle.solid)),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: Corners.smBorder,
-              borderSide: BorderSide(
-                  color: colorScheme.primary,
-                  width: 1,
-                  style: BorderStyle.solid)),
-          contentPadding: EdgeInsets.only(
-            left: Insets.med,
-            right: Insets.med,
-            top: 0,
-            bottom: 0,
-          ),
-          constraints: const BoxConstraints(maxHeight: 42),
-          isDense: false),
       chipTheme: ChipThemeData(
         selectedColor: colorScheme.primary,
         selectedShadowColor: Colors.transparent,

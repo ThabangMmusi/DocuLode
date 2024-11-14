@@ -13,6 +13,12 @@ class DocumentsLoaded extends UploadsState {
   DocumentsLoaded(this.documents, this.hasMore);
 }
 
+class DocumentsUpdated extends UploadsState {
+  final List<RemoteDocModel>? updated;
+
+  DocumentsUpdated(this.updated);
+}
+
 class DocumentsError extends UploadsState {
   final String message;
 

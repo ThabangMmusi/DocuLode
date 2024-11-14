@@ -1,12 +1,14 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:its_shared/routes/app_pages.dart';
+import 'package:its_shared/widgets/buttons/styled_buttons.dart';
 
 import '../../../../constants/responsive.dart';
-import '../../../../core/common/models/app_stats_model.dart';
+import '../../../../core/common/models/src/app_stats_model.dart';
 import '../../../../core/core.dart';
 import '../../../../styles.dart';
 import '../../shared/shared.dart';
@@ -103,8 +105,11 @@ class HomeView extends StatelessWidget {
                 "Hi..👋, Thabang Mmusi",
                 style: TextStyles.h1,
               ),
+              PrimaryBtn(onPressed: () {
+                context.go("/shared/454454");
+              }),
               SizedBox(height: Responsive.sidePadding(context)),
-              search_bar(context),
+              searchBar(context),
               SizedBox(height: Responsive.sidePadding(context)),
               Padding(
                 padding: EdgeInsets.only(left: Insets.xl, bottom: Insets.lg),
@@ -128,7 +133,7 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  ConstrainedBox search_bar(BuildContext context) {
+  ConstrainedBox searchBar(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxHeight: 42, maxWidth: 540),
       child: SearchAnchor.bar(
@@ -369,7 +374,7 @@ class SearchButton extends StatelessWidget {
   }
 }
 
-class kSliverAppbar extends SliverPersistentHeaderDelegate {
+class KSliverAppbar extends SliverPersistentHeaderDelegate {
   final double minTopBarHeight = 100;
   final double maxTopBarHeight = 320;
   final Widget? leading;
@@ -377,7 +382,7 @@ class kSliverAppbar extends SliverPersistentHeaderDelegate {
   final String? subtitle;
   final IconData? icon;
   final Widget? child;
-  kSliverAppbar({
+  KSliverAppbar({
     required this.title,
     this.leading,
     this.subtitle,

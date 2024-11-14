@@ -6,6 +6,7 @@ abstract class Routes {
 
   static const unknownRoute = _Paths.unknownRoute;
   static const uploads = _Paths.uploads;
+  static String uploadsEdit(String id) => '$uploads/$id';
   static const home = _Paths.home;
   static const search = _Paths.search;
   static const profile = _Paths.profile;
@@ -22,15 +23,18 @@ abstract class Routes {
   // static const insuranceView = _Paths.insuranceView;
   static const loading = _Paths.loading;
   static const splash = _Paths.splash;
+  static const shared = _Paths.shared;
   static const landingPage = _Paths.landingPage;
 }
 
 abstract class _Paths {
   static const loading = '/loading';
+  static const shared = '/shared/:id';
   static const splash = '/';
   static const home = '/home';
   static const search = "/search";
   static const uploads = '/uploads';
+  static const uploadEdit = ':uploadId';
   static const modules = '/modules';
   static const auth = '/auth';
   static const signIn = '/signin';

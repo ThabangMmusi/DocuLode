@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:its_shared/core/core.dart';
 import 'package:its_shared/injection_container.dart';
 
-import '../entities/course.dart';
+import '../../../../core/common/entities/src/course.dart';
 import '../repositories/setup_repositories.dart';
 
 class GetAllCourses implements UseCase<List<Course>, NoParams> {

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// //////////////////////////////////////////////////////////////
@@ -154,10 +153,10 @@ class TextStyles {
   static TextStyle get body1 => poppins.copyWith(
       fontWeight: FontWeight.normal, fontSize: FontSizes.s16, height: 1.71);
   static TextStyle get body2 => body1.copyWith(
-      fontSize: FontSizes.s14,
-      fontWeight: FontWeight.w500,
-      height: 1.5,
-      letterSpacing: .2);
+        fontSize: FontSizes.s14,
+        fontWeight: FontWeight.w500,
+        height: 1.5,
+      );
   static TextStyle get body3 => body1.copyWith(
       fontSize: FontSizes.s12, height: 1.5, fontWeight: FontWeight.w600);
   static TextStyle get body4 => body1.copyWith(
@@ -166,7 +165,7 @@ class TextStyles {
       fontWeight: FontWeight.w500,
       letterSpacing: .2);
   static TextStyle get callout1 => poppins.copyWith(
-      fontWeight: FontWeight.w800,
+      fontWeight: FontWeight.bold,
       fontSize: FontSizes.s12,
       height: 1.17,
       letterSpacing: .5);

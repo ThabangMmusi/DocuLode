@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:its_shared/styles.dart';
+import 'package:its_shared/widgets/styled_load_spinner.dart';
+import 'package:its_shared/widgets/ui_text.dart';
 
 class LoadingDataWidget extends StatelessWidget {
   const LoadingDataWidget({super.key});
@@ -24,16 +27,7 @@ class LoadingWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(
-            width: 40, height: 40, child: CircularProgressIndicator()),
-        const SizedBox(height: 20),
-        Text(
-          text,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 18),
-        )
-      ],
+      children: [const StyledLoadSpinner(), VSpace.med, UiText(text: text)],
     );
   }
 }
@@ -47,8 +41,8 @@ void showLoadingIndicator(String text, BuildContext context) {
     barrierColor: Colors.white54,
     context: context,
     barrierDismissible: false,
-    builder: (_) => WillPopScope(
-      onWillPop: () async => false,
+    builder: (_) => PopScope(
+      canPop: false,
       child: Center(
         child: Card(
           elevation: 8,

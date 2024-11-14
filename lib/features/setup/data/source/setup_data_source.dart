@@ -1,23 +1,26 @@
+import 'package:its_shared/_utils/logger.dart';
 import 'package:its_shared/core/core.dart';
 import 'package:its_shared/injection_container.dart';
 import 'package:its_shared/services/firebase/firebase_service.dart';
 
-import '../models/course_model/course_model.dart';
-import '../models/module_model/module_model.dart';
+import '../../../../core/common/models/src/course_model/course_model.dart';
+import '../../../../core/common/models/src/module_model/module_model.dart';
 
 abstract interface class SetupDataSource {
   ///get courses
   Future<List<CourseModel>> getAllCourses();
 
   ///get course modules
-  Future<List<ModuleModel>> getSortedModules({
+  Future<List<ModuleModel>> getCourseModules({
     required int maxLevel,
-    required String courseId,
+    required List<ModuleModel> modules,
   });
 
   /// add modules to user info
-  Future<void> uploadUserModules({
-    required List<String> moduleIds,
+  Future<void> uploadUserEducation({
+    required List<String> modules,
+    required int level,
+    required String courseId,
   });
 }
 
@@ -34,12 +37,12 @@ class SetupDataSourceImpl implements SetupDataSource {
   }
 
   @override
-  Future<List<ModuleModel>> getSortedModules(
-      {required int maxLevel, required String courseId}) {
+  Future<List<ModuleModel>> getCourseModules(
+      {required int maxLevel, required List<ModuleModel> modules}) {
     try {
       return firebaseService.getSortedModules(
         maxLevel: maxLevel,
-        courseId: courseId,
+        modules: modules,
       );
     } catch (e) {
       print("courses from firebase: $e");
@@ -48,8 +51,20 @@ class SetupDataSourceImpl implements SetupDataSource {
   }
 
   @override
-  Future<void> uploadUserModules({required List<String> moduleIds}) {
-    // TODO: implement uploadUserModules
-    throw UnimplementedError();
+  Future<void> uploadUserEducation({
+    required List<String> modules,
+    required int level,
+    required String courseId,
+  }) {
+    try {
+      return firebaseService.updateUser({
+        FireIds.modules: modules,
+        FireIds.level: level,
+        FireIds.course: courseId,
+      });
+    } catch (e) {
+      log("courses from firebase: $e");
+      throw ServerException(e.toString());
+    }
   }
 }

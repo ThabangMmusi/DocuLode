@@ -23,22 +23,13 @@ final class SetupCourseSelect extends SetupEvent {
   List<Object?> get props => [selectedCourse];
 }
 
-final class SetupModulesSelectedChange extends SetupEvent {
+final class SetupSelectedModule extends SetupEvent {
   final Module module;
 
-  const SetupModulesSelectedChange(this.module);
+  const SetupSelectedModule(this.module);
 
   @override
   List<Object?> get props => [module];
-}
-
-final class SetupStepChanged extends SetupEvent {
-  final int step;
-
-  const SetupStepChanged(this.step);
-
-  @override
-  List<Object?> get props => [step];
 }
 
 final class SetupLevelChange extends SetupEvent {
@@ -48,4 +39,18 @@ final class SetupLevelChange extends SetupEvent {
 
   @override
   List<Object?> get props => [level];
+}
+
+final class SetupSemesterChange extends SetupEvent {
+  final int semester;
+
+  const SetupSemesterChange(this.semester);
+
+  @override
+  List<Object?> get props => [semester];
+}
+
+final class SetupUpdateUserModules extends SetupEvent {
+  @override
+  List<Object?> get props => [];
 }

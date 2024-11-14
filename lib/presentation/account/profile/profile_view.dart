@@ -5,7 +5,7 @@ import 'package:its_shared/styles.dart';
 import 'package:its_shared/widgets/decorated_container.dart';
 
 import '../../../animated/animated.dart';
-import '../../../bloc/auth/auth_bloc.dart';
+import '../../../core/bloc/auth/auth_bloc.dart';
 import '../../../constants/responsive.dart';
 
 class UserProfileView extends StatefulWidget {
@@ -77,18 +77,7 @@ class _UserProfileViewState extends State<UserProfileView>
                 const _UserStatsWidget(),
                 VSpace.sm,
                 const Divider(),
-                UserCourseWidget(),
-                // TextButton(
-                //     onPressed: () async {
-                //       // final token = await Authuser!.getIdToken();
-                //       // print(token);
-                //       // Process.start('grep', ['-i', 'main', 'notepad.exe'])
-                //       //     .then((result) {
-                //       //   stdout.write(result.stdout);
-                //       //   stderr.write(result.stderr);
-                //       // });
-                //     },
-                //     child: const Text("Token")),
+                // const UserCourseWidget(),
               ],
             ),
           ),
@@ -97,30 +86,33 @@ class _UserProfileViewState extends State<UserProfileView>
 }
 
 class UserCourseWidget extends StatelessWidget {
-  UserCourseWidget({
+  const UserCourseWidget({
     super.key,
   });
 
-  late ColorScheme colorScheme;
   @override
   Widget build(BuildContext context) {
-    final course = context.select((AuthBloc bloc) => bloc.state.courseDetails);
-    colorScheme = Theme.of(context).colorScheme;
+    final state = context.watch<AuthBloc>().state;
+    final user = state.user!;
+    final course = user.course;
+    final modules = user.modules;
     return course == null
         ? Container()
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              valueBuilder("Course", course.name),
-              valueBuilder("Course Code", course.code),
-              valueBuilder("Course Year", "${course.year} year"),
+              valueBuilder(context, "Course", course.name!),
+              // valueBuilder(context, "Course Code", course.code),
+              valueBuilder(context, "Course Year", "${user.level}} year"),
               // valueBuilder("School", course.schoolFullName),
-              valueBuilder("Total Modules", course.modules.length.toString()),
+              valueBuilder(
+                  context, "Total Modules", modules!.length.toString()),
             ],
           );
   }
 
-  Widget valueBuilder(String title, String value) {
+  Widget valueBuilder(BuildContext context, String title, String value) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

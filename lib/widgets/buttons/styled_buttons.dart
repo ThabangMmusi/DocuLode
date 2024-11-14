@@ -6,17 +6,19 @@ import 'raw_styled_btn.dart';
 
 export 'raw_styled_btn.dart';
 
-/// Accent colored btn (orange), wraps RawBtn
+/// Accent colored btn, wraps RawBtn
 class PrimaryBtn extends StatelessWidget {
-  const PrimaryBtn(
-      {super.key,
-      required this.onPressed,
-      this.label,
-      this.icon,
-      this.child,
-      this.leadingIcon = false,
-      this.isCompact = false,
-      this.cornerRadius});
+  const PrimaryBtn({
+    super.key,
+    required this.onPressed,
+    this.label,
+    this.icon,
+    this.child,
+    this.leadingIcon = false,
+    this.isCompact = false,
+    this.cornerRadius,
+    this.loading = false,
+  });
   final Widget? child;
   final String? label;
   final IconData? icon;
@@ -24,10 +26,12 @@ class PrimaryBtn extends StatelessWidget {
   final bool isCompact;
   final double? cornerRadius;
   final VoidCallback? onPressed;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
     return RawBtn(
+      loading: loading,
       enableShadow: false,
       cornerRadius: cornerRadius,
       normalColors: BtnColors(bg: AppTheme.accent1, fg: AppTheme.surface1),
@@ -43,7 +47,7 @@ class PrimaryBtn extends StatelessWidget {
   }
 }
 
-/// Surface colors btn (white), wraps RawBtn
+/// Surface colors btn, wraps RawBtn
 class SecondaryBtn extends StatelessWidget {
   const SecondaryBtn({
     super.key,
@@ -92,25 +96,29 @@ class SecondaryBtn extends StatelessWidget {
           bg: AppTheme.surface1,
           fg: AppTheme.accent1,
           outline: AppTheme.greyWeak),
-      hoverColors: BtnColors(bg: AppTheme.bg1, fg: AppTheme.focus),
+      hoverColors: BtnColors(
+        bg: AppTheme.bg1,
+        fg: AppTheme.focus,
+        outline: AppTheme.greyWeak,
+      ),
       onPressed: onPressed,
       child: content,
     );
   }
 }
 
-/// Takes any child, applies no padding, and falls back to default colors
+/// Takes any child, applies no padding,
+/// and falls back to default colors
 class SimpleBtn extends StatelessWidget {
   const SimpleBtn(
-      {Key? key,
+      {super.key,
       required this.onPressed,
       required this.child,
       this.focusMargin,
       this.normalColors,
       this.hoverColors,
       this.cornerRadius,
-      this.ignoreDensity})
-      : super(key: key);
+      this.ignoreDensity});
   final Widget child;
   final VoidCallback? onPressed;
   final double? focusMargin;
@@ -137,12 +145,11 @@ class SimpleBtn extends StatelessWidget {
 /// Text Btn - wraps a [SimpleBtn]
 class TextBtn extends StatelessWidget {
   const TextBtn(this.label,
-      {Key? key,
+      {super.key,
       required this.onPressed,
       this.isCompact = false,
       this.style,
-      this.showUnderline = false})
-      : super(key: key);
+      this.showUnderline = false});
   final String label;
   final VoidCallback? onPressed;
   final bool isCompact;
@@ -167,21 +174,43 @@ class TextBtn extends StatelessWidget {
 /// Icon Btn - wraps a [SimpleBtn]
 class IconBtn extends StatelessWidget {
   const IconBtn(this.icon,
-      {Key? key,
+      {super.key,
       required this.onPressed,
       this.color,
       this.padding,
-      this.ignoreDensity})
-      : super(key: key);
+      this.ignoreDensity,
+      this.compact = false});
   final IconData icon;
   final VoidCallback? onPressed;
   final Color? color;
   final EdgeInsets? padding;
   final bool? ignoreDensity;
+  final bool compact;
   @override
   Widget build(BuildContext context) {
     // bool enableTouchMode = context.select((AppModel m) => m.enableTouchMode);
     // int extraPadding = enableTouchMode ? 3 : 0;
+    if (compact) {
+      return SimpleBtn(
+          ignoreDensity: ignoreDensity,
+          onPressed: onPressed,
+          normalColors: BtnColors(
+              bg: AppTheme.surface1,
+              fg: AppTheme.accent1,
+              outline: AppTheme.greyWeak),
+          hoverColors: BtnColors(
+            bg: AppTheme.bg1,
+            fg: AppTheme.focus,
+            outline: AppTheme.greyWeak,
+          ),
+          child: AnimatedPadding(
+            duration: Times.fast,
+            curve: Curves.easeOut,
+            padding: padding ?? EdgeInsets.all(Insets.xs),
+            // padding: padding ?? EdgeInsets.all(Insets.xs + extraPadding),
+            child: Icon(icon, color: color ?? Colors.black, size: 20),
+          ));
+    }
     return SimpleBtn(
         ignoreDensity: ignoreDensity,
         onPressed: onPressed,

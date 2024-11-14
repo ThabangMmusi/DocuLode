@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:protocol_handler/protocol_handler.dart';
 import 'package:windows_single_instance/windows_single_instance.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
-// import '../../_utils/logger.dart';
 import '../../_utils/device_info.dart';
 import '../../_utils/logger.dart';
 import '../../_utils/native_window_utils/window_utils.dart';
 import '../../_utils/time_utils.dart';
-import '../../bloc/auth/auth_bloc.dart';
+import '../../core/bloc/auth/auth_bloc.dart';
 import '../commands.dart';
 import 'signin_with_token_command.dart';
 
@@ -28,14 +28,16 @@ class BootstrapCommand extends BaseAppCommand {
     // Load AppModel ASAP
     await appModel.load();
     log("BootstrapCommand - AppModel Loaded, user = ${appModel.currentUser}");
-    // if (appModel.currentUser != null) {
-    //   await Future<void>.delayed(const Duration(seconds: 1));
-    //   // if (firebase.isSignedIn == false) {
-    //   //Still no auth, clear the stale user data. // TODO: Can we try some sort of re-auth here instead of just bailing
-    //   firebase.seCurrentUser = appModel.currentUser;
-    //   // appModel.currentUser = null;
-    //   // }
-    // }
+    if (firebase.isSignedIn == false && appModel.currentUser != null) {
+      // If we previously has a user, it's unexpected that firebase has lost auth. Give it some extra time.
+      await Future<void>.delayed(const Duration(seconds: 1));
+      // See if we don't have auth now...
+      if (firebase.isSignedIn == false) {
+        //Still no auth, clear the stale user data.
+        //TODO: Can we try some sort of re-auth here instead of just bailing
+        appModel.currentUser = null;
+      }
+    }
 
     // log("BootstrapCommand - Init Cloud Storage");
     // Init services
@@ -50,21 +52,21 @@ class BootstrapCommand extends BaseAppCommand {
       _configureDesktop(args);
     }
     // Login?
-    if (appModel.currentUser != null) {
-      log("BootstrapCommand - Set current user");
-      //helps un to get the access code as well as the refresh code
-      if (DeviceOS.isWindows) {
-        firebase.seCurrentUser = appModel.currentUser;
-        await firebase.signInWithMicrosoft(true);
-      } else {
-        // firebase.streamUserChange();
-      }
-      // await SetCurrentUserCommand().run(appModel.currentUser);
-      // log("BootstrapCommand - Refresh books");
-      // RefreshAllBooks();
-    } else {
-      // firebase.streamUserChange();
-    }
+    // if (appModel.currentUser != null) {
+    //   log("BootstrapCommand - Set current user");
+    //   //helps un to get the access code as well as the refresh code
+    //   if (DeviceOS.isWindows) {
+    //     firebase.seCurrentUser = appModel.currentUser;
+    //     await firebase.signInWithMicrosoft(true);
+    //   } else {
+    //     // firebase.streamUserChange();
+    //   }
+    //   // await SetCurrentUserCommand().run(appModel.currentUser);
+    //   // log("BootstrapCommand - Refresh books");
+    //   // RefreshAllBooks();
+    // } else {
+    //   firebase.streamUserChange();
+    // }
     // For aesthetics, we'll keep splash screen up for some min-time (skip on web)
     if (kIsWeb == false) {
       int remaining = kMinBootstrapTimeMs - (TimeUtils.nowMillis - startTime);
@@ -106,7 +108,7 @@ class BootstrapCommand extends BaseAppCommand {
       log(args.toString());
     });
     // }
-    // /// Polish (for Windows OS), to hide any movement of the window on startup.
+    /// Polish (for Windows OS), to hide any movement of the window on startup.
     IoUtils.instance.showWindowWhenReady();
     if (!DeviceOS.isMacOS) {
       IoUtils.instance.setTitle("Its Shared");

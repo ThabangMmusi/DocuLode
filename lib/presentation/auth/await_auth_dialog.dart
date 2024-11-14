@@ -18,14 +18,8 @@ class AwaitAuthDialog extends StatefulWidget {
 
 class _AwaitAuthDialogState extends State<AwaitAuthDialog>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-
   @override
   void initState() {
-    _animationController = AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 200),
-        reverseDuration: const Duration(milliseconds: 100));
     super.initState();
   }
 

@@ -388,8 +388,7 @@ class AppListItem<T> {
 
 class BaseListItemWidget extends StatelessWidget {
   const BaseListItemWidget(
-      {Key? key, required this.child, this.onPress, this.showDivider = true})
-      : super(key: key);
+      {super.key, required this.child, this.onPress, this.showDivider = true});
   final VoidCallback? onPress;
   final Widget child;
   final bool showDivider;

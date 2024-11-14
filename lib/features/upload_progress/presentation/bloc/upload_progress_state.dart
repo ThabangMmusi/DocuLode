@@ -18,14 +18,14 @@ class UploadState extends Equatable {
   final ErrorMessageModel? error;
   final bool uploadComplete;
   final bool collapsed;
-  final bool hide;
+  final bool close;
 
   const UploadState(
       {required this.progressMap,
       required this.pickedFiles,
       this.uploading = false,
       this.collapsed = false,
-      this.hide = false,
+      this.close = false,
       this.error,
       this.uploadComplete = false});
 
@@ -44,7 +44,7 @@ class UploadState extends Equatable {
       uploadComplete: uploadComplete ?? this.uploadComplete,
       error: error ?? this.error,
       collapsed: collapsed ?? this.collapsed,
-      hide: close ?? this.hide,
+      close: close ?? this.close,
     );
   }
 
@@ -55,5 +55,5 @@ class UploadState extends Equatable {
   int get completed => progressMap.values.where((value) => value == 1.0).length;
   @override
   List<Object> get props =>
-      [progressMap, pickedFiles, uploading, uploadComplete, collapsed, hide];
+      [progressMap, pickedFiles, uploading, uploadComplete, collapsed, close];
 }

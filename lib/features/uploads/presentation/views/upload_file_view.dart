@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:its_shared/commands/files/pick_file_command.dart';
 import 'package:its_shared/styles.dart';
+import 'package:its_shared/widgets/buttons/styled_buttons.dart';
+import 'package:its_shared/widgets/styled_load_spinner.dart';
 
+import '../../../../constants/responsive.dart';
 import '../../../../core/core.dart';
 import '../../../../presentation/account/shared/shared.dart';
 import '../../../upload_progress/presentation/bloc/upload_progress_bloc.dart';
@@ -38,8 +42,6 @@ class TableText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyles.body3,
     );
   }
 }
@@ -86,6 +88,10 @@ class _UploadFileViewState extends State<UploadFileView> {
         // TODO: implement listener
       },
       builder: (context, state) {
+        if (state is DocumentsInitial ||
+            state is DocumentsLoading && state is! DocumentsLoaded) {
+          return const Center(child: StyledLoadSpinner());
+        }
         return CustomScrollView(
           slivers: <Widget>[
             SliverPersistentHeader(
@@ -100,8 +106,15 @@ class _UploadFileViewState extends State<UploadFileView> {
                       //   onPressed: () {},
                       //   icon: Icon(Ionicons.filter),
                       // ),
-                      DLFilledButton(
-                        "Uploads",
+                      IconBtn(Ionicons.refresh,
+                          padding: EdgeInsets.all(Insets.sm),
+                          compact: true, onPressed: () {
+                        BlocProvider.of<UploadsBloc>(context)
+                            .add(FetchDocuments());
+                      }),
+                      HSpace.med,
+                      PrimaryBtn(
+                        label: "Uploads",
                         onPressed: () async {
                           await PickFileCommand()
                               .run(enableCamera: false)
@@ -119,8 +132,10 @@ class _UploadFileViewState extends State<UploadFileView> {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: Insets.xl + Insets.sm),
+                padding: EdgeInsets.symmetric(
+                    horizontal: Responsive.isMobile(context)
+                        ? Insets.lg + Insets.sm
+                        : Insets.xl + Insets.sm),
                 child: Row(
                   children: [
                     const ViewTitle(
@@ -132,41 +147,40 @@ class _UploadFileViewState extends State<UploadFileView> {
                 ),
               ),
             ),
-            if (state is DocumentsInitial ||
-                state is DocumentsLoading && state is! DocumentsLoaded)
-              const SliverToBoxAdapter(
-                  child: Center(child: CircularProgressIndicator()))
-            else if (state is DocumentsError)
+            if (state is DocumentsError)
               SliverToBoxAdapter(
                   child: Center(child: Text('Error: ${state.message}')))
             else if (state is DocumentsLoaded) ...[
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: SliverAppBarDelegate(
-                  child: const PreferredSize(
-                    preferredSize: Size.fromHeight(46),
-                    child: SizedBox(
-                      height: 46,
-                      child: Row(
-                        children: [
-                          ColumnItem(
-                            child: TableHeaderText("File Name"),
-                          ),
-                          ColumnItem(
-                              width: TableColumnSizes.fileSize,
-                              child: TableHeaderText("Size")),
-                          ColumnItem(
-                              width: TableColumnSizes.fileUploaded,
-                              child: TableHeaderText("Uploaded")),
-                          ColumnItem(
-                              width: TableColumnSizes.fileStatus,
-                              child: TableHeaderText("Status")),
-                        ],
+              if (!Responsive.isMobile(context))
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: SliverAppBarDelegate(
+                    child: const PreferredSize(
+                      preferredSize: Size.fromHeight(46),
+                      child: SizedBox(
+                        height: 46,
+                        child: Row(
+                          children: [
+                            ColumnItem(
+                              child: TableHeaderText("File Name"),
+                            ),
+                            ColumnItem(
+                                width: TableColumnSizes.fileSize,
+                                child: TableHeaderText("Size")),
+                            ColumnItem(
+                                width: TableColumnSizes.fileUploaded,
+                                child: TableHeaderText("Rating")),
+                            ColumnItem(
+                                width: TableColumnSizes.fileStatus,
+                                child: TableHeaderText("Status")),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+              if (Responsive.isMobile(context))
+                SliverToBoxAdapter(child: VSpace.lg),
               // SliverList(
               //   delegate: SliverChildBuilderDelegate(
               //     (BuildContext context, int index) {
@@ -180,7 +194,9 @@ class _UploadFileViewState extends State<UploadFileView> {
               SliverList.separated(
                   itemBuilder: (context, index) {
                     final document = state.documents[index];
-                    return DLTableRow(document);
+                    return Responsive.isMobile(context)
+                        ? DLResourceListItem(document)
+                        : DLTableRow(document);
                   },
                   separatorBuilder: (context, index) => Padding(
                         padding: EdgeInsets.symmetric(horizontal: Insets.xl),

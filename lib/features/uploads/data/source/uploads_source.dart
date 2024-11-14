@@ -14,7 +14,13 @@ class UploadsSourceImpl implements UploadsSource {
   @override
   Future<FetchedRemoteDocs> getUploads() async {
     try {
-      return await firebaseService.getUserUploads();
+      final files = await firebaseService.getUserUploads();
+      List<RemoteDocModel> finalFiles = [];
+      for (RemoteDocModel file in files.docs!) {
+        final modules = await firebaseService.getModuleNames(file.modules);
+        finalFiles.add(file.copyWith(modules: modules));
+      }
+      return FetchedRemoteDocs(docs: finalFiles);
     } catch (e) {
       throw ServerException(e.toString());
     }

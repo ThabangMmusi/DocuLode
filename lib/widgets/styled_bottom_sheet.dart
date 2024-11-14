@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 
-import '../constants/app_constants.dart';
 import '../styles.dart';
+import 'decorated_container.dart';
 
 class StyledBottomSheet extends StatelessWidget {
-  const StyledBottomSheet({required this.child, super.key});
+  const StyledBottomSheet({required this.child, Key? key}) : super(key: key);
 
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme theme = Theme.of(context).colorScheme;
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.vertical(
             top: Corners.medRadius, bottom: Radius.zero),
-        color: Theme.of(context).colorScheme.surface,
+        color: theme.surface,
       ),
       child: Column(children: [
-        kVSpacingQuarter,
+        VSpace.sm,
 
         /// Drag Handle
-        // DecoratedContainer(
-        //   width: 96,
-        //   height: 4,
-        //   borderRadius: Corners.med,
-        //   color: Theme.of(context).colorScheme.surface,
-        // ),
+        DecoratedContainer(
+          width: 96,
+          height: 4,
+          borderRadius: Corners.med,
+          color: theme.tertiaryContainer,
+        ),
 
         /// Content
         child
@@ -38,6 +39,7 @@ Future<void> showStyledBottomSheet<T>(BuildContext context,
     {required Widget child}) async {
   return showModalBottomSheet(
       isScrollControlled: true,
+      useRootNavigator: true,
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius:

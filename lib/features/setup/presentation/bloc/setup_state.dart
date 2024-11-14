@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'setup_bloc.dart';
 
-enum SetupStatus { initial, loading, success, failure }
+enum SetupStatus { initial, loading, success, failure, finalizing, done }
 
 extension EditFileStatusX on SetupStatus {
   bool get isLoadingOrSuccess => [
@@ -11,24 +11,22 @@ extension EditFileStatusX on SetupStatus {
 }
 
 class SetupState extends Equatable {
-  final int step;
-  final int? userLevel;
+  final int userLevel;
   final SetupStatus status;
   final List<Course> courses;
   final List<Module> modules;
   final Course? selectedCourse;
   final List<Module> selectedModules;
-  final String? errorMessage;
+  final String? errorMsg;
 
   const SetupState({
     this.status = SetupStatus.initial,
-    this.step = 1,
-    this.userLevel,
+    this.userLevel = 0,
     this.courses = const [],
     this.modules = const [],
     this.selectedCourse,
     this.selectedModules = const [],
-    this.errorMessage,
+    this.errorMsg,
   });
 
   SetupState copyWith({
@@ -39,17 +37,16 @@ class SetupState extends Equatable {
     List<Module>? modules,
     Course? selectedCourse,
     List<Module>? selectedModules,
-    String? errorMessage,
+    String? errorMsg,
   }) {
     return SetupState(
       status: status ?? this.status,
-      step: step ?? this.step,
       userLevel: userLevel ?? this.userLevel,
       courses: courses ?? this.courses,
       modules: modules ?? this.modules,
       selectedCourse: selectedCourse ?? this.selectedCourse,
       selectedModules: selectedModules ?? this.selectedModules,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMsg: errorMsg ?? this.errorMsg,
     );
   }
 
@@ -60,8 +57,7 @@ class SetupState extends Equatable {
         modules,
         selectedCourse,
         selectedModules,
-        step,
         userLevel,
-        errorMessage
+        errorMsg
       ];
 }
