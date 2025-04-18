@@ -9,7 +9,6 @@ import '../../_utils/device_info.dart';
 import '../../_utils/logger.dart';
 import '../../core/common/models/models.dart';
 import '../../core/core.dart';
-import 'firebase_service_firedart.dart';
 import 'firebase_service_native.dart';
 
 // CollectionKeys

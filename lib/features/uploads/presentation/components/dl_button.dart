@@ -108,14 +108,14 @@ class _DLButton extends StatefulWidget {
   final Color? hoverBorderColor;
   final Color? borderColor;
   final EdgeInsets? padding;
+
   const _DLButton(
     this.child, {
     required this.onPressed,
     required this.hoverFillColor,
-    this.fillColor,
-    this.padding,
     this.hoverBorderColor,
-    this.borderColor,
+    this.fillColor,
+    this.padding, this.borderColor,
   });
 
   @override

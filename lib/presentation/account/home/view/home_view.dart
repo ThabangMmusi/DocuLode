@@ -127,8 +127,8 @@ class HomeView extends StatelessWidget {
         ),
         SliverToBoxAdapter(child: responsiveStatsBuilder(context)),
 
-        const SliverToBoxAdapter(child: TableContainerWidget()),
-        const SliverToBoxAdapter(child: TableContainerWidget()),
+        // const SliverToBoxAdapter(child: TableContainerWidget()),
+        // const SliverToBoxAdapter(child: TableContainerWidget()),
       ],
     );
   }

@@ -8,7 +8,6 @@ import '../../constants/app_colors.dart';
 import '../../constants/responsive.dart';
 import '../../styles.dart';
 import 'account_widgets.dart';
-import 'profile/profile_view.dart';
 import 'side_menu/side_menu_widget.dart';
 import '../../features/upload_progress/upload_progress.dart';
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:its_shared/_utils/string_utils.dart';
 
-import 'buttons/styled_buttons.dart';
 
 //TODO: This is a good package / code example / blogpost
 class InlineTextEditor extends StatefulWidget {

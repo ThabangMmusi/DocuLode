@@ -17,8 +17,10 @@ dependencies:
   cloud_firestore: ^5.4.4
   firebase_storage: ^12.3.4
   # My private ui
-  rich_ui:
-    path: C:/SoftwareDevelopment/rich_ui/
+  # rich_ui:
+  #   git:
+  #     url: https://github.com/ThabangMmusi/rich_ui
+    # path: C:/SoftwareDevelopment/rich_ui/
   cupertino_icons: ^1.0.2
   intl: ^0.19.0
   ionicons: ^0.2.2

@@ -85,10 +85,10 @@ class NativeFirebaseService extends FirebaseService {
           //     .then((value) => value)
           //     .catchError((error) => print(error));z
           //TODO: USE POP UP AFTER FINDING A WAY TO PREVENT MULTIPLE POPUPS
-          // await auth.signInWithRedirect(provider);
-          await auth.signInWithPopup(provider).then((value) {
-            log(value.toString());
-          });
+          await auth.signInWithRedirect(provider);
+          // await auth.signInWithPopup(provider).then((value) {
+          //   log(value.toString());
+          // });
         } else {
           // await auth.signInWithPopup(provider);
           await auth.signInWithProvider(provider);
