@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:its_shared/constants/responsive.dart';
-import 'package:its_shared/core/components/access_state_widget.dart';
 import 'package:its_shared/core/components/module_selector.dart';
 import 'package:its_shared/core/core.dart';
 import 'package:its_shared/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
@@ -10,7 +8,6 @@ import 'package:its_shared/widgets/buttons/styled_buttons.dart';
 import 'package:its_shared/widgets/gray_rounded_text.dart';
 import 'package:its_shared/widgets/inline_text_editor.dart';
 import 'package:its_shared/widgets/styled_load_spinner.dart';
-import 'package:its_shared/widgets/ui_text.dart';
 
 import '../../../../styles.dart';
 import '../../../../widgets/styled_dropdown_textfield.dart';
@@ -20,7 +17,6 @@ class UploadEditView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double minTopBarHeight = kToolbarHeight + Insets.lg + 2;
     return Material(
       child: BlocConsumer<UploadEditBloc, UploadEditState>(
         listener: (context, state) {
@@ -167,7 +163,6 @@ class _NameField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme colors = Theme.of(context).colorScheme;
     final state = context.watch<UploadEditBloc>().state;
 
     return InlineTextEditor(

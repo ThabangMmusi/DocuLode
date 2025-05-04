@@ -1,4 +1,4 @@
-import '../../../../core/common/models/models.dart';
+import '../../../../core/data/models/models.dart';
 import '../../../../core/core.dart';
 import '../../../../services/firebase/firebase_service.dart';
 

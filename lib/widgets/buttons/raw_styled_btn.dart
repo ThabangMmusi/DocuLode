@@ -87,7 +87,7 @@ class _RawBtnState extends State<RawBtn> {
     BtnColors normalColors = widget.normalColors ??
         BtnColors(fg: theme.onInverseSurface, bg: Colors.transparent);
     BtnColors hoverColors = widget.hoverColors ??
-        BtnColors(fg: AppTheme.focus, bg: AppTheme.focus.withOpacity(.1));
+        BtnColors(fg: AppTheme.focus, bg: AppTheme.focus.withValues(alpha: .1));
     double focusMargin = widget.focusMargin ?? -5;
     return widget.loading
         ? AnimatedOpacity(
@@ -134,7 +134,7 @@ class _RawBtnState extends State<RawBtn> {
                           normal: normalColors.bg, hover: hoverColors.bg),
                     ),
                     child:
-                        Padding(padding: EdgeInsets.zero, child: widget.child),
+                        Padding(padding:widget.padding?? EdgeInsets.zero, child: widget.child),
                   ),
                 ),
 

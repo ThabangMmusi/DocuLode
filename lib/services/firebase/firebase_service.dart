@@ -7,7 +7,7 @@ import 'dart:html' as html;
 
 import '../../_utils/device_info.dart';
 import '../../_utils/logger.dart';
-import '../../core/common/models/models.dart';
+import '../../core/data/models/models.dart';
 import '../../core/core.dart';
 import 'firebase_service_native.dart';
 
@@ -19,6 +19,10 @@ class FireIds {
   static const String courses = "courses";
   static const String modules = "modules";
   static const String level = "level";
+  static const String more = "more";
+  static const String saves = "saves";
+  static const String profile = "profile";
+  static const String details = "details";
   static const String increaseDownload = "increaseDownload";
 }
 
@@ -55,14 +59,20 @@ abstract class FirebaseService {
   final StreamController<AppUser?> _controller =
       StreamController<AppUser?>.broadcast();
   AppUser? get currentUser => _currentUser;
-  String? get userId => currentUser!.id;
+  String? get userId => _userId;
   set seCurrentUser(AppUser? newUser) => _currentUser = newUser;
   AppUser? _currentUser;
+  String? _userId;
+  set setUserId(String newUserId) {
+      _userId = newUserId;
+  }
   bool isDesktopAuth = false;
   FirebaseService() {
     onUserChanged = _controller.stream;
   }
   List<String> get userPath => [FireIds.users, userId ?? ""];
+  List<String> get userEduPath => [...userPath, FireIds.more, FireIds.profile];
+  List<String> get userSavesPath => [...userPath, FireIds.more, FireIds.saves];
 
   // Helper method for getting a path from keys, and optionally prepending the scope (users/email)
   String getPathFromKeys(List<String> keys, {bool addUserPath = false}) {
@@ -89,12 +99,20 @@ abstract class FirebaseService {
 
   Future<void> setNewUser(String? uid) async {
     if (uid != null) {
-      final userMap = await getDoc([FireIds.users, uid]);
+setUserId = uid;
+      final userMap = await getDoc(userPath);
       AppUser user = AppUser.fromJson(userMap!);
-      final userModules = user.modules;
-      List<ModuleModel> modules = await getModuleNames(userModules);
-      if (modules.isNotEmpty) {
-        user = user.copyWith(modules: modules);
+      final profileMap = await getDoc(userEduPath);
+      if (profileMap != null) {
+        final moduleIds = List<String>.from(profileMap[FireIds.modules]);
+        List<ModuleModel> modules = await getModules(moduleIds);
+        CourseModel course =
+            await getCourse(profileMap[FireIds.course] as String);
+        user = user.copyWith(
+          modules: modules,
+          course: course,
+          level: profileMap[FireIds.level] as int?,
+        );
       }
       seCurrentUser = user;
     } else {
@@ -117,6 +135,48 @@ abstract class FirebaseService {
       }
     }
     return modules;
+  }
+
+  Future<List<ModuleModel>> getModules(List<String> moduleIds) async {
+    List<ModuleModel> modules = [];
+    for (final moduleId in moduleIds) {
+      final json = await getDoc([FireIds.modules, moduleId]);
+      modules.add(ModuleModel.fromJson(json!));
+    }
+    return modules;
+  }
+
+  //todo :: add temp module to avoid re reading them again and again
+  Future<List<ModuleModel>> getSortedModules({
+    int? maxLevel,
+    String? courseId,
+  }) async {
+    List<ModuleModel> modules = [];
+
+    if (maxLevel == null) {
+      maxLevel = currentUser!.level;
+      courseId = currentUser!.course!.id;
+    }
+
+    final json = await getDoc([FireIds.courses, courseId!,FireIds.more, FireIds.details]);
+    final courseDetails = ModuleManager.fromJson(json!);
+    
+    modules = courseDetails.modules!;
+    return await Future.wait(modules
+        .where(
+      (element) => element.level! <= maxLevel!,
+    )
+        .map(
+      (e) async {
+        final json = await getDoc([FireIds.modules, e.id]);
+        return e.copyWith(name: json!["name"]);
+      },
+    ).toList());
+    // for (var e in course.modules) {
+    //   final json = await getDoc([FireIds.modules, e.id]);
+    //   modules.add(e.copyWith(name: json!["name"]));
+    // }
+    // return modules;
   }
 
   ///////////////////////////////////////////////////
@@ -169,56 +229,33 @@ abstract class FirebaseService {
   //////////////////////////////////////////////////
   Future<List<CourseModel>> getAllCourses() async {
     final course = await getCollection([FireIds.courses]);
-    // const newCourse = CourseModel(id: "amAcKVBOPCZeblwjf804T3zvpXWG",
-    // duration: 3,
-    // name: "Diploma in ICT",
-    // modules: [
-    //   ModuleModel(id: "2lix5obvhr9OlYsrjg0P",level: 2,semester: 1),
-    //   ModuleModel(id: "5B1SyMXfj0cqXwDM0ibm",level: 2,semester: 1),
-    //   ModuleModel(id: "m1VSUOQpac1cl8EnIr7d",level: 2,semester: 1),
-    //   ModuleModel(id: "v7oRxsSiFqmtjPG1SaUr",level: 2,semester: 1),
-    //   ModuleModel(id: "yXvdul1lx84xKydArgJ9",level: 2,semester: 1),
-    // ]);
-    // await addDoc([FireIds.course,"amAcKVBOPCZeblwjf804T3zvpXWG"], newCourse.toJson());
     return course?.map((doc) => CourseModel.fromJson(doc)).toList() ?? [];
   }
 
-  //todo :: add temp module to avoid re reading them again and again
-  Future<List<ModuleModel>> getSortedModules({
-    int? maxLevel,
-    List<ModuleModel>? modules,
-  }) async {
-    // List<ModuleModel> modules = [];
-
-    if (maxLevel == null) {
-      maxLevel = currentUser!.level;
-      if (currentUser!.course!.modules == null) {
-        final json = await getDoc([FireIds.courses, currentUser!.course!.id]);
-        seCurrentUser = currentUser!.copyWith(
-          course: CourseModel.fromJson(json!),
-        );
-      }
-      modules = currentUser!.course!.modules!;
-    }
-    return await Future.wait(modules!
-        .where(
-      (element) => element.level! <= maxLevel!,
-    )
-        .map(
-      (e) async {
-        final json = await getDoc([FireIds.modules, e.id]);
-        return e.copyWith(name: json!["name"]);
-      },
-    ).toList());
-    // for (var e in course.modules) {
-    //   final json = await getDoc([FireIds.modules, e.id]);
-    //   modules.add(e.copyWith(name: json!["name"]));
-    // }
-    // return modules;
+  Future<CourseModel> getCourse(String courseId) async {
+    final doc = await getDoc([FireIds.courses, courseId]);
+    return CourseModel.fromJson(doc!);
   }
 
   Future<void> updateUser(Map<String, dynamic> json) async {
     await updateDoc(userPath, json);
+  }
+  ///Whew we update user profile[course,year and modules] here
+  ///this is the one that is used in the settings setup page
+  Future<void> updateUserEducation({
+    required List<String> modules,
+    required int level,
+    required  String courseId,}) async {
+    Map<String, dynamic> json = {
+      FireIds.modules: modules,
+      FireIds.level: level,
+      FireIds.course: courseId,
+    };
+    if (currentUser!.course == null) {
+      await addDoc([FireIds.more], json,documentId: FireIds.profile, addUserPath: true);
+    }else {
+      await updateDoc(userEduPath, json);
+    }
   }
 
   ///////////////////////////////////////////////////

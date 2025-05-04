@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:protocol_handler/protocol_handler.dart';
 import 'package:windows_single_instance/windows_single_instance.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import '../../_utils/device_info.dart';
 import '../../_utils/logger.dart';
 import '../../_utils/native_window_utils/window_utils.dart';
 import '../../_utils/time_utils.dart';
-import '../../core/bloc/auth/auth_bloc.dart';
+import '../../core/common/auth/presentation/bloc/auth_bloc.dart';
 import '../commands.dart';
 import 'signin_with_token_command.dart';
 

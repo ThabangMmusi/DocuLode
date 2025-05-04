@@ -47,7 +47,7 @@ class StatisticsWidgetNew extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(Insets.sm),
                     decoration: BoxDecoration(
-                      color: bgColor.withOpacity(.35),
+                      color: bgColor.withValues(alpha: .35),
                       borderRadius: BorderRadius.circular(Insets.med),
                     ),
                     child: Icon(
@@ -99,15 +99,15 @@ class StatisticsWidgetNew extends StatelessWidget {
 //       clipBehavior: Clip.antiAlias,
 //       decoration: BoxDecoration(
 //           color: tWhiteColor,
-//           // color: bgColor.withOpacity(.22),
+//           // color: bgColor.withValues(alpha: .22),
 //           // gradient: LinearGradient(
 //           //   begin: Alignment.topCenter,
 //           //   end: Alignment.bottomCenter,
 //           //   colors: [
-//           //     bgColor.withOpacity(.22),
-//           //     bgColor.withOpacity(.22),
-//           //     bgColor.withOpacity(.4),
-//           //     bgColor.withOpacity(.6),
+//           //     bgColor.withValues(alpha: .22),
+//           //     bgColor.withValues(alpha: .22),
+//           //     bgColor.withValues(alpha: .4),
+//           //     bgColor.withValues(alpha: .6),
 //           //     bgColor,
 //           //   ],
 //           // ),
@@ -142,7 +142,7 @@ class StatisticsWidgetNew extends StatelessWidget {
 //                   Container(
 //                     padding: const EdgeInsets.all(kPaddingQuarter),
 //                     decoration: BoxDecoration(
-//                       color: bgColor.withOpacity(.35),
+//                       color: bgColor.withValues(alpha: .35),
 //                       borderRadius: BorderRadius.circular(kPaddingHalf),
 //                     ),
 //                     child: Icon(

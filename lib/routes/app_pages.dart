@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:its_shared/features/upload_edit/presentation/views/upload_edit_view.dart';
+import 'package:its_shared/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:its_shared/features/shell/presentation/pages/shell_page.dart';
 import 'package:its_shared/features/upload_preview/presentation/views/upload_preview.dart';
 
-import '../core/bloc/auth/auth_bloc.dart';
-import '../features/setup/presentation/views/setup_view.dart';
+import '../core/common/auth/presentation/bloc/auth_bloc.dart';
+import '../features/settings/settings.dart';
+import '../features/setup/presentation/views/course_settings_view.dart';
 import '../features/shared/presentation/views/shared_view.dart';
-import '../presentation/account/account_view.dart';
-import '../presentation/account/home/home.dart';
 import '../features/uploads/presentation/views/upload_file_view.dart';
 import '../presentation/auth/desktop_auth.dart';
 import '../presentation/auth/login_screen.dart';
@@ -35,28 +35,20 @@ class AppRouter {
     routes: <RouteBase>[
       StatefulShellRoute.indexedStack(
         builder: (context, state, StatefulNavigationShell navigationShell) {
-          // Return the widget that implements the custom shell (in this case
-          // using a BottomNavigationBar). The StatefulNavigationShell is passed
-          // to be able access the state of the shell and to navigate to other
-          // branches in a stateful way.
-          return MainAccountView(navigationShell: navigationShell);
+          return ShellPage(navigationShell: navigationShell);
         },
         branches: <StatefulShellBranch>[
-          // The route branch for the first tab of the bottom navigation bar.
           StatefulShellBranch(
             navigatorKey: _sectionANavigatorKey,
             routes: <RouteBase>[
               GoRoute(
-                // The screen to display as the root in the first tab of the
-                // bottom navigation bar.
                 name: "DashBoard",
                 path: Routes.home,
-                builder: (context, state) => const HomeView(),
+                builder: (context, state) => const DashboardPage(),
               ),
             ],
           ),
 
-          // The route branch for the third tab of the bottom navigation bar.
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
@@ -66,26 +58,24 @@ class AppRouter {
                   GoRoute(
                     path: ":id",
                     builder: (context, state) => const UploadPreview(
-                        url:
-                            "https://storage.googleapis.com/spushare-2023.appspot.com/uploads/5ZxhOl3PGTbPIvKUJPaKBn0UHe72/00206BF92355240717090418.pdf"),
+                        url: "https://storage.googleapis.com/spushare-2023.appspot.com/uploads/5ZxhOl3PGTbPIvKUJPaKBn0UHe72/00206BF92355240717090418.pdf"),
                   ),
                 ],
               ),
             ],
           ),
 
-          // The route branch for the second tab of the bottom navigation bar.
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                path: Routes.search,
+                path: Routes.saves,
                 builder: (context, state) => const Center(
                   child: Text("Saved"),
                 ),
               ),
             ],
           ),
-// The route branch for the second tab of the bottom navigation bar.
+          
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
@@ -97,27 +87,30 @@ class AppRouter {
             ],
           ),
 
-          // The route branch for the third tab of the bottom navigation bar.
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                // The screen to display as the root in the third tab of the
-                // bottom navigation bar.
+                path: Routes.settings,
+                builder: (context, state) => const Center(
+                  child: SettingsView(),
+                ),
+              ),
+            ],
+          ),
+          
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              GoRoute(
                 path: Routes.modules,
                 builder: (context, state) => const Center(
-                  child: Text("modules"),
+                  child: Text("moduleshhhh"),
                 ),
               ),
             ],
           ),
         ],
       ),
-      // GoRoute(
-      //     path: Routes.shared,
-      //     builder: (context, state) => Text("data"),
-      //     routes: [
-
-      //     ]),
+      
       GoRoute(
         path: Routes.shared,
         builder: (context, state) {
@@ -149,7 +142,7 @@ class AppRouter {
       ),
       GoRoute(
         path: Routes.webAuthSuccessful,
-        builder: (context, tate) => const SuccessfulWebAuth(),
+        builder: (context, state) => const SuccessfulWebAuth(),
       ),
     ],
     redirect: (context, state) {
@@ -195,13 +188,10 @@ class AppRouter {
   );
 }
 
-// https://github.com/flutter/flutter/issues/108128
-// https://github.com/csells/go_router/discussions/122
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
     notifyListeners();
-    _subscription =
-        stream.asBroadcastStream().listen((currentUser) => notifyListeners());
+    _subscription = stream.asBroadcastStream().listen((currentUser) => notifyListeners());
   }
 
   late final StreamSubscription<dynamic> _subscription;

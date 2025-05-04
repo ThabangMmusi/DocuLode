@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/core/common/entities/src/module.dart';
+import 'package:its_shared/core/domain/entities/module.dart';
 import 'package:its_shared/features/upload_edit/data/source/upload_edit_source.dart';
 
 import '../../../../core/core.dart';

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:its_shared/_utils/logger.dart';
 import 'package:its_shared/core/core.dart';

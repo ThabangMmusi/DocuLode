@@ -1,14 +1,9 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/_utils/logger.dart';
 import 'package:its_shared/widgets/buttons/styled_buttons.dart';
-// import 'package:rich_ui/rich_ui.dart';
 
-import '../../../core/bloc/auth/auth_bloc.dart';
-import '../../../constants/app_constants.dart';
-import '../../../constants/app_text.dart';
+import '../../../core/common/auth/presentation/bloc/auth_bloc.dart';
 import '../../../core/components/sidebar_menu/sidebar.dart';
 import '../../../styles.dart';
 import '../account_widgets.dart';
@@ -19,85 +14,74 @@ class SideMenu extends StatelessWidget {
   final Function(BuildContext context, int index) onTap;
   @override
   Widget build(BuildContext context) {
-    String _selectedItemId = 'dashboard';
     final state = context.watch<AuthBloc>().state;
     final modules = state.user!.modules!;
+    final user = state.user!;
     return SidebarMenu(
-      profile: const SidebarProfile(
-        name: 'Frankie Sullivan',
-        avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
-      ),
-      topActions: [
-        IconButton(
-          icon: const Icon(Icons.search, color: Colors.white, size: 20),
-          onPressed: () {},
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        selectedItemBackgroundColor: Theme.of(context).colorScheme.primary,
+        selectedItemColor: Theme.of(context).colorScheme.onPrimary,
+        itemColor: Theme.of(context).colorScheme.onSurface,
+        profile: SidebarProfile(
+          name: "${user.surname} ${user.names}",
+          courseName: state.user!.course!.name!,
+          // avatarUrl: state.user!.,
         ),
-        IconButton(
-          icon: const Icon(Icons.more_vert, color: Colors.white, size: 20),
-          onPressed: () {},
-        ),
-      ],
-      selectedItemId: _selectedItemId,
-      onItemSelected: (itemId) {
-        // setState(() {
-        _selectedItemId = itemId;
-        // });
-        // Handle navigation or other actions
-      },
-      menuItems: [
-        const SidebarMenuItem(
-          id: 'dashboard',
-          title: 'Dashboard',
-          icon: Icons.dashboard_outlined,
-        ),
-        const SidebarMenuItem(
-          id: 'view_site',
-          title: 'View site',
-          icon: Icons.desktop_windows_outlined,
-          trailingIcon: Icons.open_in_new,
-        ),
-        const SidebarMenuItem(
-          id: 'marketplace',
-          title: 'Marketplace',
-          icon: Icons.shopping_cart_outlined,
-        ),
-        SidebarMenuItem.separator(),
-        const SidebarMenuItem(
-          id: 'posts',
-          title: 'Posts',
-          icon: Icons.edit_note,
-          trailingIcon: Icons.add,
-          subItems: [
-            SidebarMenuItem(
-              id: 'drafts',
-              title: 'Drafts',
-              notificationCount: 10,
+        topActions: [
+          Padding(
+            padding: EdgeInsets.all(Insets.med).copyWith(bottom: Insets.xs),
+            child: RawBtn(
+              padding: EdgeInsets.all(Insets.sm),
+              normalColors: BtnColors(
+                bg: Theme.of(context).colorScheme.onSurface,
+                fg: Theme.of(context).colorScheme.onPrimary,
+              ),
+              hoverColors: BtnColors(
+                bg: Theme.of(context).colorScheme.primary,
+                fg: Theme.of(context).colorScheme.onPrimary,
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Ionicons.search_outline, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text(
+                    'Search',
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ],
+              ),
+              onPressed: () {},
             ),
-            SidebarMenuItem(
-              id: 'scheduled',
-              title: 'Scheduled',
-              notificationCount: 2,
-            ),
-            SidebarMenuItem(
-              id: 'published',
-              title: 'Published',
-              notificationCount: 28,
-            ),
-          ],
-        ),
-        const SidebarMenuItem(
-          id: 'pages',
-          title: 'Pages',
-          icon: Icons.web_stories_outlined,
-          trailingIcon: Icons.add,
-        ),
-        const SidebarMenuItem(
-          id: 'performance',
-          title: 'Performance',
-          icon: Icons.pie_chart_outline,
-        ),
-      ],
-    );
+          ),
+        ],
+        selectedItemId: selected.toString(),
+        onItemSelected: (itemId) => onTap(context, int.parse(itemId)),
+        menuItems: List.generate(
+          bottomTaps.length - 1,
+          (index) => bottomTaps[index].label == 'Divider'
+              ? SidebarMenuItem.separator()
+              : bottomTaps[index].label == 'Modules'
+                  ? SidebarMenuItem(
+                      id: bottomTaps[index].index.toString(),
+                      icon: bottomTaps[index].icon,
+                      title: bottomTaps[index].label,
+                      subItems: modules
+                          .map(
+                            (module) => SidebarMenuItem(
+                              id: module.id,
+                              title: module.name!,
+                            ),
+                          )
+                          .toList(),
+                    )
+                  : SidebarMenuItem(
+                      id: bottomTaps[index].index.toString(),
+                      icon: bottomTaps[index].icon,
+                      title: bottomTaps[index].label,
+                      trailingIcon: bottomTaps[index].trailingIcon,
+                    ),
+        ).toList());
 
     // return RUiSideMenu(
     //   padding: EdgeInsets.symmetric(horizontal: Insets.lg),
@@ -196,35 +180,6 @@ class SideMenu extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildLogo2(BuildContext context, bool iconOnly) {
-    return Stack(
-      children: [
-        MoveWindow(),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: kPaddingDefault * 2.25),
-          child: Column(
-            children: [
-              if (!iconOnly) ...[
-                Text(
-                  tAppName,
-                  style: TextStyles.h2.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.w300),
-                ),
-                Text(
-                  tAppVersion,
-                  style: TextStyles.body2.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.w300),
-                ),
-              ]
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

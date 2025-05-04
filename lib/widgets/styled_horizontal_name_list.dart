@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:its_shared/widgets/ui_text.dart';
 
 class StyledHorizontalNameList extends StatelessWidget {
   const StyledHorizontalNameList(

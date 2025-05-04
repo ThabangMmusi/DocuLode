@@ -4,7 +4,7 @@ import 'package:its_shared/themes.dart';
 
 import '../../../../styles.dart';
 import '../bloc/upload_progress_bloc.dart';
-import '../../upload_progress.dart';
+import '../components/upload_file_widget.dart';
 
 class UploadProgressView extends StatelessWidget {
   const UploadProgressView({

@@ -1,12 +1,12 @@
 //common //entities
-export 'common/entities/src/remote_doc.dart';
+export 'domain/entities/remote_doc.dart';
 //common //models
-export 'common/models/src/remote_doc/remote_doc_model.dart';
+export 'data/models/src/remote_doc/remote_doc_model.dart';
 //common//utils
-export 'common/utils/fetched_remote_docs.dart';
+export 'utils/fetched_remote_docs.dart';
 //common//enums
-export 'common/enums/access_enum.dart';
-export 'common/enums/upload_category_enum.dart';
+export 'enums/access_enum.dart';
+export 'enums/upload_category_enum.dart';
 
 //use case
 export 'usecase/usecase.dart';

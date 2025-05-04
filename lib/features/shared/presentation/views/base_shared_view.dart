@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:its_shared/core/core.dart';
@@ -56,13 +55,13 @@ class BaseSharedView extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconBtn(Icons.thumb_up_alt, onPressed: () {}),
-                      UiText(text: "2K"),
+                      const UiText(text: "2K"),
                       HSpace.med,
                       IconBtn(Icons.thumb_down_alt_outlined, onPressed: () {}),
-                      UiText(text: "126"),
+                      const UiText(text: "126"),
                       HSpace.med,
                       const Icon(Icons.cloud_download),
-                      UiText(text: "100K"),
+                      const UiText(text: "100K"),
                     ],
                   ),
                 ),

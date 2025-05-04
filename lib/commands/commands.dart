@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../core/common/models/src/app_model.dart';
+import '../core/data/models/src/app_model.dart';
 import '../services/firebase/firebase_service.dart';
 
 BuildContext? _mainContext;

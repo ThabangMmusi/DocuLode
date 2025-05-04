@@ -10,8 +10,8 @@ class WindowsTitleBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final WindowButtonColors btnColors = WindowButtonColors(
       iconNormal: Colors.black,
-      mouseOver: Colors.black.withOpacity(.2),
-      mouseDown: Colors.black.withOpacity(.3),
+      mouseOver: Colors.black.withValues(alpha: .2),
+      mouseDown: Colors.black.withValues(alpha: .3),
       normal: Theme.of(context).colorScheme.surface,
     );
     final defaultCloseButtonColors = WindowButtonColors(

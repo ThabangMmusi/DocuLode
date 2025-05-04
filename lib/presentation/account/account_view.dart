@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:its_shared/features/upload_progress/presentation/bloc/upload_progress_bloc.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/responsive.dart';
@@ -60,7 +58,7 @@ class MainAccountView extends StatelessWidget {
                               //       color: Theme.of(context)
                               //           .colorScheme
                               //           .primary
-                              //           .withOpacity(.1),
+                              //           .withValues(alpha: .1),
                               //       border: Border(
                               //         bottom: BorderSide(
                               //             color: Theme.of(context)
@@ -123,7 +121,7 @@ class MainAccountView extends StatelessWidget {
                 backgroundColor: tWhiteColor,
                 showSelectedLabels: true,
                 selectedItemColor: tPrimaryColor,
-                unselectedItemColor: tDarkColor.withOpacity(.5),
+                unselectedItemColor: tDarkColor.withValues(alpha: .5),
                 items: bottomTaps
                     .map(
                       (e) => BottomNavigationBarItem(

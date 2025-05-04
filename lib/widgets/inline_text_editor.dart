@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:its_shared/_utils/string_utils.dart';
 
-
-//TODO: This is a good package / code example / blogpost
 class InlineTextEditor extends StatefulWidget {
   const InlineTextEditor(this.text,
-      {Key? key,
+      {super.key,
       required this.width,
       required this.style,
       this.maxLines = 1,
@@ -19,8 +17,7 @@ class InlineTextEditor extends StatefulWidget {
       this.controller,
       this.enableContextMenu = true,
       this.autoFocus = false,
-      this.maxLength})
-      : super(key: key);
+      this.maxLength});
   final double width;
   final String text;
   final int maxLines;
@@ -37,7 +34,7 @@ class InlineTextEditor extends StatefulWidget {
   final bool enableContextMenu;
 
   @override
-  _InlineTextEditorState createState() => _InlineTextEditorState();
+  State<InlineTextEditor> createState() => _InlineTextEditorState();
 }
 
 class _InlineTextEditorState extends State<InlineTextEditor> {

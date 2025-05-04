@@ -84,7 +84,7 @@ class SecondaryBtn extends StatelessWidget {
               fg: AppTheme.greyMedium,
               outline: AppTheme.greyWeak),
           hoverColors: BtnColors(
-              bg: AppTheme.focus.withOpacity(.15),
+              bg: AppTheme.focus.withValues(alpha: .15),
               fg: AppTheme.focus,
               outline: AppTheme.focus),
           onPressed: onPressed,
@@ -163,7 +163,29 @@ class TextBtn extends StatelessWidget {
             decoration:
                 showUnderline ? TextDecoration.underline : TextDecoration.none,
             fontWeight: FontWeight.w500);
-    return SimpleBtn(
+    if (isCompact) {
+      return SimpleBtn(
+          ignoreDensity:false,
+          onPressed: onPressed,
+          cornerRadius: Insets.lg,
+          normalColors: BtnColors(
+              bg: Theme.of(context).colorScheme.surface,
+              fg: Theme.of(context).colorScheme.onInverseSurface,
+              outline:  Theme.of(context).colorScheme.tertiary,),
+          hoverColors: BtnColors(
+            bg:  Theme.of(context).colorScheme.onTertiaryContainer,
+            fg:  Theme.of(context).colorScheme.onSurface,
+            outline:  Theme.of(context).colorScheme.primary,
+          ),
+          child: AnimatedPadding(
+            duration: Times.fast,
+            curve: Curves.easeOut,
+            padding:  EdgeInsets.all(Insets.xs),
+            // padding: padding ?? EdgeInsets.all(Insets.xs + extraPadding),
+      child: Text(label, style: finalStyle),
+          ));
+    }
+    return  SimpleBtn(
       ignoreDensity: false,
       onPressed: onPressed,
       child: Text(label, style: finalStyle),
@@ -195,20 +217,20 @@ class IconBtn extends StatelessWidget {
           ignoreDensity: ignoreDensity,
           onPressed: onPressed,
           normalColors: BtnColors(
-              bg: AppTheme.surface1,
-              fg: AppTheme.accent1,
-              outline: AppTheme.greyWeak),
+              bg: Theme.of(context).colorScheme.surface,
+              fg: Theme.of(context).colorScheme.onInverseSurface,
+              outline:  Theme.of(context).colorScheme.tertiary,),
           hoverColors: BtnColors(
-            bg: AppTheme.bg1,
-            fg: AppTheme.focus,
-            outline: AppTheme.greyWeak,
+            bg:  Theme.of(context).colorScheme.onTertiaryContainer,
+            fg:  Theme.of(context).colorScheme.onSurface,
+            outline:  Theme.of(context).colorScheme.primary,
           ),
           child: AnimatedPadding(
             duration: Times.fast,
             curve: Curves.easeOut,
             padding: padding ?? EdgeInsets.all(Insets.xs),
             // padding: padding ?? EdgeInsets.all(Insets.xs + extraPadding),
-            child: Icon(icon, color: color ?? Colors.black, size: 20),
+            child: Icon(icon),
           ));
     }
     return SimpleBtn(
@@ -221,5 +243,93 @@ class IconBtn extends StatelessWidget {
           // padding: padding ?? EdgeInsets.all(Insets.xs + extraPadding),
           child: Icon(icon, color: color ?? Colors.black, size: 20),
         ));
+  }
+}
+class DeleteBtn extends StatelessWidget {
+  const DeleteBtn({
+    super.key, 
+    required this.onPressed,
+    this.label = 'Delete',
+    this.icon = Icons.delete,
+  });
+
+  const DeleteBtn.TextOnly({
+    super.key,
+    required this.onPressed,
+    this.label = 'Delete',
+  }) : 
+       icon = null;
+
+  final VoidCallback onPressed;
+  final String label;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(Insets.med).copyWith(bottom: Insets.xs),
+      child: RawBtn(
+        padding: EdgeInsets.all(Insets.sm),
+        normalColors: BtnColors(
+          bg: Theme.of(context).colorScheme.errorContainer,
+          fg: Theme.of(context).colorScheme.onErrorContainer,
+        ),
+        hoverColors: BtnColors(
+          bg: Theme.of(context).colorScheme.primary,
+          fg: Theme.of(context).colorScheme.onPrimary,
+        ),
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon!=null) ...[
+              Icon(icon, color: Colors.white),
+              const SizedBox(width: 8),
+            ],
+            Text(
+              label,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class SelectableBtn extends StatelessWidget {
+  const SelectableBtn(
+      {super.key, required this.onPressed, required this.text, required this.selected});
+  final bool selected;
+  final void Function() onPressed;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return RawBtn(
+      padding: EdgeInsets.all(Insets.sm),
+      enableShadow: false,
+      normalColors: BtnColors(
+        bg: selected
+            ? Theme.of(context).colorScheme.onSurface
+            : Theme.of(context).colorScheme.tertiary,
+        fg: Theme.of(context).colorScheme.onPrimary,
+      ),
+      hoverColors: BtnColors(
+        bg: Theme.of(context).colorScheme.primary,
+        fg: Theme.of(context).colorScheme.onPrimary,
+      ),
+      cornerRadius: Insets.xl,
+      onPressed: onPressed,
+      child: Text(
+        text,
+        style: TextStyle(
+            color: selected
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).colorScheme.onSurface,
+            fontSize: 14),
+      ),
+    );
   }
 }

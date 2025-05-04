@@ -18,14 +18,15 @@ class AppTheme {
   static const Color greyMedium = Color(0xff787878);
   static const Color greyStrong = Color(0xff333333);
   static const Color focus = Color(0xffd81e1e);
+  static const Color error = Color.fromARGB(255, 240, 23, 23);
   static const Color mainTextColor = Colors.black;
   static const Color inverseTextColor = Colors.white;
 
   static MaterialColor getMaterialColor(Color color) {
-    final int red = color.red;
-    final int green = color.green;
-    final int blue = color.blue;
-    final int alpha = color.alpha;
+    final int red = color.r.round();
+    final int green = color.g.round();
+    final int blue = color.b.round();
+    final int alpha = color.a.round();
 
     final Map<int, Color> shades = {
       50: Color.fromARGB(alpha, red, green, blue),
@@ -40,7 +41,7 @@ class AppTheme {
       900: Color.fromARGB(alpha, red, green, blue),
     };
 
-    return MaterialColor(color.value, shades);
+    return MaterialColor(color.toARGB32(), shades);
   }
 
   static ThemeData get light {
@@ -78,11 +79,10 @@ class AppTheme {
         onInverseSurface: greyMedium,
         tertiary: greyWeak,
         tertiaryContainer: const Color(0XFFE8E8E8),
-        onTertiaryContainer: const Color(0xFFFCFCFC),
-        error: focus);
+        onTertiaryContainer: bg1,
+        error: error);
 
     Color dividerColor = const Color(0XFFE8E8E8);
-    BorderSide dInputBS = BorderSide(color: colorScheme.primary);
     return ThemeData(
       appBarTheme: const AppBarTheme(color: Colors.white),
       colorScheme: colorScheme,
@@ -92,8 +92,8 @@ class AppTheme {
       dividerTheme: DividerThemeData(
           color: dividerColor, thickness: 1, space: Insets.med * 2),
       searchBarTheme: SearchBarThemeData(
-        elevation: MaterialStateProperty.all(0),
-        backgroundColor: MaterialStateProperty.all(colorScheme.background),
+        elevation: WidgetStateProperty.all(0),
+        backgroundColor: WidgetStateProperty.all(colorScheme.surface),
         // side: MaterialStateProperty.all(dInputBS),
         // shape: MaterialStateProperty.all(RoundedRectangleBorder(
         //     side: dInputBS, borderRadius: Corners.medBorder))
@@ -110,43 +110,45 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
       ),
       textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
-        padding: MaterialStatePropertyAll(EdgeInsets.all(Insets.med)),
-        foregroundColor: MaterialStateProperty.all(Colors.black),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+        padding: WidgetStatePropertyAll(EdgeInsets.all(Insets.med)),
+        foregroundColor: WidgetStateProperty.all(Colors.black),
+        shape: WidgetStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(Insets.sm))),
       )),
       outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
-        padding: MaterialStatePropertyAll(EdgeInsets.all(Insets.med)),
-        foregroundColor: MaterialStateProperty.all(Colors.black),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+        padding: WidgetStatePropertyAll(EdgeInsets.all(Insets.med)),
+        foregroundColor: WidgetStateProperty.all(Colors.black),
+        shape: WidgetStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(Insets.sm))),
       )),
       filledButtonTheme: FilledButtonThemeData(
           style: ButtonStyle(
-        padding: MaterialStatePropertyAll(EdgeInsets.all(Insets.med)),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+        padding: WidgetStatePropertyAll(EdgeInsets.all(Insets.med)),
+        shape: WidgetStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(Insets.sm))),
       )),
       switchTheme: SwitchThemeData(
           splashRadius: 0,
-          thumbColor: MaterialStateProperty.all(colorScheme.onSecondary),
-          trackColor: MaterialStateProperty.all(dividerColor),
-          trackOutlineWidth: const MaterialStatePropertyAll(0),
-          trackOutlineColor: MaterialStateProperty.all(Colors.transparent)),
+          thumbColor: WidgetStateProperty.all(colorScheme.onSecondary),
+          trackColor: WidgetStateProperty.all(dividerColor),
+          trackOutlineWidth: const WidgetStatePropertyAll(0),
+          trackOutlineColor: WidgetStateProperty.all(Colors.transparent)),
       tabBarTheme: TabBarTheme(
           indicatorSize: TabBarIndicatorSize.tab, labelStyle: TextStyles.h3),
+          inputDecorationTheme: const InputDecorationTheme(
+        filled: true,)
     );
   }
 
   static ThemeData get dark {
     return ThemeData(
       appBarTheme: const AppBarTheme(
-        color: Color.fromARGB(255, 16, 46, 59),
+        color: Color.fromARGB(255, 31, 54, 63),
       ),
       colorScheme: ColorScheme.fromSeed(
         brightness: Brightness.dark,

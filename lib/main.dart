@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:its_shared/features/settings/presentation/bloc/settings_bloc.dart';
 // import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:its_shared/features/setup/presentation/bloc/setup_bloc.dart';
 import 'package:its_shared/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
@@ -10,12 +11,12 @@ import 'package:its_shared/features/uploads/presentation/bloc/uploads_bloc.dart'
 import 'package:its_shared/themes.dart';
 
 import '_utils/logger.dart';
-import 'core/bloc/auth/auth_bloc.dart';
+import 'core/common/auth/presentation/bloc/auth_bloc.dart';
 import 'commands/app/bootstrap_command.dart';
 import 'cubits/desktop_auth/desktop_auth_cubit.dart';
 import 'features/shared/presentation/bloc/shared_bloc.dart';
 import 'injection_container.dart';
-import 'core/common/models/src/app_model.dart';
+import 'core/data/models/src/app_model.dart';
 import 'routes/app_pages.dart';
 import 'services/firebase/firebase_service.dart';
 
@@ -66,6 +67,7 @@ void main(List<String> args) async {
           ),
           BlocProvider(create: (context) => serviceLocator<UploadEditBloc>()),
           BlocProvider(create: (context) => serviceLocator<SetupBloc>()),
+          BlocProvider(create: (context) => serviceLocator<SettingsBloc>()),
           BlocProvider(create: (context) => serviceLocator<SharedBloc>()),
           // BlocProvider(
           //   create: (context) => ConnectionCubit(),

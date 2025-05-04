@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../_utils/logger.dart';
 import '../../cubits/desktop_auth/desktop_auth_cubit.dart';
-import '../../core/common/models/src/app_user/app_user.dart';
+import '../../core/data/models/src/app_user/app_user.dart';
 import '../commands.dart';
 
 class SignInWithTokenCommand extends BaseAppCommand {

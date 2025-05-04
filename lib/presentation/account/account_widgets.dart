@@ -41,34 +41,48 @@ Widget searchBox() {
     ],
   );
 }
-
 List<NavigationItem> get bottomTaps {
   return [
     NavigationItem(
       label: "Dashboard",
-      icon: Ionicons.home_outline,
-      activeIcon: Ionicons.home,
+      icon: Icons.dashboard_outlined,
+      activeIcon: Icons.dashboard,
+      index: 0,
     ),
-    // NavigationItem(
-    //   label: "Search",
-    //   icon: Ionicons.search_outline,
-    //   activeIcon: Ionicons.search,
-    // ),
     NavigationItem(
       label: "Uploads",
-      icon: Ionicons.file_tray_outline,
+      icon: Icons.edit_note,
       activeIcon: Ionicons.file_tray,
+      trailingIcon: Icons.add,
+      index: 1,
     ),
     NavigationItem(
       label: "Saved",
-      icon: Ionicons.bookmark_outline,
+      icon: Icons.bookmark_outline,
       activeIcon: Ionicons.bookmark,
+      index: 2,
     ),
     NavigationItem(
       label: "Modules",
-      icon: Ionicons.book_outline,
+      icon: Icons.web_stories_outlined,
       activeIcon: Ionicons.book,
-    )
+      index: 3,
+    ),
+    NavigationItem(
+      label: "Divider",
+    ),
+    NavigationItem(
+      label: "Settings",
+      icon: Icons.settings,
+      activeIcon: Ionicons.book,
+      index: 4,
+    ),
+    NavigationItem(
+      label: "Search",
+      icon: Ionicons.search,
+      activeIcon: Ionicons.search,
+      index: 5,
+    ),
   ];
 }
 
@@ -76,9 +90,13 @@ class NavigationItem {
   String label;
   IconData? icon;
   IconData? activeIcon;
+  IconData? trailingIcon;
+  int? index;
   NavigationItem({
     required this.label,
     this.icon,
     this.activeIcon,
+    this.trailingIcon,
+    this.index,
   });
 }

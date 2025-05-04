@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:its_shared/features/upload_progress/domain/domain.dart';
 
 import '../../../../commands/files/pick_file_command.dart';
-import '../../../../core/common/models/models.dart';
+import '../../../../core/data/models/models.dart';
 import '../../../uploads/presentation/bloc/uploads_bloc.dart';
 part 'upload_progress_event.dart';
 part 'upload_progress_state.dart';

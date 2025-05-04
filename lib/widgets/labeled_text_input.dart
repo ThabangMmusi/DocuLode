@@ -21,7 +21,7 @@ class LabeledTextInput extends StatefulWidget {
     this.obscureText = false,
     this.autoFocus = false,
     this.maxLength,
-    this.filled = false,
+    this.filled = true,
     this.readOnly = false,
     this.radius = Corners.lgBorder,
     this.suffix,
@@ -117,8 +117,8 @@ class _LabeledTextInputState extends State<LabeledTextInput> {
                                   ))),
                     )
                   : null,
-              filled: widget.filled,
-              fillColor: colorScheme.tertiary,
+              filled: widget.readOnly?true: widget.filled,
+              fillColor:widget.readOnly?colorScheme.tertiaryContainer: colorScheme.surface ,
               enabledBorder: OutlineInputBorder(
                   borderRadius: Corners.smBorder,
                   borderSide: BorderSide(

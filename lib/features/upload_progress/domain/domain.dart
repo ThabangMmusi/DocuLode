@@ -1,3 +1,3 @@
-export 'repositories/upload_file_repository.dart';
-export 'entities/local_file.dart';
-export 'usecases/upload_file.dart';
+export 'entities/entities.dart';
+export 'repositories/repositories.dart';
+export 'usecases/usecases.dart';

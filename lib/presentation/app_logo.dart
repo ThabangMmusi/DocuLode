@@ -36,7 +36,7 @@ class AppLogoWidget extends StatelessWidget {
                 color: Theme.of(context)
                     .colorScheme
                     .inverseSurface
-                    .withOpacity(.5),
+                    .withValues(alpha: .5),
                 fontSize: 14),
           ),
       ],

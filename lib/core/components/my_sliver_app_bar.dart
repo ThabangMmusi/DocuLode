@@ -8,17 +8,15 @@ import '../../styles.dart';
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   MySliverAppBar(
-      {required this.minTopBarHeight,
-      required this.maxTopBarHeight,
+      {
       required this.title,
       this.leading,
       this.trailing});
-  final double minTopBarHeight;
-  final double maxTopBarHeight;
   final String title;
   final Widget? leading;
   final Widget? trailing;
 
+  final double minTopBarHeight = kToolbarHeight + Insets.lg + 2;
   @override
   Widget build(
     BuildContext context,
@@ -27,9 +25,9 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   ) {
     ThemeData theme = Theme.of(context);
     ColorScheme colorScheme = theme.colorScheme;
-    var shrinkFactor = min(1, shrinkOffset / (maxTopBarHeight - 1));
+    var shrinkFactor = min(1, shrinkOffset / (minTopBarHeight - 1));
     var topBar = SizedBox(
-      height: max(maxTopBarHeight * (1 - shrinkFactor), maxTopBarHeight),
+      height: max(minTopBarHeight * (1 - shrinkFactor), minTopBarHeight),
       child: Stack(
         children: [
           Opacity(
@@ -40,7 +38,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                     sigmaX: 50, sigmaY: 50, tileMode: TileMode.repeated),
                 child: ClipRect(
                   child: Container(
-                    color: colorScheme.tertiaryContainer.withOpacity(.1),
+                    color: colorScheme.tertiaryContainer.withValues(alpha: .1),
                   ),
                 ),
               ),
@@ -103,7 +101,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => maxTopBarHeight;
+  double get maxExtent => minTopBarHeight;
   @override
   double get minExtent => minTopBarHeight;
   @override

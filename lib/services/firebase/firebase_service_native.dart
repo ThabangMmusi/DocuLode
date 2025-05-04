@@ -8,7 +8,7 @@ import 'package:its_shared/_utils/logger.dart';
 import 'package:its_shared/core/core.dart';
 
 import '../../firebase_options.dart';
-import '../../core/common/models/src/app_user/app_user.dart';
+import '../../core/data/models/src/app_user/app_user.dart';
 import 'firebase_service.dart';
 
 class NativeFirebaseService extends FirebaseService {
@@ -85,10 +85,10 @@ class NativeFirebaseService extends FirebaseService {
           //     .then((value) => value)
           //     .catchError((error) => print(error));z
           //TODO: USE POP UP AFTER FINDING A WAY TO PREVENT MULTIPLE POPUPS
-          await auth.signInWithRedirect(provider);
-          // await auth.signInWithPopup(provider).then((value) {
-          //   log(value.toString());
-          // });
+          // await auth.signInWithRedirect(provider);
+          await auth.signInWithPopup(provider).then((value) {
+            log(value.toString());
+          });
         } else {
           // await auth.signInWithPopup(provider);
           await auth.signInWithProvider(provider);

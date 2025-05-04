@@ -4,7 +4,7 @@ import 'package:its_shared/_utils/logger.dart';
 import 'package:its_shared/core/core.dart';
 import 'package:its_shared/injection_container.dart';
 
-import '../../../../core/common/entities/entities.dart';
+import '../../../../core/domain/entities/entities.dart';
 import '../../domain/usecases/get_sorted_modules.dart';
 import '../../domain/usecases/update_file.dart';
 

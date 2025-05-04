@@ -8,7 +8,9 @@ abstract class Routes {
   static const uploads = _Paths.uploads;
   static String uploadsEdit(String id) => '$uploads/$id';
   static const home = _Paths.home;
+  static const saves = _Paths.saves;
   static const search = _Paths.search;
+  static const settings = _Paths.settings;
   static const profile = _Paths.profile;
   static const modules = _Paths.modules;
   static const auth = _Paths.auth;
@@ -33,8 +35,10 @@ abstract class _Paths {
   static const splash = '/';
   static const home = '/home';
   static const search = "/search";
+  static const settings = "/settings";
   static const uploads = '/uploads';
   static const uploadEdit = ':uploadId';
+  static const saves = '/saves';
   static const modules = '/modules';
   static const auth = '/auth';
   static const signIn = '/signin';

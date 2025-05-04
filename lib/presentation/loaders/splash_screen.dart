@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:its_shared/core/bloc/auth/auth_bloc.dart';
+import 'package:its_shared/core/common/auth/presentation/bloc/auth_bloc.dart';
 
 import '../../core/core.dart';
 import '../../routes/app_pages.dart';

@@ -1,6 +1,6 @@
 import 'package:file_selector/file_selector.dart';
 
-import '../../core/common/models/models.dart';
+import '../../core/data/models/models.dart';
 import '../../core/core.dart';
 import 'firebase_rest_api.dart';
 import 'firebase_service.dart';

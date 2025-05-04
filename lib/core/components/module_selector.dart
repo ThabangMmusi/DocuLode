@@ -3,12 +3,16 @@ import 'package:ionicons/ionicons.dart';
 
 import '../../widgets/styled_dropdown.dart';
 import '../../widgets/styled_dropdown_textfield.dart';
-import '../common/entities/entities.dart';
+import '../../widgets/styled_load_spinner.dart';
+import '../domain/entities/entities.dart';
 import '../../styles.dart';
 import '../../widgets/labeled_text_input.dart';
 
-//to pass module on press
+// To pass module on press
 typedef ModuleCallback = void Function(Module module);
+
+// Private constant for list item height
+const double _listItemHeight = 42.0;
 
 class ModuleWidget extends StatelessWidget {
   const ModuleWidget(
@@ -20,7 +24,6 @@ class ModuleWidget extends StatelessWidget {
   final ModuleCallback onPress;
   final Module module;
   final bool isSelected;
-  // final bool showDivider;
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +32,17 @@ class ModuleWidget extends StatelessWidget {
       child: InkWell(
         onTap: () => onPress(module),
         child: Container(
-            height: 42,
-            padding:
-                EdgeInsets.symmetric(horizontal: Insets.med).copyWith(left: 0),
-            child: Row(
-              children: [
-                _buildIcon(context, module),
-                HSpace.med,
-                Text(module.name ?? ""),
-              ],
-            )),
+          height: _listItemHeight, // Use the private constant here
+          padding:
+              EdgeInsets.symmetric(horizontal: Insets.med).copyWith(left: 0),
+          child: Row(
+            children: [
+              _buildIcon(context, module),
+              HSpace.med,
+              Text(module.name ?? ""),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -69,6 +73,7 @@ class ModuleSelector extends StatefulWidget {
     this.value,
     this.onChange,
     this.fieldValidator,
+    this.isLoadingModules = false,
   });
   final List<Module> modules;
   final List<Module> selectedModules;
@@ -78,6 +83,7 @@ class ModuleSelector extends StatefulWidget {
   final dynamic value;
   final ValueChanged<dynamic>? onChange;
   final FormFieldValidator<dynamic>? fieldValidator;
+  final bool isLoadingModules;
   @override
   State<ModuleSelector> createState() => _ModuleSelectorState();
 }
@@ -85,6 +91,7 @@ class ModuleSelector extends StatefulWidget {
 class _ModuleSelectorState extends State<ModuleSelector> {
   List<Module> _suggestions = [];
   TextEditingController controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -101,13 +108,14 @@ class _ModuleSelectorState extends State<ModuleSelector> {
             ),
             HSpace(Insets.med),
             SizedBox(
-                width: 180,
-                child: StyledDropDown(
-                  label: widget.label,
-                  value: widget.value,
-                  listItems: widget.listItems,
-                  onChange: widget.onChange,
-                )),
+              width: 180,
+              child: StyledDropDown(
+                label: widget.label,
+                value: widget.value,
+                listItems: widget.listItems,
+                onChange: widget.onChange,
+              ),
+            ),
           ],
         ),
         VSpace(Insets.med + 3),
@@ -117,18 +125,25 @@ class _ModuleSelectorState extends State<ModuleSelector> {
   }
 
   Widget _buildChips(List<Module> modules) {
-    return Expanded(
-      child: ListView.separated(
-          itemBuilder: (context, index) => ModuleWidget(
+    final double listHeight = (modules.length * _listItemHeight)+modules.length-1; // Calculate height based on item count
+
+    return SizedBox(
+      height: listHeight, // Dynamically calculate height based on item count
+      child: widget.isLoadingModules
+          ? const Center(
+              child: SizedBox(width: 25, height: 25, child: StyledLoadSpinner()))
+          : ListView.separated(
+              itemBuilder: (context, index) => ModuleWidget(
                 modules[index],
                 onPress: widget.onModulePress,
                 isSelected: widget.selectedModules.contains(modules[index]),
               ),
-          separatorBuilder: (context, index) => const Divider(
+              separatorBuilder: (context, index) => const Divider(
                 thickness: 1,
                 height: 1,
               ),
-          itemCount: modules.length),
+              itemCount: modules.length,
+            ),
     );
   }
 

@@ -6,14 +6,12 @@ import 'package:ionicons/ionicons.dart';
 import 'package:its_shared/core/core.dart';
 import 'package:its_shared/features/shared/presentation/bloc/shared_bloc.dart';
 import 'package:its_shared/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
-import 'package:its_shared/features/uploads/presentation/components/dl_button.dart';
 import 'package:its_shared/features/uploads/presentation/components/uploaded_status.dart';
 import 'package:its_shared/features/upload_edit/presentation/views/update_file_dialog.dart';
 import 'package:its_shared/features/uploads/presentation/views/upload_file_view.dart';
 import 'package:its_shared/routes/app_pages.dart';
 import 'package:its_shared/styles.dart';
-import 'package:its_shared/widgets/ui_text.dart';
-import 'package:timeago/timeago.dart' as timeAgo;
+import 'package:timeago/timeago.dart' as time_ago;
 
 import '../../../../themes.dart';
 import '../../../../widgets/buttons/styled_buttons.dart';
@@ -233,7 +231,7 @@ class _DLTableRowState extends State<DLTableRow> {
         ),
         HSpace.xs,
         Text(
-          timeAgo.format(widget.document.uploaded!),
+          time_ago.format(widget.document.uploaded!),
           style: TextStyles.caption.copyWith(fontWeight: FontWeight.w400),
         ),
       ],

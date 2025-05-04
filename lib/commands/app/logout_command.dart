@@ -1,5 +1,5 @@
 import '../../_utils/logger.dart';
-import '../../core/common/models/src/app_user/app_user.dart';
+import '../../core/data/models/src/app_user/app_user.dart';
 import '../commands.dart';
 
 class SetCurrentUserCommand extends BaseAppCommand {

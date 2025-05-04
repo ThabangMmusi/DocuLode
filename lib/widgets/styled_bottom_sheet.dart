@@ -4,7 +4,7 @@ import '../styles.dart';
 import 'decorated_container.dart';
 
 class StyledBottomSheet extends StatelessWidget {
-  const StyledBottomSheet({required this.child, Key? key}) : super(key: key);
+  const StyledBottomSheet({required this.child, super.key});
 
   final Widget child;
 

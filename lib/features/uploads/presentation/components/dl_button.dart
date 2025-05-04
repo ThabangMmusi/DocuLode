@@ -113,9 +113,8 @@ class _DLButton extends StatefulWidget {
     this.child, {
     required this.onPressed,
     required this.hoverFillColor,
-    this.hoverBorderColor,
     this.fillColor,
-    this.padding, this.borderColor,
+    this.padding, this.hoverBorderColor, this.borderColor,
   });
 
   @override

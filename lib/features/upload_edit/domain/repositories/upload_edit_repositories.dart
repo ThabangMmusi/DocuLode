@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/common/entities/entities.dart';
+import '../../../../core/domain/entities/entities.dart';
 import '../../../../core/core.dart';
 
 abstract interface class UploadEditRepository {

@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:its_shared/core/core.dart';
 import 'package:its_shared/injection_container.dart';
 
-import '../../../../core/bloc/auth/auth_bloc.dart';
-import '../../../../core/common/entities/entities.dart';
-import '../../../../core/common/models/models.dart';
+import '../../../../core/common/auth/presentation/bloc/auth_bloc.dart';
+import '../../../../core/domain/entities/entities.dart';
+import '../../../../core/data/models/models.dart';
 import '../../domain/usecases/get_shared_file.dart';
 import '../../domain/usecases/download_file.dart';
 

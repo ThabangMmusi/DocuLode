@@ -79,9 +79,6 @@ class _UploadFileViewState extends State<UploadFileView> {
 
   @override
   Widget build(BuildContext context) {
-    final double minTopBarHeight = kToolbarHeight + Insets.lg + 2;
-    ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
     return BlocConsumer<UploadsBloc, UploadsState>(
       listener: (context, state) {
         // TODO: implement listener
@@ -96,8 +93,6 @@ class _UploadFileViewState extends State<UploadFileView> {
             SliverPersistentHeader(
               pinned: true,
               delegate: MySliverAppBar(
-                  minTopBarHeight: minTopBarHeight,
-                  maxTopBarHeight: minTopBarHeight,
                   title: "Uploads",
                   trailing: Row(
                     children: [

@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/routes/app_pages.dart';
 import 'package:its_shared/widgets/buttons/styled_buttons.dart';
 
 import '../../../../constants/responsive.dart';
-import '../../../../core/common/models/src/app_stats_model.dart';
+import '../../../../core/data/models/src/app_stats_model.dart';
 import '../../../../core/core.dart';
 import '../../../../styles.dart';
-import '../../shared/shared.dart';
 import '../../home/home.dart';
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
@@ -83,15 +81,12 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double minTopBarHeight = kToolbarHeight + Insets.lg + 2;
     return CustomScrollView(
       slivers: [
         SliverPersistentHeader(
             pinned: true,
             delegate: MySliverAppBar(
-                title: "Dashboard",
-                minTopBarHeight: minTopBarHeight,
-                maxTopBarHeight: minTopBarHeight)
+                title: "Dashboard")
             // delegate: kSliverAppbar(title: "title"),
             ),
 
@@ -396,7 +391,7 @@ class KSliverAppbar extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     var shrinkFactor = min(1, shrinkOffset / (maxExtent - minExtent));
-    Widget _leading = leading ?? const BackButton(color: Colors.white);
+    Widget finalLeading = leading ?? const BackButton(color: Colors.white);
     var topBar = Positioned(
       top: 0,
       left: 0,
@@ -415,7 +410,7 @@ class KSliverAppbar extends SliverPersistentHeaderDelegate {
               BoxShadow(
                 offset: const Offset(0, 10),
                 blurRadius: 10.0,
-                color: Colors.green.withOpacity(0.3),
+                color: Colors.green.withValues(alpha: 0.3),
               )
             ]),
         child: Stack(
@@ -429,7 +424,7 @@ class KSliverAppbar extends SliverPersistentHeaderDelegate {
             ),
             Container(
               decoration: BoxDecoration(
-                  color: Colors.amberAccent.withOpacity((shrinkFactor) * 1),
+                  color: Colors.amberAccent.withValues(alpha: (shrinkFactor) * 1),
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(26),
                     bottomRight: Radius.circular(26),
@@ -443,7 +438,7 @@ class KSliverAppbar extends SliverPersistentHeaderDelegate {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        _leading,
+                        finalLeading,
                       ],
                     ),
                     Column(
@@ -457,7 +452,7 @@ class KSliverAppbar extends SliverPersistentHeaderDelegate {
                         Text(subtitle ?? "",
                             style: TextStyles.body2.copyWith(
                                 color: Colors.white
-                                    .withOpacity((shrinkFactor) * 1),
+                                    .withValues(alpha: (shrinkFactor) * 1),
                                 fontWeight: FontWeight.bold)),
                         SizedBox(
                           height: max(26.0 * (1 - shrinkFactor), 15),
@@ -490,13 +485,13 @@ class KSliverAppbar extends SliverPersistentHeaderDelegate {
                 height: 50,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Colors.white.withOpacity(1.0 - shrinkFactor),
+                    color: Colors.white.withValues(alpha: 1.0 - shrinkFactor),
                     boxShadow: [
                       BoxShadow(
                         offset: const Offset(0, 10),
                         blurRadius: 10.0,
                         color: Colors.green
-                            .withOpacity(0.23 - (0.23 * shrinkFactor)),
+                            .withValues(alpha: 0.23 - (0.23 * shrinkFactor)),
                       )
                     ]),
                 child:

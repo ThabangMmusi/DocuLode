@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../../_utils/device_info.dart';
-import '../../core/bloc/auth/auth_bloc.dart';
+import '../../core/common/auth/presentation/bloc/auth_bloc.dart';
 import '../../commands/app/authenticate_desktop_command.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/app_text.dart';

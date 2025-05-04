@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:its_shared/styles.dart';
 
-/// A customizable sidebar menu with support for sub-menu items, notification counters, 
+import '../../core.dart';
+
+/// A customizable sidebar menu with support for sub-menu items, notification counters,
 /// and a fixed profile section at the bottom.
 class SidebarMenu extends StatefulWidget {
   /// The list of main menu items
   final List<SidebarMenuItem> menuItems;
-  
+
   /// Profile data to display at the bottom
   final SidebarProfile profile;
-  
+
   /// Background color of the sidebar
   final Color backgroundColor;
-  
+
   /// Text and icon color for menu items
   final Color itemColor;
-  
+
   /// Background color for selected menu item
   final Color selectedItemBackgroundColor;
-  
+
   /// Text and icon color for selected menu item
   final Color selectedItemColor;
-  
+
   /// Currently selected menu item ID
   final String? selectedItemId;
-  
+
   /// Callback when a menu item is selected
   final Function(String itemId)? onItemSelected;
-  
+
   /// Width of the sidebar
   final double width;
-  
+
   /// Optional actions to display in the top-right corner
   final List<Widget>? topActions;
 
@@ -61,7 +64,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
   void initState() {
     super.initState();
     _selectedItemId = widget.selectedItemId;
-    
+
     // Pre-expand items that contain the selected item
     if (_selectedItemId != null) {
       for (var item in widget.menuItems) {
@@ -98,8 +101,21 @@ class _SidebarMenuState extends State<SidebarMenu> {
   void _selectItem(String itemId) {
     setState(() {
       _selectedItemId = itemId;
+
+      // Check if the selected item is a sub-item
+      for (var item in widget.menuItems) {
+        if (item.subItems != null) {
+          for (var subItem in item.subItems!) {
+            if (subItem.id == itemId) {
+              // If a sub-item is selected, also mark the parent item as expanded
+              _expandedItems.add(item.id);
+              break;
+            }
+          }
+        }
+      }
     });
-    
+
     if (widget.onItemSelected != null) {
       widget.onItemSelected!(itemId);
     }
@@ -109,12 +125,16 @@ class _SidebarMenuState extends State<SidebarMenu> {
   Widget build(BuildContext context) {
     return Container(
       width: widget.width,
-      color: widget.backgroundColor,
+      decoration: BoxDecoration(
+          color: widget.backgroundColor, borderRadius: Corners.medBorder),
       child: Column(
         children: [
-          // Profile section at top
-          _buildProfileHeader(),
-          
+          // Header section at top
+          _buildHeader(),
+
+          if (widget.topActions != null) ...widget.topActions!,
+          // Fixed profile section at bottom
+
           // Scrollable menu items
           Expanded(
             child: ListView(
@@ -122,40 +142,53 @@ class _SidebarMenuState extends State<SidebarMenu> {
               children: _buildMenuItems(),
             ),
           ),
-          
-          // Fixed profile section at bottom
-          _buildProfileFooter(),
+          _buildProfile(),
         ],
       ),
     );
   }
 
-  Widget _buildProfileHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
+  Widget _buildHeader() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.tertiary.withAlpha(40),
+        borderRadius: const BorderRadius.only(
+            topLeft: Corners.medRadius, topRight: Corners.medRadius),
+      ),
+      child: Column(
         children: [
-          CircleAvatar(
-            radius: 16,
-            backgroundImage: widget.profile.avatarUrl != null 
-                ? NetworkImage(widget.profile.avatarUrl!) 
-                : null,
-            child: widget.profile.avatarUrl == null 
-                ? Text(widget.profile.name[0], style: const TextStyle(color: Colors.white))
-                : null,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              widget.profile.name,
-              style: TextStyle(
-                color: widget.itemColor,
-                fontWeight: FontWeight.w500,
-                fontSize: 15,
-              ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                const FullAppLogo(
+                  showIconOnly: true,
+                ),
+                const Spacer(),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                      // Light blue color
+                      borderRadius: Corners.xlBorder,
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.tertiary,
+                        width: 1,
+                      )),
+                  child: Text(
+                    "Preview",
+                    style: TextStyles.body4.copyWith(
+                      color: Theme.of(context).colorScheme.tertiary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          if (widget.topActions != null) ...widget.topActions!,
+          const Divider(
+            height: 1,
+          ),
         ],
       ),
     );
@@ -163,13 +196,13 @@ class _SidebarMenuState extends State<SidebarMenu> {
 
   List<Widget> _buildMenuItems() {
     final List<Widget> menuWidgets = [];
-    
+
     for (var item in widget.menuItems) {
       if (item.isSeparator) {
         menuWidgets.add(_buildSeparator());
       } else if (item.subItems != null && item.subItems!.isNotEmpty) {
         menuWidgets.add(_buildExpandableMenuItem(item));
-        
+
         // Add sub-items if expanded
         if (_expandedItems.contains(item.id)) {
           for (var subItem in item.subItems!) {
@@ -180,143 +213,70 @@ class _SidebarMenuState extends State<SidebarMenu> {
         menuWidgets.add(_buildMenuItem(item));
       }
     }
-    
+
     return menuWidgets;
   }
 
   Widget _buildMenuItem(SidebarMenuItem item) {
     final bool isSelected = _selectedItemId == item.id;
-    
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: isSelected ? widget.selectedItemBackgroundColor : Colors.transparent,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => _selectItem(item.id),
-          borderRadius: BorderRadius.circular(6),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Row(
-              children: [
-                if (item.icon != null)
-                  Icon(
-                    item.icon,
-                    size: 20,
-                    color: isSelected ? widget.selectedItemColor : widget.itemColor,
-                  ),
-                if (item.icon != null) const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    item.title,
-                    style: TextStyle(
-                      color: isSelected ? widget.selectedItemColor : widget.itemColor,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                if (item.trailingIcon != null)
-                  Icon(
-                    item.trailingIcon,
-                    size: 16,
-                    color: isSelected ? widget.selectedItemColor : widget.itemColor.withOpacity(0.7),
-                  ),
-                if (item.notificationCount != null && item.notificationCount! > 0)
-                  _buildNotificationCounter(item.notificationCount!),
-              ],
-            ),
-          ),
-        ),
-      ),
+
+    return _MenuItemBase(
+      title: item.title,
+      icon: item.icon,
+      isSelected: isSelected,
+      onTap: () => _selectItem(item.id),
+      itemColor: widget.itemColor,
+      selectedItemColor: widget.selectedItemColor,
+      selectedItemBackgroundColor: widget.selectedItemBackgroundColor,
+      trailing: _buildTrailing(item, isSelected),
     );
   }
 
   Widget _buildExpandableMenuItem(SidebarMenuItem item) {
+    final bool isSelected = _selectedItemId == item.id ||
+        (item.subItems?.any((subItem) => subItem.id == _selectedItemId) ??
+            false);
     final bool isExpanded = _expandedItems.contains(item.id);
-    
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => _toggleExpanded(item.id),
-          borderRadius: BorderRadius.circular(6),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Row(
-              children: [
-                if (item.icon != null)
-                  Icon(
-                    item.icon,
-                    size: 20,
-                    color: widget.itemColor,
-                  ),
-                if (item.icon != null) const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    item.title,
-                    style: TextStyle(
-                      color: widget.itemColor,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                if (item.notificationCount != null && item.notificationCount! > 0)
-                  _buildNotificationCounter(item.notificationCount!),
-                const SizedBox(width: 8),
-                Icon(
-                  isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                  size: 16,
-                  color: widget.itemColor.withOpacity(0.7),
-                ),
-              ],
-            ),
+
+    return _MenuItemBase(
+      title: item.title,
+      icon: item.icon,
+      isSelected: isSelected,
+      onTap: () => _toggleExpanded(item.id),
+      itemColor: widget.itemColor,
+      selectedItemColor: widget.selectedItemColor,
+      selectedItemBackgroundColor: widget.selectedItemBackgroundColor,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (item.notificationCount != null && item.notificationCount! > 0)
+            _buildNotificationCounter(item.notificationCount!),
+          const SizedBox(width: 8),
+          Icon(
+            isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            size: 16,
+            color: isSelected ? widget.selectedItemColor : widget.itemColor,
           ),
-        ),
+        ],
       ),
     );
   }
 
   Widget _buildSubMenuItem(SidebarMenuItem item) {
     final bool isSelected = _selectedItemId == item.id;
-    
-    return Container(
+
+    return _MenuItemBase(
+      title: item.title,
+      isSelected: isSelected,
+      onTap: () => _selectItem(item.id),
+      itemColor: widget.itemColor,
+      selectedItemColor: widget.selectedItemColor,
+      selectedItemBackgroundColor: widget.selectedItemBackgroundColor,
       margin: const EdgeInsets.only(left: 24, right: 12, top: 2, bottom: 2),
-      decoration: BoxDecoration(
-        color: isSelected ? widget.selectedItemBackgroundColor : Colors.transparent,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => _selectItem(item.id),
-          borderRadius: BorderRadius.circular(6),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    item.title,
-                    style: TextStyle(
-                      color: isSelected ? widget.selectedItemColor : widget.itemColor,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                if (item.notificationCount != null && item.notificationCount! > 0)
-                  _buildNotificationCounter(item.notificationCount!),
-              ],
-            ),
-          ),
-        ),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      trailing: item.notificationCount != null && item.notificationCount! > 0
+          ? _buildNotificationCounter(item.notificationCount!)
+          : null,
     );
   }
 
@@ -345,39 +305,79 @@ class _SidebarMenuState extends State<SidebarMenu> {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Divider(
         height: 1,
-        color: widget.itemColor.withOpacity(0.2),
+        color: widget.itemColor.withValues(alpha: 0.2),
       ),
     );
   }
 
-  Widget _buildProfileFooter() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+  Widget _buildProfile() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: Insets.sm, horizontal: Insets.med)
+          .copyWith(top: Insets.lg),
+      padding: EdgeInsets.all(Insets.sm),
+      decoration: BoxDecoration(
+        border:
+            Border.all(color: widget.itemColor.withValues(alpha: .1), width: 1),
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Row(
         children: [
           CircleAvatar(
             radius: 16,
-            backgroundImage: widget.profile.avatarUrl != null 
-                ? NetworkImage(widget.profile.avatarUrl!) 
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            backgroundImage: widget.profile.avatarUrl != null
+                ? NetworkImage(widget.profile.avatarUrl!)
                 : null,
-            child: widget.profile.avatarUrl == null 
-                ? Text(widget.profile.name[0], style: const TextStyle(color: Colors.white))
+            child: widget.profile.avatarUrl == null
+                ? Text(widget.profile.name[0],
+                    style: const TextStyle(color: Colors.white))
                 : null,
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              widget.profile.name,
-              style: TextStyle(
-                color: widget.itemColor,
-                fontWeight: FontWeight.w500,
-                fontSize: 15,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.profile.name,
+                  style: TextStyles.body2.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  widget.profile.courseName,
+                  style: TextStyles.body4.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ],
             ),
+          ),
+          IconButton(
+            icon: Icon(Icons.exit_to_app, color: widget.itemColor),
+            onPressed: () {
+              // Add your more menu logic here
+            },
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildTrailing(SidebarMenuItem item, bool isSelected) {
+    if (item.notificationCount != null && item.notificationCount! > 0) {
+      return _buildNotificationCounter(item.notificationCount!);
+    }
+    if (item.trailingIcon != null) {
+      return Icon(
+        item.trailingIcon,
+        size: 18,
+        color: isSelected
+            ? widget.selectedItemColor
+            : widget.itemColor.withValues(alpha: 0.7),
+      );
+    }
+    return const SizedBox.shrink();
   }
 }
 
@@ -385,22 +385,22 @@ class _SidebarMenuState extends State<SidebarMenu> {
 class SidebarMenuItem {
   /// Unique identifier for the menu item
   final String id;
-  
+
   /// Display title
   final String title;
-  
+
   /// Optional icon to display
   final IconData? icon;
-  
+
   /// Optional trailing icon to display
   final IconData? trailingIcon;
-  
+
   /// Optional notification counter
   final int? notificationCount;
-  
+
   /// Optional sub-items
   final List<SidebarMenuItem>? subItems;
-  
+
   /// Whether this item is just a separator
   final bool isSeparator;
 
@@ -413,7 +413,7 @@ class SidebarMenuItem {
     this.subItems,
     this.isSeparator = false,
   });
-  
+
   /// Create a separator item
   factory SidebarMenuItem.separator() {
     return const SidebarMenuItem(
@@ -428,12 +428,145 @@ class SidebarMenuItem {
 class SidebarProfile {
   /// Display name for the profile
   final String name;
-  
+  final String courseName;
+
   /// Optional profile avatar URL
   final String? avatarUrl;
-  
+
   const SidebarProfile({
     required this.name,
+    required this.courseName,
     this.avatarUrl,
   });
 }
+
+class _MenuItemBase extends StatelessWidget {
+  final String title;
+  final IconData? icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final Color itemColor;
+  final Color selectedItemColor;
+  final Color selectedItemBackgroundColor;
+  final Widget? trailing;
+  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry margin;
+
+  const _MenuItemBase({
+    required this.title,
+    required this.isSelected,
+    required this.onTap,
+    required this.itemColor,
+    required this.selectedItemColor,
+    required this.selectedItemBackgroundColor,
+    this.icon,
+    this.trailing,
+    this.padding = const EdgeInsets.all(12),
+    this.margin = const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: margin,
+      decoration: BoxDecoration(
+        color: isSelected ? selectedItemBackgroundColor : Colors.transparent,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(6),
+          child: Padding(
+            padding: padding,
+            child: Row(
+              children: [
+                if (icon != null) ...[
+                  Icon(
+                    icon,
+                    size: 20,
+                    color: isSelected ? selectedItemColor : itemColor,
+                  ),
+                  const SizedBox(width: 12),
+                ],
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: isSelected ? selectedItemColor : itemColor,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                if (trailing != null) trailing!,
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SubMenuItemBase extends StatelessWidget {
+  final String title;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final Color itemColor;
+  final Color selectedItemColor;
+  final Color selectedItemBackgroundColor;
+  final Widget? trailing;
+  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry margin;
+
+  const _SubMenuItemBase({
+    required this.title,
+    required this.isSelected,
+    required this.onTap,
+    required this.itemColor,
+    required this.selectedItemColor,
+    required this.selectedItemBackgroundColor,
+    this.trailing,
+    this.padding = const EdgeInsets.all(12),
+    this.margin = const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: margin,
+      decoration: BoxDecoration(
+        color: isSelected ? selectedItemBackgroundColor : Colors.transparent,
+        borderRadius: BorderRadius.circular(6),
+        border: isSelected? Border(left: BorderSide(color: selectedItemColor, width: 4)) : null,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(6),
+          child: Padding(
+            padding: padding,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: isSelected ? selectedItemColor : itemColor,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                if (trailing != null) trailing!,
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Then modify _buildMenuItem, _buildExpandableMenuItem, and _buildSubMenuItem to use _MenuItemBase:

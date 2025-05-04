@@ -5,7 +5,7 @@ import 'package:its_shared/styles.dart';
 import 'package:its_shared/widgets/decorated_container.dart';
 
 import '../../../animated/animated.dart';
-import '../../../core/bloc/auth/auth_bloc.dart';
+import '../../../core/common/auth/presentation/bloc/auth_bloc.dart';
 import '../../../constants/responsive.dart';
 
 class UserProfileView extends StatefulWidget {
@@ -68,7 +68,7 @@ class _UserProfileViewState extends State<UserProfileView>
                   ),
                 ),
                 VSpace.lg,
-                Text(user!.getFullNames,
+                Text("${user!.surname} ${user.names}",
                     style: const TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 16,
