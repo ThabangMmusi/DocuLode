@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCPVt361KUEBiQp2Sl-md1g712wSiggvO4',
-    appId: '1:830312586949:android:156af1f80c3e2b25269aac',
+    appId: '1:830312586949:android:1ec90371334b1397269aac',
     messagingSenderId: '830312586949',
     projectId: 'spushare-2023',
     storageBucket: 'spushare-2023.appspot.com',

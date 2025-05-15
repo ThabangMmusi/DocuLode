@@ -7,17 +7,53 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:830312586949:android:156af1f80c3e2b25269aac",
+        "mobilesdk_app_id": "1:830312586949:android:1ec90371334b1397269aac",
         "android_client_info": {
           "package_name": "com.example.its_shared"
         }
       },
       "oauth_client": [
         {
-          "client_id": "830312586949-kqpmi47eelje6sbircics8liemqijtva.apps.googleusercontent.com",
+          "client_id": "830312586949-7stp4qkmuc3483t781hap2ujc4lfiudg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPVt361KUEBiQp2Sl-md1g712wSiggvO4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "830312586949-7stp4qkmuc3483t781hap2ujc4lfiudg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "830312586949-2452d4p2h0pguaa2a04hqdqqik37gqms.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.spuShare"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830312586949:android:377baba05a424e90269aac",
+        "android_client_info": {
+          "package_name": "com.rva.docu_lode"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "830312586949-lc5duvmgbou6jok2osb9f76suckcg255.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.its_shared",
+            "package_name": "com.rva.docu_lode",
             "certificate_hash": "9e3a3080d3734b367d54d5b116ce07b9b34dc6e3"
           }
         },
