@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "its_shared" "\0"
+            VALUE "FileDescription", "doculode" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "its_shared" "\0"
+            VALUE "InternalName", "doculode" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "its_shared.exe" "\0"
-            VALUE "ProductName", "its_shared" "\0"
+            VALUE "OriginalFilename", "doculode.exe" "\0"
+            VALUE "ProductName", "doculode" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

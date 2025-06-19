@@ -1,10 +1,11 @@
+import 'package:doculode/config/index.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:its_shared/themes.dart';
 
-import '../../../../styles.dart';
-import '../bloc/upload_progress_bloc.dart';
-import '../components/upload_file_widget.dart';
+import 'package:doculode/config/styles.dart';
+import 'package:doculode/features/upload_progress/presentation/bloc/upload_progress_bloc.dart';
+import 'package:doculode/features/upload_progress/presentation/components/upload_file_widget.dart';
 
 class UploadProgressView extends StatelessWidget {
   const UploadProgressView({
@@ -37,7 +38,8 @@ class UploadProgressView extends StatelessWidget {
                 children: [
                   Text(
                     "Uploading",
-                    style: TextStyles.h3.copyWith(color: colors.surface),
+                    style: TextStyles.headlineSmall
+                        .copyWith(color: colors.surface),
                   ),
                   Row(
                     children: [
@@ -91,8 +93,8 @@ class UploadProgressView extends StatelessWidget {
       decoration: BoxDecoration(
           // color: colors.primary,
           color: state.uploadComplete
-              ? AppTheme.greenSurface
-              : AppTheme.blueSurface,
+              ? AppTheme.successColor
+              : AppTheme.surfaceDark,
           borderRadius: Corners.lgBorder),
       child: Row(
         children: [
@@ -101,8 +103,8 @@ class UploadProgressView extends StatelessWidget {
             decoration: BoxDecoration(
                 // color: colors.error,
                 color: state.uploadComplete
-                    ? AppTheme.greenSurfaceDark
-                    : AppTheme.blueSurfaceDark,
+                    ? AppTheme.successColor
+                    : AppTheme.infoColor,
                 borderRadius: Corners.lgBorder),
             child: Icon(
               Icons.upload,
@@ -114,7 +116,7 @@ class UploadProgressView extends StatelessWidget {
             children: [
               Text(
                 "Uploaded ${state.completed} of ${state.progressMap.length} files",
-                style: TextStyles.h3.copyWith(color: colors.surface),
+                style: TextStyles.headlineSmall.copyWith(color: colors.surface),
               )
             ],
           ),

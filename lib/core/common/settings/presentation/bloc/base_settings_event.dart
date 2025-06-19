@@ -59,3 +59,37 @@ final class LoadingEvent extends BaseSettingsEvent {
   @override
   List<Object?> get props => [];
 }
+
+final class FirstNameChanged extends BaseSettingsEvent {
+  final String name;
+  const FirstNameChanged(this.name);
+  @override
+  List<Object?> get props => [name];
+}
+
+final class LastNameChanged extends BaseSettingsEvent {
+  final String name;
+  const LastNameChanged(this.name);
+  @override
+  List<Object?> get props => [name];
+}
+
+final class SignOutRequested extends BaseSettingsEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+final class ProfileUpdateRequested extends BaseSettingsEvent {
+  final String names;
+  final String surname;
+  final String email;
+
+  const ProfileUpdateRequested({
+    required this.names,
+    required this.surname,
+    required this.email,
+  });
+
+  @override
+  List<Object?> get props => [names, surname, email];
+}

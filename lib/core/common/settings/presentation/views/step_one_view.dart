@@ -1,13 +1,15 @@
+import 'package:doculode/config/index.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:its_shared/_utils/string_utils.dart';
-import 'package:its_shared/styles.dart';
-import 'package:its_shared/widgets/styled_dropdown.dart';
-import 'package:its_shared/widgets/styled_dropdown_textfield.dart';
 
-import '../../../../../widgets/styled_load_spinner.dart';
-import '../../../../components/module_selector.dart';
-import '../bloc/base_settings_bloc.dart';
+import 'package:doculode/widgets/styled_load_spinner.dart';
+import 'package:doculode/core/components/module_selector.dart';
+import 'package:doculode/core/common/settings/presentation/bloc/base_settings_bloc.dart';
+import 'package:doculode/widgets/styled_dropdown.dart';
+import 'package:doculode/core/domain/entities/app_list_item.dart';
+import 'package:doculode/core/utils/string_utils.dart';
+import 'package:doculode/widgets/styled_dropdown_textfield.dart';
 
 class CourseSettings<T extends BaseSettingsBloc> extends StatelessWidget {
   const CourseSettings({super.key});
@@ -35,15 +37,15 @@ class CourseSettings<T extends BaseSettingsBloc> extends StatelessWidget {
                   initialList: state.courses
                       .map((course) => AppListItem(course.name!, value: course))
                       .toList(),
-                  onSelection: (p0) {
-                    context.read<T>().add(SelectCourseEvent(p0));
+                  onSelectionChanged: (p0) {
+                    context.read<T>().add(SelectCourseEvent(p0!));
                   },
                 ),
               ),
               if (state.selectedCourse != null) ...[
                 HSpace(Insets.med),
                 SizedBox(
-              width: 180,
+                  width: 180,
                   child: StyledDropDown(
                     label: "Level/Year",
                     value: state.selectedLevel,
@@ -84,8 +86,7 @@ class CourseSettings<T extends BaseSettingsBloc> extends StatelessWidget {
         2,
         (index) => AppListItem("Semester ${index + 1}", value: index + 1),
       ),
-      onChange: (value) =>
-          context.read<T>().add(SelectSemesterEvent(value!)),
+      onChange: (value) => context.read<T>().add(SelectSemesterEvent(value!)),
     );
   }
 }

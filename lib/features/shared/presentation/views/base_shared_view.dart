@@ -1,13 +1,13 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/index.dart';
+import 'package:doculode/widgets/buttons/buttons.dart';
+import 'package:doculode/widgets/index.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/core/core.dart';
-import 'package:its_shared/features/shared/presentation/bloc/shared_bloc.dart';
-import 'package:its_shared/styles.dart';
-import 'package:its_shared/widgets/buttons/styled_buttons.dart';
-import 'package:its_shared/widgets/gray_rounded_text.dart';
-import 'package:its_shared/widgets/styled_horizontal_name_list.dart';
-import 'package:its_shared/widgets/ui_text.dart';
+
+import '../bloc/shared_bloc.dart';
 
 class BaseSharedView extends StatelessWidget {
   const BaseSharedView({
@@ -26,13 +26,13 @@ class BaseSharedView extends StatelessWidget {
           children: [
             UiText(
               text: state.fileFullName,
-              style: TextStyles.h2,
+              style: TextStyles.headlineMedium,
             ),
             VSpace.sm,
 
             StyledHorizontalNameList(
               state.modules.map((p) => p.name!).toList(),
-              style: TextStyles.body3,
+              style: TextStyles.bodySmall,
               maxWidth: 440,
             ),
             VSpace.sm,
@@ -73,12 +73,7 @@ class BaseSharedView extends StatelessWidget {
                 //       context.read<SharedBloc>().add(const SharedDownload()),
                 // ),
                 if (!state.owners)
-                  SimpleBtn(
-                    // enableShadow: false,
-                    normalColors: BtnColors(
-                        bg: colorScheme.onSurface, fg: colorScheme.onPrimary),
-                    hoverColors: BtnColors(
-                        bg: colorScheme.primary, fg: colorScheme.onPrimary),
+                  PrimaryBtn(
                     child: Padding(
                       padding: EdgeInsets.all(Insets.xs),
                       child: Padding(

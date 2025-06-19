@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:its_shared/services/firebase/firebase_service.dart';
+import 'package:doculode/core/domain/repositories/database_service.dart';
 
 import '../../../../core/core.dart';
 import '../model/local_doc_model.dart';
@@ -10,12 +9,14 @@ abstract interface class UploadFileSource {
 }
 
 class UploadFileSourceImpl implements UploadFileSource {
-  final FirebaseService firebaseService;
-  UploadFileSourceImpl(this.firebaseService);
+  final DatabaseService _databaseService;
+
+  UploadFileSourceImpl({required DatabaseService databaseService})
+      : _databaseService = databaseService;
   @override
   Stream<double> uploadFile(LocalDocModel file) async* {
     try {
-      yield* firebaseService.uploadFile(file.name, file.path, file.asset);
+      yield* _databaseService.uploadFile(file.name, file.path, file.asset);
     } catch (e) {
       throw ServerException(e.toString());
     }

@@ -1,13 +1,12 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/constants/index.dart';
+import 'package:doculode/features/shell/presentation/widgets/side_menu/side_menu_widget.dart';
+import 'package:doculode/features/upload_progress/presentation/bloc/upload_progress_bloc.dart';
+import 'package:doculode/features/upload_progress/presentation/views/upload_progress_view.dart';
+import 'package:doculode/presentation/account/account_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:its_shared/constants/app_colors.dart';
-import 'package:its_shared/constants/responsive.dart';
-import 'package:its_shared/features/shell/presentation/constants/navigation_items.dart';
-import 'package:its_shared/features/shell/presentation/widgets/side_menu/side_menu_widget.dart';
-import 'package:its_shared/features/upload_progress/presentation/bloc/upload_progress_bloc.dart';
-import 'package:its_shared/features/upload_progress/presentation/views/upload_progress_view.dart';
-import 'package:its_shared/styles.dart';
 
 class ShellPage extends StatelessWidget {
   ShellPage({
@@ -29,44 +28,46 @@ class ShellPage extends StatelessWidget {
               padding: Responsive.isMobile(context)
                   ? EdgeInsets.zero
                   : EdgeInsets.all(padding),
-              child: Stack(
-                children: [
-                  Row(
-                    children: [
-                      if (!Responsive.isMobile(context)) ...[
-                        SideMenu(
-                          selected: navigationShell.currentIndex,
-                          onTap: _onTap,
-                        ),
-                        HSpace(padding)
-                      ],
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Responsive.isDesktop(context)
-                                  ? Container(
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                          color: Theme.of(context).colorScheme.surface,
-                                          borderRadius: Corners.medBorder),
-                                      child: navigationShell,
-                                    )
-                                  : Container(
-                                      color: Theme.of(context).colorScheme.surface,
-                                      child: navigationShell),
-                            ),
-                          ],
-                        ),
+              child: Stack(children: [
+                Row(
+                  children: [
+                    if (!Responsive.isMobile(context)) ...[
+                      SideMenu(
+                        selected: navigationShell.currentIndex,
+                        onTap: _onTap,
                       ),
+                      HSpace(padding)
                     ],
-                  ),
-                  if ((state.uploading && !state.close))
-                    const Align(
-                      alignment: Alignment.bottomRight,
-                      child: UploadProgressView(),
-                    )
-                ]),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Responsive.isDesktop(context)
+                                ? Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .surface,
+                                        borderRadius: Corners.medBorder),
+                                    child: navigationShell,
+                                  )
+                                : Container(
+                                    color:
+                                        Theme.of(context).colorScheme.surface,
+                                    child: navigationShell),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                if ((state!.uploading && !state.close))
+                  const Align(
+                    alignment: Alignment.bottomRight,
+                    child: UploadProgressView(),
+                  )
+              ]),
             );
           },
         ),

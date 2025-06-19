@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pdfx/pdfx.dart';
-import 'package:internet_file/internet_file.dart';
 
 class UploadPreview extends StatefulWidget {
   const UploadPreview({super.key, required this.url});
@@ -17,13 +16,13 @@ class _UploadPreviewState extends State<UploadPreview> {
   @override
   void initState() {
     super.initState();
-    _pdfController = PdfController(
-      // Load PDF from the external URL without treating it as an asset.
-      document: PdfDocument.openData(
-        InternetFile.get(widget.url, force: true),
-      ),
-      initialPage: _initialPage,
-    );
+    // _pdfController = PdfController(
+    //   // Load PDF from the external URL without treating it as an asset.
+    //   document: PdfDocument.openData(
+    //     InternetFile.get(widget.url, force: true),
+    //   ),
+    //   initialPage: _initialPage,
+    // );
   }
 
   @override
@@ -70,11 +69,11 @@ class _UploadPreviewState extends State<UploadPreview> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              _pdfController.loadDocument(
-                PdfDocument.openData(
-                  InternetFile.get(widget.url, force: true),
-                ),
-              );
+              // _pdfController.loadDocument(
+              //   PdfDocument.openData(
+              //     InternetFile.get(widget.url, force: true),
+              //   ),
+              // );
             },
           ),
         ],

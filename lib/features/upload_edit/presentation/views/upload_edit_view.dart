@@ -1,15 +1,15 @@
+import 'package:doculode/core/components/module_selector.dart';
+import 'package:doculode/core/constants/index.dart';
+import 'package:doculode/core/domain/entities/app_list_item.dart';
+import 'package:doculode/core/index.dart';
+import 'package:doculode/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
+import 'package:doculode/widgets/buttons/buttons.dart';
+import 'package:doculode/widgets/index.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:its_shared/constants/responsive.dart';
-import 'package:its_shared/core/components/module_selector.dart';
-import 'package:its_shared/core/core.dart';
-import 'package:its_shared/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
-import 'package:its_shared/widgets/buttons/styled_buttons.dart';
-import 'package:its_shared/widgets/gray_rounded_text.dart';
-import 'package:its_shared/widgets/inline_text_editor.dart';
-import 'package:its_shared/widgets/styled_load_spinner.dart';
 
-import '../../../../styles.dart';
+import 'package:doculode/config/styles.dart';
 import '../../../../widgets/styled_dropdown_textfield.dart';
 
 class UploadEditView extends StatelessWidget {
@@ -150,7 +150,7 @@ class SubTitle extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyles.body2,
+          style: TextStyles.bodyMedium,
         ),
         trailing ?? Container()
       ],
@@ -170,7 +170,7 @@ class _NameField extends StatelessWidget {
       key: const Key('editTodoView_title_textFormField'),
       width: MediaQuery.of(context).size.width,
       maxLength: 150,
-      style: TextStyles.h2,
+      style: TextStyles.headlineMedium,
       maxLines: 3,
       // suffix: Padding(
       //   padding: EdgeInsets.all(Insets.sm),
@@ -185,7 +185,7 @@ class _NameField extends StatelessWidget {
       //       children: [
       //         Text(
       //           state.ext.toUpperCase(),
-      //           style: TextStyles.body3.copyWith(color: colors.surface),
+      //           style: TextStyles.bodySmall.copyWith(color: colors.surface),
       //         ),
       //       ],
       //     ),

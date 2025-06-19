@@ -1,12 +1,13 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/constants/index.dart';
+import 'package:doculode/widgets/animated/animated.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/styles.dart';
 
-import '../../../../animated/animated.dart';
-import '../../../../constants/responsive.dart';
-import '../../../../core/common/auth/presentation/bloc/auth_bloc.dart';
-import '../widgets/profile_stats_widget.dart';
+import 'package:doculode/core/common/auth/presentation/bloc/auth_bloc.dart';
+import 'package:doculode/features/profile/presentation/widgets/profile_stats_widget.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,7 +16,8 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   @override
@@ -96,8 +98,9 @@ class UserCourseWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               valueBuilder(context, "Course", course.name!),
-              valueBuilder(context, "Course Year", "${user.level}} year"),
-              valueBuilder(context, "Total Modules", modules!.length.toString()),
+              valueBuilder(context, "Course Year", "${user.year}} year"),
+              valueBuilder(
+                  context, "Total Modules", modules!.length.toString()),
             ],
           );
   }

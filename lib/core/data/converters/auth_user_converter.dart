@@ -1,6 +1,5 @@
-
-import 'package:its_shared/core/data/models/models.dart';
-import 'package:its_shared/core/domain/entities/entities.dart';
+import 'package:doculode/core/data/models/models.dart';
+import 'package:doculode/core/domain/entities/entities.dart';
 
 extension AuthUserConverter on AppUser {
   AuthUser toEntity() {
@@ -10,7 +9,7 @@ extension AuthUserConverter on AppUser {
       surname: surname,
       email: email,
       photoUrl: photoUrl,
-      level: level,
+      year: year,
       semester: semester,
       course: course,
       modules: modules,

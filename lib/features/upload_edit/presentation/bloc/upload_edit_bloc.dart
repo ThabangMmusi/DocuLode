@@ -1,8 +1,9 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/index.dart';
+import 'package:doculode/core/utils/index.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:its_shared/_utils/logger.dart';
-import 'package:its_shared/core/core.dart';
-import 'package:its_shared/injection_container.dart';
 
 import '../../../../core/domain/entities/entities.dart';
 import '../../domain/usecases/get_sorted_modules.dart';
@@ -12,8 +13,8 @@ part 'upload_edit_event.dart';
 part 'upload_edit_state.dart';
 
 class UploadEditBloc extends Bloc<UploadEditEvent, UploadEditState> {
-  final UploadUpdate _uploadUpdate = serviceLocator<UploadUpdate>();
-  final GetSortedModules _getSortedModules = serviceLocator<GetSortedModules>();
+  final UploadUpdate _uploadUpdate = sl<UploadUpdate>();
+  final GetSortedModules _getSortedModules = sl<GetSortedModules>();
   // final UploadsBloc _uploadsBloc = serviceLocator<UploadsBloc>();
 
   UploadEditBloc() : super(const UploadEditState()) {

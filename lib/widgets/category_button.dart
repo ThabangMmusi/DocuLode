@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../constants/app_colors.dart';
-import '../constants/app_constants.dart';
+import 'package:doculode/core/constants/app_colors.dart';
+import 'package:doculode/core/constants/app_constants.dart';
 
 class CategoryButton extends StatefulWidget {
   final int index;

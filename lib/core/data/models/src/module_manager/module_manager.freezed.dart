@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,88 +10,64 @@ part of 'module_manager.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-ModuleManager _$ModuleManagerFromJson(Map<String, dynamic> json) {
-  return _ModuleManager.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ModuleManager {
-  List<ModuleModel>? get modules => throw _privateConstructorUsedError;
-  List<String>? get predecessors => throw _privateConstructorUsedError;
-
-  /// Serializes this ModuleManager to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  List<ModuleModel>? get modules;
+  List<String>? get predecessors;
 
   /// Create a copy of ModuleManager
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ModuleManagerCopyWith<ModuleManager> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ModuleManagerCopyWith<$Res> {
-  factory $ModuleManagerCopyWith(
-          ModuleManager value, $Res Function(ModuleManager) then) =
-      _$ModuleManagerCopyWithImpl<$Res, ModuleManager>;
-  @useResult
-  $Res call({List<ModuleModel>? modules, List<String>? predecessors});
-}
-
-/// @nodoc
-class _$ModuleManagerCopyWithImpl<$Res, $Val extends ModuleManager>
-    implements $ModuleManagerCopyWith<$Res> {
-  _$ModuleManagerCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of ModuleManager
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $ModuleManagerCopyWith<ModuleManager> get copyWith =>
+      _$ModuleManagerCopyWithImpl<ModuleManager>(
+          this as ModuleManager, _$identity);
+
+  /// Serializes this ModuleManager to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? modules = freezed,
-    Object? predecessors = freezed,
-  }) {
-    return _then(_value.copyWith(
-      modules: freezed == modules
-          ? _value.modules
-          : modules // ignore: cast_nullable_to_non_nullable
-              as List<ModuleModel>?,
-      predecessors: freezed == predecessors
-          ? _value.predecessors
-          : predecessors // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is ModuleManager &&
+            const DeepCollectionEquality().equals(other.modules, modules) &&
+            const DeepCollectionEquality()
+                .equals(other.predecessors, predecessors));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(modules),
+      const DeepCollectionEquality().hash(predecessors));
+
+  @override
+  String toString() {
+    return 'ModuleManager(modules: $modules, predecessors: $predecessors)';
   }
 }
 
 /// @nodoc
-abstract class _$$ModuleManagerImplCopyWith<$Res>
-    implements $ModuleManagerCopyWith<$Res> {
-  factory _$$ModuleManagerImplCopyWith(
-          _$ModuleManagerImpl value, $Res Function(_$ModuleManagerImpl) then) =
-      __$$ModuleManagerImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $ModuleManagerCopyWith<$Res> {
+  factory $ModuleManagerCopyWith(
+          ModuleManager value, $Res Function(ModuleManager) _then) =
+      _$ModuleManagerCopyWithImpl;
   @useResult
   $Res call({List<ModuleModel>? modules, List<String>? predecessors});
 }
 
 /// @nodoc
-class __$$ModuleManagerImplCopyWithImpl<$Res>
-    extends _$ModuleManagerCopyWithImpl<$Res, _$ModuleManagerImpl>
-    implements _$$ModuleManagerImplCopyWith<$Res> {
-  __$$ModuleManagerImplCopyWithImpl(
-      _$ModuleManagerImpl _value, $Res Function(_$ModuleManagerImpl) _then)
-      : super(_value, _then);
+class _$ModuleManagerCopyWithImpl<$Res>
+    implements $ModuleManagerCopyWith<$Res> {
+  _$ModuleManagerCopyWithImpl(this._self, this._then);
+
+  final ModuleManager _self;
+  final $Res Function(ModuleManager) _then;
 
   /// Create a copy of ModuleManager
   /// with the given fields replaced by the non-null parameter values.
@@ -100,13 +77,13 @@ class __$$ModuleManagerImplCopyWithImpl<$Res>
     Object? modules = freezed,
     Object? predecessors = freezed,
   }) {
-    return _then(_$ModuleManagerImpl(
+    return _then(_self.copyWith(
       modules: freezed == modules
-          ? _value._modules
+          ? _self.modules
           : modules // ignore: cast_nullable_to_non_nullable
               as List<ModuleModel>?,
       predecessors: freezed == predecessors
-          ? _value._predecessors
+          ? _self.predecessors
           : predecessors // ignore: cast_nullable_to_non_nullable
               as List<String>?,
     ));
@@ -115,14 +92,14 @@ class __$$ModuleManagerImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ModuleManagerImpl implements _ModuleManager {
-  const _$ModuleManagerImpl(
+class _ModuleManager extends ModuleManager {
+  const _ModuleManager(
       {final List<ModuleModel>? modules, final List<String>? predecessors})
       : _modules = modules,
-        _predecessors = predecessors;
-
-  factory _$ModuleManagerImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ModuleManagerImplFromJson(json);
+        _predecessors = predecessors,
+        super._();
+  factory _ModuleManager.fromJson(Map<String, dynamic> json) =>
+      _$ModuleManagerFromJson(json);
 
   final List<ModuleModel>? _modules;
   @override
@@ -144,16 +121,26 @@ class _$ModuleManagerImpl implements _ModuleManager {
     return EqualUnmodifiableListView(value);
   }
 
+  /// Create a copy of ModuleManager
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'ModuleManager(modules: $modules, predecessors: $predecessors)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ModuleManagerCopyWith<_ModuleManager> get copyWith =>
+      __$ModuleManagerCopyWithImpl<_ModuleManager>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$ModuleManagerToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ModuleManagerImpl &&
+            other is _ModuleManager &&
             const DeepCollectionEquality().equals(other._modules, _modules) &&
             const DeepCollectionEquality()
                 .equals(other._predecessors, _predecessors));
@@ -166,39 +153,50 @@ class _$ModuleManagerImpl implements _ModuleManager {
       const DeepCollectionEquality().hash(_modules),
       const DeepCollectionEquality().hash(_predecessors));
 
-  /// Create a copy of ModuleManager
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$ModuleManagerImplCopyWith<_$ModuleManagerImpl> get copyWith =>
-      __$$ModuleManagerImplCopyWithImpl<_$ModuleManagerImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ModuleManagerImplToJson(
-      this,
-    );
+  String toString() {
+    return 'ModuleManager(modules: $modules, predecessors: $predecessors)';
   }
 }
 
-abstract class _ModuleManager implements ModuleManager {
-  const factory _ModuleManager(
-      {final List<ModuleModel>? modules,
-      final List<String>? predecessors}) = _$ModuleManagerImpl;
-
-  factory _ModuleManager.fromJson(Map<String, dynamic> json) =
-      _$ModuleManagerImpl.fromJson;
-
+/// @nodoc
+abstract mixin class _$ModuleManagerCopyWith<$Res>
+    implements $ModuleManagerCopyWith<$Res> {
+  factory _$ModuleManagerCopyWith(
+          _ModuleManager value, $Res Function(_ModuleManager) _then) =
+      __$ModuleManagerCopyWithImpl;
   @override
-  List<ModuleModel>? get modules;
-  @override
-  List<String>? get predecessors;
+  @useResult
+  $Res call({List<ModuleModel>? modules, List<String>? predecessors});
+}
+
+/// @nodoc
+class __$ModuleManagerCopyWithImpl<$Res>
+    implements _$ModuleManagerCopyWith<$Res> {
+  __$ModuleManagerCopyWithImpl(this._self, this._then);
+
+  final _ModuleManager _self;
+  final $Res Function(_ModuleManager) _then;
 
   /// Create a copy of ModuleManager
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ModuleManagerImplCopyWith<_$ModuleManagerImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? modules = freezed,
+    Object? predecessors = freezed,
+  }) {
+    return _then(_ModuleManager(
+      modules: freezed == modules
+          ? _self._modules
+          : modules // ignore: cast_nullable_to_non_nullable
+              as List<ModuleModel>?,
+      predecessors: freezed == predecessors
+          ? _self._predecessors
+          : predecessors // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+    ));
+  }
 }
+
+// dart format on

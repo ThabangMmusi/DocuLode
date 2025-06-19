@@ -1,3 +1,6 @@
+// This file is now obsolete. All sign-out logic is handled in core/common/settings/.
+// You can safely delete this file.
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/domain/entities/entities.dart';
@@ -5,25 +8,24 @@ import '../../../../core/common/settings/domain/usecases/usecases.dart';
 import '../../../../core/common/settings/presentation/bloc/base_settings_bloc.dart';
 import '../../../../core/domain/usecases/get_current_user.dart';
 import '../../../../core/usecase/usecase.dart';
-import '../../domain/usecases/usecases.dart';
 
 part 'settings_state.dart';
 part 'settings_event.dart';
 
 class SettingsBloc extends BaseSettingsBloc<SettingsState> {
-  final UpdateProfile _updateProfile;
   final GetCurrentUser _getCurrentUser;
 
   SettingsBloc({
     required super.getAllCourses,
     required super.getSortedModules,
     required super.updateUserEdu,
-    required UpdateProfile updateProfile,
+    required super.validateEmail,
+    required super.validateName,
+    required super.updateProfile,
     required GetCurrentUser getCurrentUser,
+    required super.signOut,
     super.initialState = const SettingsState(),
-  })  : _getCurrentUser = getCurrentUser,
-        _updateProfile = updateProfile {
-    on<SettingsProfileUpdate>(_onProfileUpdate);
+  }) : _getCurrentUser = getCurrentUser {
     //   on<SettingsAppearanceUpdate>(_onAppearanceUpdate);
     //   on<SettingsPreferencesUpdate>(_onPreferencesUpdate);
     //   on<SettingsAccountDelete>(_onAccountDelete);
@@ -71,7 +73,7 @@ class SettingsBloc extends BaseSettingsBloc<SettingsState> {
 
     final getModules = await getSortedModules(CourseModulesParams(
       courseId: user.course!.id,
-      maxLevel: user.level!,
+      maxLevel: user.year!,
     ));
 
     getModules.fold(
@@ -88,41 +90,11 @@ class SettingsBloc extends BaseSettingsBloc<SettingsState> {
           // showRecentLists: user.settings?.showRecentLists ?? true,
           // enableSounds: user.settings?.enableSounds ?? true,
           selectedCourse: user.course!,
-          selectedLevel: user.level,
+          selectedLevel: user.year,
           selectedModules: modules,
           courses: courses,
           modules: r,
           status: SettingsStatus.success,
-        ));
-      },
-    );
-  }
-
-  Future<void> _onProfileUpdate(
-    SettingsProfileUpdate event,
-    Emitter<SettingsState> emit,
-  ) async {
-    add(LoadingEvent());
-    final res = await _updateProfile(ProfileParams(
-      names: event.names,
-      surname: event.surname,
-    ));
-
-    res.fold(
-      (l) => error(emit, l.message),
-      (r) {
-        // final user = currrentUser;
-        // super._authBloc.add(AuthUserChanged(
-        //       user: user.copyWith(
-        //         names: event.names,
-        //         surname: event.surname,
-        //       ),
-        //     ));
-        emit(state.copyWith(
-          status: SettingsStatus.success,
-          firstNames: event.names,
-          lastName: event.surname,
-          email: event.email,
         ));
       },
     );

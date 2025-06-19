@@ -1,5 +1,19 @@
+import 'package:doculode/core/index.dart';
+
+
+
+
+
+
+
+
+
+
+
+
+
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/core/core.dart';
+
 import '../entities/entities.dart';
 import '../repositories/user_repository.dart';
 

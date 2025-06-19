@@ -1,3 +1,4 @@
+import 'package:doculode/core/domain/entities/app_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -5,8 +6,8 @@ import '../../widgets/styled_dropdown.dart';
 import '../../widgets/styled_dropdown_textfield.dart';
 import '../../widgets/styled_load_spinner.dart';
 import '../domain/entities/entities.dart';
-import '../../styles.dart';
-import '../../widgets/labeled_text_input.dart';
+import 'package:doculode/config/styles.dart';
+import '../../widgets/styled_text_input.dart';
 
 // To pass module on press
 typedef ModuleCallback = void Function(Module module);
@@ -99,7 +100,7 @@ class _ModuleSelectorState extends State<ModuleSelector> {
         Row(
           children: [
             Expanded(
-              child: LabeledTextInput(
+              child: StyledTextInput(
                 label: "Modules",
                 hintText: "Search for module",
                 controller: controller,
@@ -125,13 +126,16 @@ class _ModuleSelectorState extends State<ModuleSelector> {
   }
 
   Widget _buildChips(List<Module> modules) {
-    final double listHeight = (modules.length * _listItemHeight)+modules.length-1; // Calculate height based on item count
+    final double listHeight = (modules.length * _listItemHeight) +
+        modules.length -
+        1; // Calculate height based on item count
 
     return SizedBox(
       height: listHeight, // Dynamically calculate height based on item count
       child: widget.isLoadingModules
           ? const Center(
-              child: SizedBox(width: 25, height: 25, child: StyledLoadSpinner()))
+              child:
+                  SizedBox(width: 25, height: 25, child: StyledLoadSpinner()))
           : ListView.separated(
               itemBuilder: (context, index) => ModuleWidget(
                 modules[index],

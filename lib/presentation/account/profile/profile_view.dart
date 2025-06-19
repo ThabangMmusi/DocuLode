@@ -1,12 +1,13 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/widgets/animated/slide_fade_animated.dart';
+import 'package:doculode/widgets/index.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/styles.dart';
-import 'package:its_shared/widgets/decorated_container.dart';
 
-import '../../../animated/animated.dart';
-import '../../../core/common/auth/presentation/bloc/auth_bloc.dart';
-import '../../../constants/responsive.dart';
+import 'package:doculode/core/common/auth/presentation/bloc/auth_bloc.dart';
+import 'package:doculode/core/constants/responsive.dart';
 
 class UserProfileView extends StatefulWidget {
   const UserProfileView({super.key});
@@ -103,7 +104,7 @@ class UserCourseWidget extends StatelessWidget {
             children: [
               valueBuilder(context, "Course", course.name!),
               // valueBuilder(context, "Course Code", course.code),
-              valueBuilder(context, "Course Year", "${user.level}} year"),
+              valueBuilder(context, "Course Year", "${user.year}} year"),
               // valueBuilder("School", course.schoolFullName),
               valueBuilder(
                   context, "Total Modules", modules!.length.toString()),

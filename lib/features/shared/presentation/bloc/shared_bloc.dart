@@ -1,7 +1,28 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/index.dart';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:its_shared/core/core.dart';
-import 'package:its_shared/injection_container.dart';
+
+
 
 import '../../../../core/common/auth/presentation/bloc/auth_bloc.dart';
 import '../../../../core/domain/entities/entities.dart';
@@ -13,9 +34,9 @@ part 'shared_event.dart';
 part 'shared_state.dart';
 
 class SharedBloc extends Bloc<SharedEvent, SharedState> {
-  final DownloadFile _downloadFile = serviceLocator<DownloadFile>();
-  final GetSharedFile _getSharedFile = serviceLocator<GetSharedFile>();
-  final AuthBloc _authBloc = serviceLocator<AuthBloc>();
+  final DownloadFile _downloadFile = sl<DownloadFile>();
+  final GetSharedFile _getSharedFile = sl<GetSharedFile>();
+  final AuthBloc _authBloc = sl<AuthBloc>();
 
   SharedBloc() : super(const SharedState()) {
     on<SharedViewStart>(_onStart);

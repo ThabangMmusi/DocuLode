@@ -5,20 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "its_shared",
+            "name": "doculode",
             "request": "launch",
             "type": "dart",
-            "args": ["--web-port=23429",
-                "--web-enable-expression-evaluation"],
+            "args": [
+                "--web-port=23429",
+                "--web-enable-expression-evaluation",
+                "--dart-define", "https://khxbuxlzjkixxsywlnbz.supabase.co",
+                "--dart-define", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoeGJ1eGx6amtpeHhzeXdsbmJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NDg4ODYsImV4cCI6MjA2MzEyNDg4Nn0.gghU-up-pQetsldCwDLWCuBACh8vYaX1xOaSubHs2fo"
+            ],
         },
         {
-            "name": "its_shared (profile mode)",
+            "name": "doculode (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "its_shared (release mode)",
+            "name": "doculode (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

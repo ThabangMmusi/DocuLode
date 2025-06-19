@@ -1,7 +1,28 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/widgets/index.dart';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import 'package:flutter/material.dart';
-import 'package:its_shared/styles.dart';
-import 'package:its_shared/widgets/styled_load_spinner.dart';
-import 'package:its_shared/widgets/ui_text.dart';
+
+
+
 
 class LoadingDataWidget extends StatelessWidget {
   const LoadingDataWidget({super.key});

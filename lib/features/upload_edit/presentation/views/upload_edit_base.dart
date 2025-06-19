@@ -1,15 +1,16 @@
+import 'package:doculode/core/domain/entities/app_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/core/components/module_selector.dart';
-import 'package:its_shared/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
-import 'package:its_shared/widgets/labeled_text_input.dart';
-import 'package:its_shared/widgets/styled_load_spinner.dart';
+import 'package:doculode/core/components/module_selector.dart';
+import 'package:doculode/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
+import 'package:doculode/widgets/styled_text_input.dart';
+import 'package:doculode/widgets/styled_load_spinner.dart';
 
-import '../../../../core/core.dart';
-import '../../../../styles.dart';
-import '../../../../widgets/styled_dropdown_textfield.dart';
-import '../../../uploads/presentation/components/dl_button.dart';
+import 'package:doculode/core/core.dart';
+import 'package:doculode/config/styles.dart';
+import 'package:doculode/widgets/styled_dropdown_textfield.dart';
+import 'package:doculode/features/uploads/presentation/components/dl_button.dart';
 
 class UploadEditBase extends StatelessWidget {
   const UploadEditBase({super.key});
@@ -93,7 +94,7 @@ class SubTitle extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyles.body2,
+          style: TextStyles.bodyMedium,
         ),
         trailing ?? Container()
       ],
@@ -109,12 +110,12 @@ class _NameField extends StatelessWidget {
     ColorScheme colors = Theme.of(context).colorScheme;
     final state = context.watch<UploadEditBloc>().state;
 
-    return LabeledTextInput(
+    return StyledTextInput(
       key: const Key('editTodoView_title_textFormField'),
       label: "Filename",
-      text: state.name,
+      initialValue: state.name,
       maxLength: 50,
-      suffix: Padding(
+      suffixWidget: Padding(
         padding: EdgeInsets.all(Insets.sm),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: Insets.sm).copyWith(top: 2),
@@ -127,7 +128,7 @@ class _NameField extends StatelessWidget {
             children: [
               Text(
                 state.ext.toUpperCase(),
-                style: TextStyles.body3.copyWith(color: colors.surface),
+                style: TextStyles.bodySmall.copyWith(color: colors.surface),
               ),
             ],
           ),

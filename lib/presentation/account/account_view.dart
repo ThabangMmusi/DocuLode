@@ -1,13 +1,14 @@
+import 'package:doculode/features/shell/shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/responsive.dart';
-import '../../styles.dart';
+import 'package:doculode/core/constants/app_colors.dart';
+import 'package:doculode/config/styles.dart';
+import 'package:doculode/core/constants/responsive.dart';
 import 'account_widgets.dart';
 import 'side_menu/side_menu_widget.dart';
-import '../../features/upload_progress/upload_progress.dart';
+import 'package:doculode/features/upload_progress/upload_progress.dart';
 
 //for validating the authentications before the account
 class MainAccountView extends StatelessWidget {

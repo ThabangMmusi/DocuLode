@@ -1,16 +1,37 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/index.dart';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:go_router/go_router.dart';
-// import 'package:its_shared/constants/responsive.dart';
-// import 'package:its_shared/core/bloc/auth/auth_bloc.dart';
-// import 'package:its_shared/core/common/settings/presentation/bloc/base_settings_bloc.dart';
-// import 'package:its_shared/routes/app_pages.dart';
-// import 'package:its_shared/styles.dart';
-// import 'package:its_shared/widgets/styled_load_spinner.dart';
+// 
+// 
+// 
+// 
+// 
+// 
 
 // import '../../../../constants/app_text.dart';
 // import '../../../../core/common/settings/presentation/views/step_one_view.dart';
-// import '../../../../widgets/buttons/styled_buttons.dart';
+
 // import '../../../../widgets/styled_dropdown_textfield.dart';
 // import '../bloc/settings_bloc.dart';
 // import '../widget/setup_side_image.dart';
@@ -164,7 +185,7 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     final colorScheme = Theme.of(context).colorScheme;
-    
+
 //     return Column(
 //       mainAxisSize: MainAxisSize.min,
 //       children: [
@@ -172,21 +193,21 @@
 //           children: [
 //             Text(
 //               tAppName,
-//               style: TextStyles.h2.copyWith(color: colorScheme.primary),
+//               style: TextStyles.headlineMedium.copyWith(color: colorScheme.primary),
 //             ),
 //           ],
 //         ),
 //         VSpace(Insets.xl),
-//         Text("Welcome!", textAlign: TextAlign.center, style: TextStyles.h1),
+//         Text("Welcome!", textAlign: TextAlign.center, style: TextStyles.displayLarge),
 //         VSpace.med,
 //         Text(
 //           "Lets finalize few things...",
 //           textAlign: TextAlign.center,
-//           style: TextStyles.h3,
+//           style: TextStyles.headlineSmall,
 //         ),
 //         Text(
 //           "You can always change them later.",
-//           style: TextStyles.body2.copyWith(
+//           style: TextStyles.bodyMedium.copyWith(
 //             fontWeight: FontWeight.w400,
 //             color: colorScheme.onInverseSurface,
 //           ),

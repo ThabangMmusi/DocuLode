@@ -1,10 +1,11 @@
+import 'package:doculode/config/index.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:its_shared/features/upload_edit/presentation/views/upload_edit_view.dart';
-import 'package:its_shared/styles.dart';
 
 import '../../../../widgets/my_dialog_box.dart';
 import '../bloc/upload_edit_bloc.dart';
+import 'upload_edit_view.dart';
 
 class UpdateFileDialog extends StatelessWidget {
   const UpdateFileDialog({

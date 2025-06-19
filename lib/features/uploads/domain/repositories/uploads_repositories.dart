@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/core.dart';
+import 'package:doculode/core/core.dart';
 
 abstract interface class UploadsRepository {
   ///update document

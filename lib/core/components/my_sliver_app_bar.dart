@@ -3,15 +3,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../../constants/responsive.dart';
-import '../../styles.dart';
+import 'package:doculode/core/constants/responsive.dart';
+import 'package:doculode/config/styles.dart';
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
-  MySliverAppBar(
-      {
-      required this.title,
-      this.leading,
-      this.trailing});
+  MySliverAppBar({required this.title, this.leading, this.trailing});
   final String title;
   final Widget? leading;
   final Widget? trailing;
@@ -89,7 +85,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  style: TextStyles.h2,
+                  style: TextStyles.headlineMedium,
                 ),
               ),
             ),

@@ -1,9 +1,11 @@
+import 'package:doculode/core/index.dart';
+
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:its_shared/core/core.dart';
 
+import '../../../../../features/sign_in/domain/usecases/validate_email_use_case.dart';
 import '../../../../domain/entities/entities.dart';
 import '../../domain/usecases/usecases.dart';
 
@@ -12,22 +14,33 @@ part 'base_settings_state.dart';
 
 class BaseSettingsBloc<T extends BaseSettingsState>
     extends Bloc<BaseSettingsEvent, T> {
-  final GetAllCourses _getAllCourses;
-  final GetCourseModules _getSortedModules;
+  final GetAllCoursesUsecase _getAllCourses;
+  final GetCourseModulesUsecase _getSortedModules;
   final UpdateUserEdu _updateUserEdu;
+  final ValidateEmailUseCase _validateEmail;
+  final ValidateNameUseCase _validateName;
+  final UserSignOut _signOut;
+  final UpdateProfile _updateProfile;
 
-  GetAllCourses get getAllCourses => _getAllCourses;
-  GetCourseModules get getSortedModules => _getSortedModules;
+  GetAllCoursesUsecase get getAllCourses => _getAllCourses;
+  GetCourseModulesUsecase get getSortedModules => _getSortedModules;
 
   BaseSettingsBloc({
-    required GetAllCourses getAllCourses,
-    required GetCourseModules getSortedModules,
+    required GetAllCoursesUsecase getAllCourses,
+    required GetCourseModulesUsecase getSortedModules,
+    required UpdateProfile updateProfile,
     required UpdateUserEdu updateUserEdu,
+    required ValidateEmailUseCase validateEmail,
+    required ValidateNameUseCase validateName,
+    required UserSignOut signOut,
     required T initialState,
-  })  : 
-        _getAllCourses = getAllCourses,
+  })  : _getAllCourses = getAllCourses,
         _getSortedModules = getSortedModules,
         _updateUserEdu = updateUserEdu,
+        _updateProfile = updateProfile,
+        _validateEmail = validateEmail,
+        _validateName = validateName,
+        _signOut = signOut,
         super(initialState) {
     on<SelectCourseEvent>(_onCourseSelect);
     on<SelectModuleEvent>(_onModuleSelect);
@@ -36,6 +49,66 @@ class BaseSettingsBloc<T extends BaseSettingsState>
     on<SelectLevelEvent>(_onLevelChange);
     on<UpdateUserEduEvent>(_onUpdateUserEdu);
     on<LoadingEvent>(_loading);
+    on<FirstNameChanged>(_onFirstNameChanged);
+    on<LastNameChanged>(_onLastNameChanged);
+    on<SignOutRequested>(_onSignOutRequested);
+    on<ProfileUpdateRequested>(_onProfileUpdate);
+  }
+
+  Future<void> _onProfileUpdate(
+    ProfileUpdateRequested event,
+    Emitter<T> emit,
+  ) async {
+    add(LoadingEvent());
+    final res = await _updateProfile(ProfileParams(
+      names: event.names,
+      surname: event.surname,
+    ));
+
+    res.fold(
+      (l) => error(emit, l.message),
+      (r) {
+        emit(state.copyWith(
+          status: SettingsStatus.success,
+          firstNames: event.names,
+          lastName: event.surname,
+          email: event.email,
+        ) as T);
+      },
+    );
+  }
+
+  void _onLastNameChanged(LastNameChanged event, Emitter<T> emit) async {
+    final result = await _validateName(event.name);
+    result.fold(
+      (l) => emit(state.copyWith(
+        lastName: event.name,
+        lastNameError: l.message,
+        isNamesValid: false,
+      ) as T),
+      (r) => emit(state.copyWith(
+        lastName: event.name,
+        lastNameError: "",
+        isNamesValid:
+            state.firstNamesError.isEmpty && state.firstNames.isNotEmpty,
+      ) as T),
+    );
+  }
+
+  void _onFirstNameChanged(FirstNameChanged event, Emitter<T> emit) async {
+    final result = await _validateName(event.name);
+    result.fold(
+      (l) => emit(state.copyWith(
+        firstNames: event.name,
+        firstNamesError: l.message,
+        isNamesValid: false,
+      ) as T),
+      (r) => emit(state.copyWith(
+        firstNames: event.name,
+        firstNamesError: "",
+        isNamesValid: state.lastNameError.isEmpty && state.lastName.isNotEmpty,
+      ) as T),
+    );
   }
 
   void _loading(LoadingEvent event, Emitter<T> emit) =>
@@ -46,7 +119,12 @@ class BaseSettingsBloc<T extends BaseSettingsState>
 
   void _onCourseSelect(SelectCourseEvent event, Emitter<T> emit) {
     if (state.selectedCourse == event.selectedCourse) return;
-    emit(state.copyWith(selectedCourse: event.selectedCourse) as T);
+    emit(state.copyWith(
+      selectedCourse: event.selectedCourse,
+      selectedLevel: 0, // Reset year/level
+      selectedModules: const [], // Reset modules/semester selection
+      modules: const [], // Optionally clear modules list as well
+    ) as T);
   }
 
   void _onLevelChange(SelectLevelEvent event, Emitter<T> emit) {
@@ -89,8 +167,7 @@ class BaseSettingsBloc<T extends BaseSettingsState>
     res.fold(
       (l) => error(emit, l.message),
       (r) {
-        final selected =
-            r.where((e) => e.level == state.selectedLevel).toList();
+        final selected = r.where((e) => e.year == state.selectedLevel).toList();
         emit(state.copyWith(
           status: SettingsStatus.success,
           modules: r,
@@ -116,6 +193,16 @@ class BaseSettingsBloc<T extends BaseSettingsState>
       (r) {
         emit(state.copyWith(status: SettingsStatus.done) as T);
       },
+    );
+  }
+
+  Future<void> _onSignOutRequested(
+      SignOutRequested event, Emitter<T> emit) async {
+    emit(state.copyWith(status: SettingsStatus.signingOut) as T);
+    final res = await _signOut(NoParams());
+    res.fold(
+      (l) => error(emit, l.message),
+      (r) => emit(state.copyWith(status: SettingsStatus.loggedOff) as T),
     );
   }
 }

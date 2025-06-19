@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:doculode/config/styles.dart';
+import 'package:doculode/core/constants/app_constants.dart';
 
-import '../styles.dart';
 import 'decorated_container.dart';
 
 class StyledBottomSheet extends StatelessWidget {

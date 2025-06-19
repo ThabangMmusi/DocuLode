@@ -1,8 +1,9 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/core/core.dart';
-import 'package:its_shared/features/upload_progress/data/model/local_doc_model.dart';
+import 'package:doculode/core/index.dart';
+import 'package:doculode/features/upload_progress/data/model/local_doc_model.dart';
 
-import '../../../../_utils/logger.dart';
+import 'package:fpdart/fpdart.dart';
+
+import '../../../../core/utils/logger.dart';
 import '../../domain/domain.dart';
 import '../sources/upload_file_sources.dart';
 
@@ -33,7 +34,7 @@ class UploadFileRepositoryImpl implements UploadFileRepository {
 
       // yield right(progress);
     } on ServerException catch (e) {
-      yield left(Failure(e.message));
+      yield left(ServerFailure(e.message));
     }
   }
 }

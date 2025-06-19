@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/core/common/auth/data/source/source.dart';
-import 'package:its_shared/core/domain/repositories/user_repository.dart';
-import 'package:its_shared/core/error/exceptions.dart';
-import 'package:its_shared/core/error/failures.dart';
+import 'package:doculode/core/common/auth/data/source/source.dart';
+import 'package:doculode/core/domain/repositories/user_repository.dart';
+import 'package:doculode/core/error/exceptions.dart';
+import 'package:doculode/core/error/failures.dart';
 
 import '../../../../domain/entities/entities.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -27,12 +27,12 @@ class AuthRepositoryImpl implements AuthRepository {
       unawaited(_authDataSource.signOut());
       return Future.value(right(null));
     } on ServerException catch (e) {
-      return Future.value(left(Failure(e.message)));
+      return Future.value(left(ServerFailure(e.message)));
     }
   }
 
   // Get user-related data from UserRepository
   @override
-  Future<Either<Failure, AuthUser?>> getCurrentUser() => 
+  Future<Either<Failure, AuthUser?>> getCurrentUser() =>
       _userRepository.getCurrentUser();
 }

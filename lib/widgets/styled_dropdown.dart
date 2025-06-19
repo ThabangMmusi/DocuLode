@@ -1,8 +1,13 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/domain/entities/app_list_item.dart';
+import 'package:doculode/core/utils/logger.dart';
+import 'package:doculode/widgets/styled_load_spinner.dart';
+import 'package:doculode/widgets/styled_text_input.dart';
+import 'package:doculode/core/components/custom_scroll_behavior.dart';
+import 'package:doculode/widgets/base_list_item_widget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:its_shared/styles.dart';
-
-import 'styled_dropdown_textfield.dart';
 
 class StyledDropDown<T> extends StatefulWidget {
   final List<AppListItem<T>> listItems;

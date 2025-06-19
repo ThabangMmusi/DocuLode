@@ -1,13 +1,27 @@
+import 'package:doculode/core/index.dart';
+
+
+
+
+
+
+
+
+
+
+
+
+
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/core/core.dart';
+
 
 import '../../../../domain/entities/module.dart';
 import '../repositories/base_settings_repository.dart';
 
-class GetCourseModules implements UseCase<List<Module>, CourseModulesParams> {
+class GetCourseModulesUsecase implements UseCase<List<Module>, CourseModulesParams> {
   final BaseSettingsRepository _setUpRepository;
 
-  GetCourseModules(this._setUpRepository);
+  GetCourseModulesUsecase(this._setUpRepository);
 
   @override
   Future<Either<Failure, List<Module>>> call(CourseModulesParams params) async {

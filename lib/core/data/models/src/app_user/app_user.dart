@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:its_shared/core/data/models/src/course_model/course_model.dart';
-import 'package:its_shared/core/data/models/src/module_converter.dart';
-import 'package:its_shared/core/data/models/src/module_model/module_model.dart';
+import 'package:doculode/core/data/models/src/course_model/course_model.dart';
+import 'package:doculode/core/data/models/src/module_converter.dart';
+import 'package:doculode/core/data/models/src/module_model/module_model.dart';
 
 part 'app_user.freezed.dart';
 part 'app_user.g.dart';
@@ -17,7 +17,7 @@ class CourseConverter implements JsonConverter<CourseModel, String> {
 }
 
 @freezed
-class AppUser with _$AppUser {
+sealed class AppUser with _$AppUser {
   static String kDefaultImageUrl =
       "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=50&q=80";
 
@@ -28,7 +28,7 @@ class AppUser with _$AppUser {
     String? surname,
     String? email,
     String? photoUrl,
-    int? level,
+    int? year,
     int? semester,
     @CourseConverter() CourseModel? course,
     @ModuleConverter() List<ModuleModel>? modules,

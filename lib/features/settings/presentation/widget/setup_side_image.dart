@@ -1,6 +1,27 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/widgets/index.dart';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import 'package:flutter/material.dart';
-import 'package:its_shared/styles.dart';
-import 'package:its_shared/widgets/decorated_container.dart';
+
+
 
 class SetupSideImage extends StatelessWidget {
   const SetupSideImage({
@@ -28,7 +49,7 @@ class SetupSideImage extends StatelessWidget {
                     padding: EdgeInsets.all(Insets.xl),
                     child: Text(
                       "Take Control, Be in Control",
-                      style: TextStyles.h1.copyWith(
+                      style: TextStyles.displayLarge.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),

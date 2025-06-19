@@ -1,5 +1,7 @@
+import 'package:doculode/core/domain/repositories/database_service.dart';
+
 import '../../../../core/core.dart';
-import '../../../../services/firebase/firebase_service.dart';
+import 'package:doculode/services/services.dart';
 
 abstract interface class SharedSource {
   Future<void> downloadFile(Map<String, dynamic> file);
@@ -9,13 +11,13 @@ abstract interface class SharedSource {
 }
 
 class SharedSourceImpl implements SharedSource {
-  final FirebaseService firebaseService;
-
-  SharedSourceImpl(this.firebaseService);
+  final DatabaseService _databaseService;
+  SharedSourceImpl({required DatabaseService databaseService})
+      : _databaseService = databaseService;
   @override
   Future<void> downloadFile(Map<String, dynamic> file) async {
     try {
-      return await firebaseService.downloadFile(file);
+      return await _databaseService.downloadFile(file);
     } catch (e) {
       throw ServerException(e.toString());
     }
@@ -24,7 +26,7 @@ class SharedSourceImpl implements SharedSource {
   @override
   Future<RemoteDocModel?> getSharedFile(String id) {
     try {
-      return firebaseService.getUploadedFile(id);
+      return _databaseService.getUploadedFile(id);
     } catch (e) {
       throw ServerException(e.toString());
     }

@@ -1,5 +1,19 @@
+import 'package:doculode/config/index.dart';
+
+
+
+
+
+
+
+
+
+
+
+
+
 import 'package:flutter/material.dart';
-import 'package:its_shared/styles.dart';
+
 
 class StatisticsWidgetNew extends StatelessWidget {
   const StatisticsWidgetNew({

@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-import '../../constants/app_colors.dart';
+import 'package:doculode/core/constants/app_colors.dart';
 
 class LoadingDataPage extends StatefulWidget {
   const LoadingDataPage({super.key});
@@ -35,7 +35,7 @@ class _LoadingDataPageState extends State<LoadingDataPage>
       backgroundColor: tSecondaryColor,
       body: Stack(
         children: [
-          const Center(
+          Center(
             child: CircleAvatar(
               backgroundColor: tPrimaryColor,
               radius: 40,
@@ -47,7 +47,7 @@ class _LoadingDataPageState extends State<LoadingDataPage>
             child: RotationTransition(
               turns: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
                   parent: _animationController, curve: Curves.easeInOut)),
-              child: const Center(
+              child: Center(
                 child: GradientCircularProgressIndicator(
                   radius: 50,
                   gradientColors: [
@@ -77,7 +77,8 @@ class GradientCircularProgressIndicator extends StatelessWidget {
   final List<Color> gradientColors;
   final double strokeWidth;
 
-  const GradientCircularProgressIndicator({super.key, 
+  const GradientCircularProgressIndicator({
+    super.key,
     required this.radius,
     required this.gradientColors,
     this.strokeWidth = 4.0,

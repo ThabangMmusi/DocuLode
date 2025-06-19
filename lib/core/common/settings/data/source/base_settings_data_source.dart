@@ -1,10 +1,9 @@
-import 'package:its_shared/_utils/logger.dart';
-import 'package:its_shared/core/data/converters/converters.dart';
-import 'package:its_shared/core/core.dart';
-import 'package:its_shared/services/firebase/firebase_service.dart';
-
-import '../../../../domain/entities/entities.dart';
-import '../../../../data/models/models.dart';
+import 'package:doculode/core/data/converters/index.dart';
+import 'package:doculode/core/index.dart';
+import 'package:doculode/core/domain/repositories/database_service.dart';
+import 'package:doculode/core/utils/logger.dart';
+import 'package:doculode/core/domain/entities/auth_user.dart';
+import 'package:doculode/core/data/models/models.dart';
 
 abstract interface class BaseSettingsDataSource {
   Future<AuthUser?> getCurrentUser();
@@ -24,15 +23,24 @@ abstract interface class BaseSettingsDataSource {
     required int level,
     required String courseId,
   });
+
+  /// Update user profile information
+  Future<void> updateUserProfile({
+    required String names,
+    required String surname,
+  });
+
+  /// Sign out user (mirrors AuthDataSource)
+  Future<void> signOut();
 }
 
 class BaseSettingsDataSourceImpl implements BaseSettingsDataSource {
-  final FirebaseService _firebaseService;
+  final DatabaseService _firebaseService;
 
-  BaseSettingsDataSourceImpl({required FirebaseService firebaseService})
+  BaseSettingsDataSourceImpl({required DatabaseService firebaseService})
       : _firebaseService = firebaseService;
 
-  FirebaseService get firebaseService => _firebaseService;
+  DatabaseService get firebaseService => _firebaseService;
 
   @override
   Future<AuthUser?> getCurrentUser() async {
@@ -60,8 +68,8 @@ class BaseSettingsDataSourceImpl implements BaseSettingsDataSource {
   Future<List<ModuleModel>> getCourseModules(
       {required int maxLevel, required String courseId}) {
     try {
-      return _firebaseService.getSortedModules(
-        maxLevel: maxLevel,
+      return _firebaseService.getMultipleYearsModules(
+        endYear: maxLevel,
         courseId: courseId,
       );
     } catch (e) {
@@ -77,13 +85,39 @@ class BaseSettingsDataSourceImpl implements BaseSettingsDataSource {
     required String courseId,
   }) {
     try {
-      return _firebaseService.updateUserEducation(
-        modules: modules,
+      return _firebaseService.updateUserEducationProfile(
+        selectedModuleIds: modules,
         level: level,
         courseId: courseId,
       );
     } catch (e) {
       log("courses from firebase: $e");
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> updateUserProfile({
+    required String names,
+    required String surname,
+  }) {
+    try {
+      return _firebaseService.updateUserPublicProfile({
+        'names': names,
+        'surname': surname,
+      });
+    } catch (e) {
+      log("Update profile error: $e");
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> signOut() async {
+    try {
+      await _firebaseService.signOut();
+    } catch (e) {
+      log("Sign out error: $e");
       throw ServerException(e.toString());
     }
   }

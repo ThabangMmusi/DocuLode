@@ -20,6 +20,3 @@ export 'progress/upload_progress.dart';
 //components
 export 'components/my_sliver_app_bar.dart';
 export 'components/access_state_widget.dart';
-
-//app logos
-export 'app_logo/full_app_logo.dart';

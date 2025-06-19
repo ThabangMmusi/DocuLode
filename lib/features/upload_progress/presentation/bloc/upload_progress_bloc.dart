@@ -1,10 +1,9 @@
+import 'package:doculode/core/commands/files/pick_file_command.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:its_shared/features/upload_progress/domain/domain.dart';
-
-import '../../../../commands/files/pick_file_command.dart';
-import '../../../../core/data/models/models.dart';
-import '../../../uploads/presentation/bloc/uploads_bloc.dart';
+import 'package:doculode/features/upload_progress/domain/domain.dart';
+import 'package:doculode/core/data/models/models.dart';
+import 'package:doculode/features/uploads/presentation/bloc/uploads_bloc.dart';
 part 'upload_progress_event.dart';
 part 'upload_progress_state.dart';
 

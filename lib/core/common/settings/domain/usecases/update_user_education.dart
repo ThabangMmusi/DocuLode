@@ -1,6 +1,7 @@
+import 'package:doculode/core/index.dart';
+import 'package:doculode/core/domain/entities/module.dart';
+
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/core/domain/entities/module.dart';
-import 'package:its_shared/core/core.dart';
 
 import '../repositories/base_settings_repository.dart';
 

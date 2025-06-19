@@ -1,6 +1,8 @@
+import 'package:doculode/core/domain/repositories/database_service.dart';
+
 import '../../../../core/data/models/models.dart';
 import '../../../../core/core.dart';
-import '../../../../services/firebase/firebase_service.dart';
+import 'package:doculode/services/services.dart';
 
 abstract interface class UploadEditSource {
   Future<void> updateDoc(Map<String, dynamic> file);
@@ -10,13 +12,15 @@ abstract interface class UploadEditSource {
 }
 
 class UploadEditSourceImpl implements UploadEditSource {
-  final FirebaseService firebaseService;
+  final DatabaseService _databaseService;
 
-  UploadEditSourceImpl(this.firebaseService);
+  UploadEditSourceImpl({required DatabaseService databaseService})
+      : _databaseService = databaseService;
+
   @override
   Future<void> updateDoc(Map<String, dynamic> file) async {
     try {
-      return await firebaseService.updateUpload(file);
+      return await _databaseService.updateUpload(file);
     } catch (e) {
       throw ServerException(e.toString());
     }
@@ -25,7 +29,7 @@ class UploadEditSourceImpl implements UploadEditSource {
   @override
   Future<List<ModuleModel>> getCourseModules() {
     try {
-      return firebaseService.getSortedModules();
+      return _databaseService.getMultipleYearsModules();
     } catch (e) {
       throw ServerException(e.toString());
     }

@@ -1,11 +1,12 @@
+import 'package:doculode/config/index.dart';
+
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/injection_container.dart';
-import '../../../../core/core.dart';
+
+import 'package:doculode/core/core.dart';
 import '../repositories/upload_edit_repositories.dart';
 
 class UploadUpdate implements UseCase<void, UpdateFileParams> {
-  final UploadEditRepository uploadEditRepository =
-      serviceLocator<UploadEditRepository>();
+  final UploadEditRepository uploadEditRepository = sl<UploadEditRepository>();
 
   @override
   Future<Either<Failure, void>> call(UpdateFileParams params) async {

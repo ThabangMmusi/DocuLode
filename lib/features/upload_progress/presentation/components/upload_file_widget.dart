@@ -1,11 +1,12 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/utils/utils.dart';
+import 'package:doculode/features/upload_progress/presentation/bloc/upload_progress_bloc.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/_utils/string_utils.dart';
-import 'package:its_shared/features/upload_progress/presentation/bloc/upload_progress_bloc.dart';
-import 'package:its_shared/themes.dart';
 
-import '../../../../styles.dart';
+import 'package:doculode/config/styles.dart';
 
 class UploadFileWidget extends StatelessWidget {
   const UploadFileWidget({
@@ -41,7 +42,7 @@ class UploadFileWidget extends StatelessWidget {
                             : Ionicons.checkmark_circle_outline,
                         color: progress < 1
                             ? colors.onInverseSurface
-                            : AppTheme.greenSurfaceDark,
+                            : AppTheme.successColor,
                       ),
                     ],
                   ),
@@ -54,7 +55,7 @@ class UploadFileWidget extends StatelessWidget {
                         child: Text(
                           file.name,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyles.body2.copyWith(
+                          style: TextStyles.bodyMedium.copyWith(
                               fontWeight: FontWeight.bold,
                               color: colors.surface),
                         ),
@@ -69,7 +70,7 @@ class UploadFileWidget extends StatelessWidget {
                                 borderRadius: Corners.lgBorder),
                             child: Text(
                               file.ext.toUpperCase(),
-                              style: TextStyles.body4.copyWith(
+                              style: TextStyles.labelSmall.copyWith(
                                   fontWeight: FontWeight.w800,
                                   color: colors.surface),
                             ),
@@ -77,7 +78,7 @@ class UploadFileWidget extends StatelessWidget {
                           HSpace.sm,
                           Text(
                             "Uploading... ${StringUtils.convertToPercentage(progress, 0)}",
-                            style: TextStyles.body4
+                            style: TextStyles.labelSmall
                                 .copyWith(color: colors.surface),
                           )
                         ],
@@ -94,7 +95,7 @@ class UploadFileWidget extends StatelessWidget {
               //       onPressed: () {},
               //       child: Text(
               //         "Edit",
-              //         style: TextStyles.body3,
+              //         style: TextStyles.bodySmall,
               //       )),
               // )
             ],
@@ -104,7 +105,7 @@ class UploadFileWidget extends StatelessWidget {
             LinearProgressIndicator(
               value: progress,
               backgroundColor: colors.inversePrimary,
-              color: AppTheme.blueSurface,
+              color: AppTheme.infoColor,
               borderRadius: const BorderRadius.all(Corners.medRadius),
             ),
           ]

@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/core.dart';
-import '../repositories/uploads_repositories.dart';
+import 'package:doculode/core/core.dart';
+import 'package:doculode/features/uploads/domain/repositories/uploads_repositories.dart';
 
 class GetUploads implements UseCase<FetchedRemoteDocs, NoParams> {
   final UploadsRepository uploadsRepository;

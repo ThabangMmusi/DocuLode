@@ -1,9 +1,6 @@
 part of 'settings_bloc.dart';
+
 class SettingsState extends BaseSettingsState {
-  final String names;
-  final String lastName;
-  final String email;
-  final String imageUrl;
   // final String theme;
   // final bool showRecentLists;
   // final bool enableSounds;
@@ -16,10 +13,15 @@ class SettingsState extends BaseSettingsState {
     super.selectedCourse,
     super.selectedModules,
     super.errorMsg,
-    this.names = '',
-    this.lastName = '',
-    this.email = '',
-    this.imageUrl = '',
+    super.firstNames,
+    super.lastName,
+    super.email,
+    super.imageUrl,
+    super.firstNamesError,
+    super.lastNameError,
+    super.emailError,
+    super.isNamesValid,
+    super.isPersonalDetailValid,
     // required this.theme,
     // required this.showRecentLists,
     // required this.enableSounds,
@@ -38,10 +40,15 @@ class SettingsState extends BaseSettingsState {
     Course? selectedCourse,
     List<Module>? selectedModules,
     String? errorMsg,
+    String? firstNamesError,
+    String? lastNameError,
+    String? emailError,
+    bool? isNamesValid,
+    bool? isPersonalDetailValid,
   }) {
     return SettingsState(
       status: status ?? this.status,
-      names: firstNames ?? names,
+      firstNames: firstNames ?? this.firstNames,
       lastName: lastName ?? this.lastName,
       email: email ?? this.email,
       imageUrl: imageUrl ?? this.imageUrl,
@@ -54,6 +61,16 @@ class SettingsState extends BaseSettingsState {
       selectedCourse: selectedCourse ?? this.selectedCourse,
       selectedModules: selectedModules ?? this.selectedModules,
       errorMsg: errorMsg ?? this.errorMsg,
+      firstNamesError: firstNamesError ?? this.firstNamesError,
+      lastNameError: lastNameError ?? this.lastNameError,
+      emailError: emailError ?? this.emailError,
+      isNamesValid: isNamesValid ?? this.isNamesValid,
+      isPersonalDetailValid:
+          isPersonalDetailValid ?? this.isPersonalDetailValid,
     );
   }
 }
+
+// Optionally, add a status for sign-out if you want to show a loading or confirmation state
+// Example:
+// SettingsStatus.signingOut

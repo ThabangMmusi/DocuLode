@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:its_shared/styles.dart';
+import 'package:doculode/config/index.dart';
 
-import '../../../../core/core.dart';
+import 'package:flutter/material.dart';
+
+import 'package:doculode/core/core.dart';
 
 // enum UploadedStatus {unpublished, published}
 class UploadedStatus extends StatelessWidget {
@@ -21,7 +22,7 @@ class UploadedStatus extends StatelessWidget {
       child: Center(
           child: Text(
         status.asString,
-        style: TextStyles.body4.copyWith(color: getForeColor()),
+        style: TextStyles.labelSmall.copyWith(color: getForeColor()),
       )),
     );
   }

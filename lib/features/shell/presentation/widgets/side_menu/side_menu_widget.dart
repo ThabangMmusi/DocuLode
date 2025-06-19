@@ -1,17 +1,17 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/common/auth/presentation/bloc/auth_bloc.dart';
+import 'package:doculode/core/components/components.dart';
+import 'package:doculode/presentation/account/account_widgets.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/core/common/auth/presentation/bloc/auth_bloc.dart';
-import 'package:its_shared/core/components/sidebar_menu/sidebar.dart';
-import 'package:its_shared/features/shell/presentation/constants/navigation_items.dart';
-import 'package:its_shared/styles.dart';
-import 'package:its_shared/widgets/buttons/styled_buttons.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({super.key, required this.selected, required this.onTap});
   final int selected;
   final Function(BuildContext context, int index) onTap;
-  
+
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AuthBloc>().state;
@@ -27,32 +27,32 @@ class SideMenu extends StatelessWidget {
           courseName: state.user!.course!.name!,
         ),
         topActions: [
-          Padding(
-            padding: EdgeInsets.all(Insets.med).copyWith(bottom: Insets.xs),
-            child: RawBtn(
-              padding: EdgeInsets.all(Insets.sm),
-              normalColors: BtnColors(
-                bg: Theme.of(context).colorScheme.onSurface,
-                fg: Theme.of(context).colorScheme.onPrimary,
-              ),
-              hoverColors: BtnColors(
-                bg: Theme.of(context).colorScheme.primary,
-                fg: Theme.of(context).colorScheme.onPrimary,
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Ionicons.search_outline, color: Colors.white),
-                  SizedBox(width: 8),
-                  Text(
-                    'Search',
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                ],
-              ),
-              onPressed: () {},
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.all(Insets.med).copyWith(bottom: Insets.xs),
+          //   child: RawBtn(
+          //     padding: EdgeInsets.all(Insets.sm),
+          //     normalColors: BtnColors(
+          //       bg: Theme.of(context).colorScheme.onSurface,
+          //       fg: Theme.of(context).colorScheme.onPrimary,
+          //     ),
+          //     hoverColors: BtnColors(
+          //       bg: Theme.of(context).colorScheme.primary,
+          //       fg: Theme.of(context).colorScheme.onPrimary,
+          //     ),
+          //     child: const Row(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         Icon(Ionicons.search_outline, color: Colors.white),
+          //         SizedBox(width: 8),
+          //         Text(
+          //           'Search',
+          //           style: TextStyle(color: Colors.white, fontSize: 14),
+          //         ),
+          //       ],
+          //     ),
+          //     onPressed: () {},
+          //   ),
+          // ),
         ],
         selectedItemId: selected.toString(),
         onItemSelected: (itemId) => onTap(context, int.parse(itemId)),

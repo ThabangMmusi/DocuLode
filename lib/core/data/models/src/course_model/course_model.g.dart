@@ -6,20 +6,17 @@ part of 'course_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CourseModelImpl _$$CourseModelImplFromJson(Map<String, dynamic> json) =>
-    _$CourseModelImpl(
+_CourseModel _$CourseModelFromJson(Map<String, dynamic> json) => _CourseModel(
       id: json['id'] as String,
-      duration: (json['du'] as num?)?.toInt(),
-      name: json['name'] as String?,
-      predecessors: (json['predecessors'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
+      courseId: json['course_id'] as String?,
+      duration: (json['duration'] as num?)?.toInt(),
+      name: json['course_name'] as String?,
     );
 
-Map<String, dynamic> _$$CourseModelImplToJson(_$CourseModelImpl instance) =>
+Map<String, dynamic> _$CourseModelToJson(_CourseModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      if (instance.duration case final value?) 'du': value,
-      if (instance.name case final value?) 'name': value,
-      if (instance.predecessors case final value?) 'predecessors': value,
+      if (instance.courseId case final value?) 'course_id': value,
+      if (instance.duration case final value?) 'duration': value,
+      if (instance.name case final value?) 'course_name': value,
     };

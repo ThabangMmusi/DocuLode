@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:its_shared/core/usecase/usecase.dart';
-import 'package:its_shared/core/domain/usecases/get_current_user.dart';
+import 'package:doculode/core/usecase/usecase.dart';
+import 'package:doculode/core/domain/usecases/get_current_user.dart';
 
 import '../../../../domain/entities/entities.dart';
 import '../../domain/usecases/usecases.dart';

@@ -1,39 +1,29 @@
+import 'package:doculode/config/index.dart';
+
 import 'package:flutter/material.dart';
-import 'package:its_shared/styles.dart';
 
 import '../../core.dart';
+import '../app_logo.dart';
 
-/// A customizable sidebar menu with support for sub-menu items, notification counters,
-/// and a fixed profile section at the bottom.
 class SidebarMenu extends StatefulWidget {
-  /// The list of main menu items
   final List<SidebarMenuItem> menuItems;
 
-  /// Profile data to display at the bottom
   final SidebarProfile profile;
 
-  /// Background color of the sidebar
   final Color backgroundColor;
 
-  /// Text and icon color for menu items
   final Color itemColor;
 
-  /// Background color for selected menu item
   final Color selectedItemBackgroundColor;
 
-  /// Text and icon color for selected menu item
   final Color selectedItemColor;
 
-  /// Currently selected menu item ID
   final String? selectedItemId;
 
-  /// Callback when a menu item is selected
   final Function(String itemId)? onItemSelected;
 
-  /// Width of the sidebar
   final double width;
 
-  /// Optional actions to display in the top-right corner
   final List<Widget>? topActions;
 
   const SidebarMenu({
@@ -55,9 +45,8 @@ class SidebarMenu extends StatefulWidget {
 }
 
 class _SidebarMenuState extends State<SidebarMenu> {
-  // Track expanded menu items
   final Set<String> _expandedItems = {};
-  // Track selected item
+
   String? _selectedItemId;
 
   @override
@@ -65,7 +54,6 @@ class _SidebarMenuState extends State<SidebarMenu> {
     super.initState();
     _selectedItemId = widget.selectedItemId;
 
-    // Pre-expand items that contain the selected item
     if (_selectedItemId != null) {
       for (var item in widget.menuItems) {
         if (item.subItems != null) {
@@ -102,12 +90,10 @@ class _SidebarMenuState extends State<SidebarMenu> {
     setState(() {
       _selectedItemId = itemId;
 
-      // Check if the selected item is a sub-item
       for (var item in widget.menuItems) {
         if (item.subItems != null) {
           for (var subItem in item.subItems!) {
             if (subItem.id == itemId) {
-              // If a sub-item is selected, also mark the parent item as expanded
               _expandedItems.add(item.id);
               break;
             }
@@ -129,13 +115,8 @@ class _SidebarMenuState extends State<SidebarMenu> {
           color: widget.backgroundColor, borderRadius: Corners.medBorder),
       child: Column(
         children: [
-          // Header section at top
           _buildHeader(),
-
           if (widget.topActions != null) ...widget.topActions!,
-          // Fixed profile section at bottom
-
-          // Scrollable menu items
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -161,15 +142,12 @@ class _SidebarMenuState extends State<SidebarMenu> {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                const FullAppLogo(
-                  showIconOnly: true,
-                ),
+                const AppLogo(),
                 const Spacer(),
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                      // Light blue color
                       borderRadius: Corners.xlBorder,
                       border: Border.all(
                         color: Theme.of(context).colorScheme.tertiary,
@@ -177,7 +155,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
                       )),
                   child: Text(
                     "Preview",
-                    style: TextStyles.body4.copyWith(
+                    style: TextStyles.labelSmall.copyWith(
                       color: Theme.of(context).colorScheme.tertiary,
                       fontWeight: FontWeight.w500,
                     ),
@@ -203,7 +181,6 @@ class _SidebarMenuState extends State<SidebarMenu> {
       } else if (item.subItems != null && item.subItems!.isNotEmpty) {
         menuWidgets.add(_buildExpandableMenuItem(item));
 
-        // Add sub-items if expanded
         if (_expandedItems.contains(item.id)) {
           for (var subItem in item.subItems!) {
             menuWidgets.add(_buildSubMenuItem(subItem));
@@ -340,13 +317,13 @@ class _SidebarMenuState extends State<SidebarMenu> {
               children: [
                 Text(
                   widget.profile.name,
-                  style: TextStyles.body2.copyWith(
+                  style: TextStyles.bodyMedium.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   widget.profile.courseName,
-                  style: TextStyles.body4.copyWith(
+                  style: TextStyles.labelSmall.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
@@ -355,9 +332,7 @@ class _SidebarMenuState extends State<SidebarMenu> {
           ),
           IconButton(
             icon: Icon(Icons.exit_to_app, color: widget.itemColor),
-            onPressed: () {
-              // Add your more menu logic here
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -381,27 +356,19 @@ class _SidebarMenuState extends State<SidebarMenu> {
   }
 }
 
-/// Data model for a sidebar menu item
 class SidebarMenuItem {
-  /// Unique identifier for the menu item
   final String id;
 
-  /// Display title
   final String title;
 
-  /// Optional icon to display
   final IconData? icon;
 
-  /// Optional trailing icon to display
   final IconData? trailingIcon;
 
-  /// Optional notification counter
   final int? notificationCount;
 
-  /// Optional sub-items
   final List<SidebarMenuItem>? subItems;
 
-  /// Whether this item is just a separator
   final bool isSeparator;
 
   const SidebarMenuItem({
@@ -414,7 +381,6 @@ class SidebarMenuItem {
     this.isSeparator = false,
   });
 
-  /// Create a separator item
   factory SidebarMenuItem.separator() {
     return const SidebarMenuItem(
       id: '',
@@ -424,13 +390,10 @@ class SidebarMenuItem {
   }
 }
 
-/// Data model for sidebar profile information
 class SidebarProfile {
-  /// Display name for the profile
   final String name;
   final String courseName;
 
-  /// Optional profile avatar URL
   final String? avatarUrl;
 
   const SidebarProfile({
@@ -539,7 +502,9 @@ class _SubMenuItemBase extends StatelessWidget {
       decoration: BoxDecoration(
         color: isSelected ? selectedItemBackgroundColor : Colors.transparent,
         borderRadius: BorderRadius.circular(6),
-        border: isSelected? Border(left: BorderSide(color: selectedItemColor, width: 4)) : null,
+        border: isSelected
+            ? Border(left: BorderSide(color: selectedItemColor, width: 4))
+            : null,
       ),
       child: Material(
         color: Colors.transparent,
@@ -568,5 +533,3 @@ class _SubMenuItemBase extends StatelessWidget {
     );
   }
 }
-
-// Then modify _buildMenuItem, _buildExpandableMenuItem, and _buildSubMenuItem to use _MenuItemBase:

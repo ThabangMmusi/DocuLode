@@ -1,11 +1,12 @@
 import 'dart:convert';
 
+import 'package:doculode/core/constants/index.dart';
 import 'package:flutter/material.dart';
-import 'package:its_shared/_utils/logger.dart';
+import 'package:doculode/core/utils/logger.dart';
 
-import '../../../../_utils/debouncer.dart';
-import '../../../../_utils/device_info.dart';
-import '../../../../_utils/universal_file/universal_file.dart';
+import '../../../utils/debouncer.dart';
+import '../../../utils/device_info.dart';
+import '../../../utils/universal_file/universal_file.dart';
 import 'app_user/app_user.dart';
 
 // abstract class AbstractModel extends EasyNotifier {}
@@ -13,7 +14,7 @@ import 'app_user/app_user.dart';
 // * Make sure file is cleared when we logout (ChangeUserCommand)
 class AppModel {
   static const kFileName = "app-model";
-  String get kVersion => "1.0.0";
+  String get kVersion => tAppVersion;
 
   // Determines what the start value should be for touchMode, bases on the current device os
   static bool defaultToTouchMode() => DeviceOS.isMobile;

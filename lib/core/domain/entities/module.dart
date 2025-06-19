@@ -1,9 +1,12 @@
 class Module {
   final String id;
 
+  /// institution ID
+  final String? moduleId;
+
   /// level of the module
   /// at which level is taught/ required
-  final int? level;
+  final int? year;
 
   /// semester  level
   final int? semester;
@@ -13,7 +16,8 @@ class Module {
 
   Module({
     required this.id,
-    this.level,
+    this.moduleId,
+    this.year,
     this.semester,
     this.name,
   });

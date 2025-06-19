@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../styles.dart';
+import 'package:doculode/config/styles.dart';
 
 class ViewTitle extends StatelessWidget {
   const ViewTitle({
@@ -12,7 +12,7 @@ class ViewTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: TextStyles.h1,
+      style: TextStyles.displayLarge,
     );
   }
 }

@@ -1,23 +1,11 @@
+// This file is now obsolete. All sign-out logic is handled in core/common/settings/.
+// You can safely delete this file.
+
 part of 'settings_bloc.dart';
 
 final class SettingsInitialize extends BaseSettingsEvent {
   @override
   List<Object?> get props => [];
-}
-
-final class SettingsProfileUpdate extends BaseSettingsEvent {
-  final String names;
-  final String surname;
-  final String email;
-
-  const SettingsProfileUpdate({
-    required this.names,
-    required this.surname,
-    required this.email,
-  });
-
-  @override
-  List<Object?> get props => [names, surname, email];
 }
 
 final class SettingsAppearanceUpdate extends BaseSettingsEvent {

@@ -1,16 +1,17 @@
+import 'package:doculode/core/constants/responsive.dart';
+import 'package:doculode/widgets/buttons/buttons.dart';
+import 'package:doculode/widgets/index.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:its_shared/constants/responsive.dart';
-import 'package:its_shared/widgets/buttons/styled_buttons.dart';
-import 'package:its_shared/widgets/styled_load_spinner.dart';
-import 'package:its_shared/widgets/ui_text.dart';
 
-import '../../../../core/common/settings/settings.dart';
-import '../../../../core/core.dart';
-import '../../../../presentation/account/shared/view_title.dart';
-import '../../../../styles.dart';
-import '../../settings.dart';
+import 'package:doculode/core/common/settings/settings.dart';
+import 'package:doculode/core/core.dart';
+import 'package:doculode/presentation/account/shared/view_title.dart';
+import 'package:doculode/features/settings/settings.dart';
+import 'package:doculode/config/styles.dart';
+import 'profile_view.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -34,7 +35,7 @@ class _SettingsViewState extends State<SettingsView>
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
-    context.read<SettingsBloc>().add(SettingsInitialize());
+    // context.read<SettingsBloc>().add(SettingsInitialize());
   }
 
   @override
@@ -84,27 +85,29 @@ class _SettingsViewState extends State<SettingsView>
             //   )
             if (state.status == SettingsStatus.initial)
               SliverToBoxAdapter(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height - kToolbarHeight - 132,
-                child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                  const SizedBox(
-                    height: 25, width: 25, child: StyledLoadSpinner()),
-                  HSpace.sm,
-                  UiText(
-                    text: "Loading...",
-                    style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: 14,
+                child: SizedBox(
+                  height:
+                      MediaQuery.of(context).size.height - kToolbarHeight - 132,
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                            height: 25, width: 25, child: StyledLoadSpinner()),
+                        HSpace.sm,
+                        UiText(
+                          text: "Loading...",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  ],
-                ),
                 ),
               ),
-              ),if (state.status != SettingsStatus.initial)
+            if (state.status != SettingsStatus.initial)
               // else
               SliverToBoxAdapter(
                 child: Padding(

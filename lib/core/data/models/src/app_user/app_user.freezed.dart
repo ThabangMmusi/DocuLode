@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,45 +10,85 @@ part of 'app_user.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-AppUser _$AppUserFromJson(Map<String, dynamic> json) {
-  return _AppUser.fromJson(json);
-}
 
 /// @nodoc
 mixin _$AppUser {
-  String? get id => throw _privateConstructorUsedError;
-  String? get names => throw _privateConstructorUsedError;
-  String? get surname => throw _privateConstructorUsedError;
-  String? get email => throw _privateConstructorUsedError;
-  String? get photoUrl => throw _privateConstructorUsedError;
-  int? get level => throw _privateConstructorUsedError;
-  int? get semester => throw _privateConstructorUsedError;
+  String? get id;
+  String? get names;
+  String? get surname;
+  String? get email;
+  String? get photoUrl;
+  int? get year;
+  int? get semester;
   @CourseConverter()
-  CourseModel? get course => throw _privateConstructorUsedError;
+  CourseModel? get course;
   @ModuleConverter()
-  List<ModuleModel>? get modules => throw _privateConstructorUsedError;
-  String? get type => throw _privateConstructorUsedError;
-  String? get token => throw _privateConstructorUsedError;
-  String? get refreshToken => throw _privateConstructorUsedError;
-
-  /// Serializes this AppUser to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  List<ModuleModel>? get modules;
+  String? get type;
+  String? get token;
+  String? get refreshToken;
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $AppUserCopyWith<AppUser> get copyWith => throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $AppUserCopyWith<AppUser> get copyWith =>
+      _$AppUserCopyWithImpl<AppUser>(this as AppUser, _$identity);
+
+  /// Serializes this AppUser to a JSON map.
+  Map<String, dynamic> toJson();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is AppUser &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.names, names) || other.names == names) &&
+            (identical(other.surname, surname) || other.surname == surname) &&
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.photoUrl, photoUrl) ||
+                other.photoUrl == photoUrl) &&
+            (identical(other.year, year) || other.year == year) &&
+            (identical(other.semester, semester) ||
+                other.semester == semester) &&
+            (identical(other.course, course) || other.course == course) &&
+            const DeepCollectionEquality().equals(other.modules, modules) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.token, token) || other.token == token) &&
+            (identical(other.refreshToken, refreshToken) ||
+                other.refreshToken == refreshToken));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      names,
+      surname,
+      email,
+      photoUrl,
+      year,
+      semester,
+      course,
+      const DeepCollectionEquality().hash(modules),
+      type,
+      token,
+      refreshToken);
+
+  @override
+  String toString() {
+    return 'AppUser(id: $id, names: $names, surname: $surname, email: $email, photoUrl: $photoUrl, year: $year, semester: $semester, course: $course, modules: $modules, type: $type, token: $token, refreshToken: $refreshToken)';
+  }
 }
 
 /// @nodoc
-abstract class $AppUserCopyWith<$Res> {
-  factory $AppUserCopyWith(AppUser value, $Res Function(AppUser) then) =
-      _$AppUserCopyWithImpl<$Res, AppUser>;
+abstract mixin class $AppUserCopyWith<$Res> {
+  factory $AppUserCopyWith(AppUser value, $Res Function(AppUser) _then) =
+      _$AppUserCopyWithImpl;
   @useResult
   $Res call(
       {String? id,
@@ -55,7 +96,7 @@ abstract class $AppUserCopyWith<$Res> {
       String? surname,
       String? email,
       String? photoUrl,
-      int? level,
+      int? year,
       int? semester,
       @CourseConverter() CourseModel? course,
       @ModuleConverter() List<ModuleModel>? modules,
@@ -67,14 +108,11 @@ abstract class $AppUserCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
-    implements $AppUserCopyWith<$Res> {
-  _$AppUserCopyWithImpl(this._value, this._then);
+class _$AppUserCopyWithImpl<$Res> implements $AppUserCopyWith<$Res> {
+  _$AppUserCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final AppUser _self;
+  final $Res Function(AppUser) _then;
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
@@ -86,7 +124,7 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
     Object? surname = freezed,
     Object? email = freezed,
     Object? photoUrl = freezed,
-    Object? level = freezed,
+    Object? year = freezed,
     Object? semester = freezed,
     Object? course = freezed,
     Object? modules = freezed,
@@ -94,56 +132,56 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
     Object? token = freezed,
     Object? refreshToken = freezed,
   }) {
-    return _then(_value.copyWith(
+    return _then(_self.copyWith(
       id: freezed == id
-          ? _value.id
+          ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
       names: freezed == names
-          ? _value.names
+          ? _self.names
           : names // ignore: cast_nullable_to_non_nullable
               as String?,
       surname: freezed == surname
-          ? _value.surname
+          ? _self.surname
           : surname // ignore: cast_nullable_to_non_nullable
               as String?,
       email: freezed == email
-          ? _value.email
+          ? _self.email
           : email // ignore: cast_nullable_to_non_nullable
               as String?,
       photoUrl: freezed == photoUrl
-          ? _value.photoUrl
+          ? _self.photoUrl
           : photoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      level: freezed == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
+      year: freezed == year
+          ? _self.year
+          : year // ignore: cast_nullable_to_non_nullable
               as int?,
       semester: freezed == semester
-          ? _value.semester
+          ? _self.semester
           : semester // ignore: cast_nullable_to_non_nullable
               as int?,
       course: freezed == course
-          ? _value.course
+          ? _self.course
           : course // ignore: cast_nullable_to_non_nullable
               as CourseModel?,
       modules: freezed == modules
-          ? _value.modules
+          ? _self.modules
           : modules // ignore: cast_nullable_to_non_nullable
               as List<ModuleModel>?,
       type: freezed == type
-          ? _value.type
+          ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as String?,
       token: freezed == token
-          ? _value.token
+          ? _self.token
           : token // ignore: cast_nullable_to_non_nullable
               as String?,
       refreshToken: freezed == refreshToken
-          ? _value.refreshToken
+          ? _self.refreshToken
           : refreshToken // ignore: cast_nullable_to_non_nullable
               as String?,
-    ) as $Val);
+    ));
   }
 
   /// Create a copy of AppUser
@@ -151,130 +189,26 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
   @override
   @pragma('vm:prefer-inline')
   $CourseModelCopyWith<$Res>? get course {
-    if (_value.course == null) {
+    if (_self.course == null) {
       return null;
     }
 
-    return $CourseModelCopyWith<$Res>(_value.course!, (value) {
-      return _then(_value.copyWith(course: value) as $Val);
+    return $CourseModelCopyWith<$Res>(_self.course!, (value) {
+      return _then(_self.copyWith(course: value));
     });
   }
 }
 
 /// @nodoc
-abstract class _$$AppUserImplCopyWith<$Res> implements $AppUserCopyWith<$Res> {
-  factory _$$AppUserImplCopyWith(
-          _$AppUserImpl value, $Res Function(_$AppUserImpl) then) =
-      __$$AppUserImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String? id,
-      String? names,
-      String? surname,
-      String? email,
-      String? photoUrl,
-      int? level,
-      int? semester,
-      @CourseConverter() CourseModel? course,
-      @ModuleConverter() List<ModuleModel>? modules,
-      String? type,
-      String? token,
-      String? refreshToken});
-
-  @override
-  $CourseModelCopyWith<$Res>? get course;
-}
-
-/// @nodoc
-class __$$AppUserImplCopyWithImpl<$Res>
-    extends _$AppUserCopyWithImpl<$Res, _$AppUserImpl>
-    implements _$$AppUserImplCopyWith<$Res> {
-  __$$AppUserImplCopyWithImpl(
-      _$AppUserImpl _value, $Res Function(_$AppUserImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AppUser
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = freezed,
-    Object? names = freezed,
-    Object? surname = freezed,
-    Object? email = freezed,
-    Object? photoUrl = freezed,
-    Object? level = freezed,
-    Object? semester = freezed,
-    Object? course = freezed,
-    Object? modules = freezed,
-    Object? type = freezed,
-    Object? token = freezed,
-    Object? refreshToken = freezed,
-  }) {
-    return _then(_$AppUserImpl(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      names: freezed == names
-          ? _value.names
-          : names // ignore: cast_nullable_to_non_nullable
-              as String?,
-      surname: freezed == surname
-          ? _value.surname
-          : surname // ignore: cast_nullable_to_non_nullable
-              as String?,
-      email: freezed == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String?,
-      photoUrl: freezed == photoUrl
-          ? _value.photoUrl
-          : photoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      level: freezed == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
-              as int?,
-      semester: freezed == semester
-          ? _value.semester
-          : semester // ignore: cast_nullable_to_non_nullable
-              as int?,
-      course: freezed == course
-          ? _value.course
-          : course // ignore: cast_nullable_to_non_nullable
-              as CourseModel?,
-      modules: freezed == modules
-          ? _value._modules
-          : modules // ignore: cast_nullable_to_non_nullable
-              as List<ModuleModel>?,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String?,
-      token: freezed == token
-          ? _value.token
-          : token // ignore: cast_nullable_to_non_nullable
-              as String?,
-      refreshToken: freezed == refreshToken
-          ? _value.refreshToken
-          : refreshToken // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
-}
-
-/// @nodoc
 @JsonSerializable()
-class _$AppUserImpl extends _AppUser {
-  const _$AppUserImpl(
+class _AppUser extends AppUser {
+  const _AppUser(
       {this.id,
       this.names,
       this.surname,
       this.email,
       this.photoUrl,
-      this.level,
+      this.year,
       this.semester,
       @CourseConverter() this.course,
       @ModuleConverter() final List<ModuleModel>? modules,
@@ -283,9 +217,8 @@ class _$AppUserImpl extends _AppUser {
       this.refreshToken})
       : _modules = modules,
         super._();
-
-  factory _$AppUserImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AppUserImplFromJson(json);
+  factory _AppUser.fromJson(Map<String, dynamic> json) =>
+      _$AppUserFromJson(json);
 
   @override
   final String? id;
@@ -298,7 +231,7 @@ class _$AppUserImpl extends _AppUser {
   @override
   final String? photoUrl;
   @override
-  final int? level;
+  final int? year;
   @override
   final int? semester;
   @override
@@ -322,23 +255,33 @@ class _$AppUserImpl extends _AppUser {
   @override
   final String? refreshToken;
 
+  /// Create a copy of AppUser
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'AppUser(id: $id, names: $names, surname: $surname, email: $email, photoUrl: $photoUrl, level: $level, semester: $semester, course: $course, modules: $modules, type: $type, token: $token, refreshToken: $refreshToken)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$AppUserCopyWith<_AppUser> get copyWith =>
+      __$AppUserCopyWithImpl<_AppUser>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$AppUserToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AppUserImpl &&
+            other is _AppUser &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.names, names) || other.names == names) &&
             (identical(other.surname, surname) || other.surname == surname) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.photoUrl, photoUrl) ||
                 other.photoUrl == photoUrl) &&
-            (identical(other.level, level) || other.level == level) &&
+            (identical(other.year, year) || other.year == year) &&
             (identical(other.semester, semester) ||
                 other.semester == semester) &&
             (identical(other.course, course) || other.course == course) &&
@@ -358,7 +301,7 @@ class _$AppUserImpl extends _AppUser {
       surname,
       email,
       photoUrl,
-      level,
+      year,
       semester,
       course,
       const DeepCollectionEquality().hash(_modules),
@@ -366,71 +309,126 @@ class _$AppUserImpl extends _AppUser {
       token,
       refreshToken);
 
-  /// Create a copy of AppUser
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$AppUserImplCopyWith<_$AppUserImpl> get copyWith =>
-      __$$AppUserImplCopyWithImpl<_$AppUserImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AppUserImplToJson(
-      this,
-    );
+  String toString() {
+    return 'AppUser(id: $id, names: $names, surname: $surname, email: $email, photoUrl: $photoUrl, year: $year, semester: $semester, course: $course, modules: $modules, type: $type, token: $token, refreshToken: $refreshToken)';
   }
 }
 
-abstract class _AppUser extends AppUser {
-  const factory _AppUser(
-      {final String? id,
-      final String? names,
-      final String? surname,
-      final String? email,
-      final String? photoUrl,
-      final int? level,
-      final int? semester,
-      @CourseConverter() final CourseModel? course,
-      @ModuleConverter() final List<ModuleModel>? modules,
-      final String? type,
-      final String? token,
-      final String? refreshToken}) = _$AppUserImpl;
-  const _AppUser._() : super._();
+/// @nodoc
+abstract mixin class _$AppUserCopyWith<$Res> implements $AppUserCopyWith<$Res> {
+  factory _$AppUserCopyWith(_AppUser value, $Res Function(_AppUser) _then) =
+      __$AppUserCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String? id,
+      String? names,
+      String? surname,
+      String? email,
+      String? photoUrl,
+      int? year,
+      int? semester,
+      @CourseConverter() CourseModel? course,
+      @ModuleConverter() List<ModuleModel>? modules,
+      String? type,
+      String? token,
+      String? refreshToken});
 
-  factory _AppUser.fromJson(Map<String, dynamic> json) = _$AppUserImpl.fromJson;
+  @override
+  $CourseModelCopyWith<$Res>? get course;
+}
 
-  @override
-  String? get id;
-  @override
-  String? get names;
-  @override
-  String? get surname;
-  @override
-  String? get email;
-  @override
-  String? get photoUrl;
-  @override
-  int? get level;
-  @override
-  int? get semester;
-  @override
-  @CourseConverter()
-  CourseModel? get course;
-  @override
-  @ModuleConverter()
-  List<ModuleModel>? get modules;
-  @override
-  String? get type;
-  @override
-  String? get token;
-  @override
-  String? get refreshToken;
+/// @nodoc
+class __$AppUserCopyWithImpl<$Res> implements _$AppUserCopyWith<$Res> {
+  __$AppUserCopyWithImpl(this._self, this._then);
+
+  final _AppUser _self;
+  final $Res Function(_AppUser) _then;
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AppUserImplCopyWith<_$AppUserImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = freezed,
+    Object? names = freezed,
+    Object? surname = freezed,
+    Object? email = freezed,
+    Object? photoUrl = freezed,
+    Object? year = freezed,
+    Object? semester = freezed,
+    Object? course = freezed,
+    Object? modules = freezed,
+    Object? type = freezed,
+    Object? token = freezed,
+    Object? refreshToken = freezed,
+  }) {
+    return _then(_AppUser(
+      id: freezed == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      names: freezed == names
+          ? _self.names
+          : names // ignore: cast_nullable_to_non_nullable
+              as String?,
+      surname: freezed == surname
+          ? _self.surname
+          : surname // ignore: cast_nullable_to_non_nullable
+              as String?,
+      email: freezed == email
+          ? _self.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String?,
+      photoUrl: freezed == photoUrl
+          ? _self.photoUrl
+          : photoUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      year: freezed == year
+          ? _self.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as int?,
+      semester: freezed == semester
+          ? _self.semester
+          : semester // ignore: cast_nullable_to_non_nullable
+              as int?,
+      course: freezed == course
+          ? _self.course
+          : course // ignore: cast_nullable_to_non_nullable
+              as CourseModel?,
+      modules: freezed == modules
+          ? _self._modules
+          : modules // ignore: cast_nullable_to_non_nullable
+              as List<ModuleModel>?,
+      type: freezed == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String?,
+      token: freezed == token
+          ? _self.token
+          : token // ignore: cast_nullable_to_non_nullable
+              as String?,
+      refreshToken: freezed == refreshToken
+          ? _self.refreshToken
+          : refreshToken // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+
+  /// Create a copy of AppUser
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CourseModelCopyWith<$Res>? get course {
+    if (_self.course == null) {
+      return null;
+    }
+
+    return $CourseModelCopyWith<$Res>(_self.course!, (value) {
+      return _then(_self.copyWith(course: value));
+    });
+  }
 }
+
+// dart format on

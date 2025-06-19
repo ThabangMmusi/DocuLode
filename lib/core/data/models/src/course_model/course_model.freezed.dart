@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,109 +10,70 @@ part of 'course_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-CourseModel _$CourseModelFromJson(Map<String, dynamic> json) {
-  return _CourseModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$CourseModel {
-  String get id => throw _privateConstructorUsedError;
-  @JsonKey(name: 'du')
-  int? get duration => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
-  List<String>? get predecessors => throw _privateConstructorUsedError;
-
-  /// Serializes this CourseModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String get id;
+  @JsonKey(name: "course_id")
+  String? get courseId;
+  int? get duration;
+  @JsonKey(name: "course_name")
+  String? get name;
 
   /// Create a copy of CourseModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $CourseModelCopyWith<CourseModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $CourseModelCopyWith<$Res> {
-  factory $CourseModelCopyWith(
-          CourseModel value, $Res Function(CourseModel) then) =
-      _$CourseModelCopyWithImpl<$Res, CourseModel>;
-  @useResult
-  $Res call(
-      {String id,
-      @JsonKey(name: 'du') int? duration,
-      String? name,
-      List<String>? predecessors});
-}
-
-/// @nodoc
-class _$CourseModelCopyWithImpl<$Res, $Val extends CourseModel>
-    implements $CourseModelCopyWith<$Res> {
-  _$CourseModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of CourseModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $CourseModelCopyWith<CourseModel> get copyWith =>
+      _$CourseModelCopyWithImpl<CourseModel>(this as CourseModel, _$identity);
+
+  /// Serializes this CourseModel to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? id = null,
-    Object? duration = freezed,
-    Object? name = freezed,
-    Object? predecessors = freezed,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      duration: freezed == duration
-          ? _value.duration
-          : duration // ignore: cast_nullable_to_non_nullable
-              as int?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      predecessors: freezed == predecessors
-          ? _value.predecessors
-          : predecessors // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is CourseModel &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.courseId, courseId) ||
+                other.courseId == courseId) &&
+            (identical(other.duration, duration) ||
+                other.duration == duration) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, courseId, duration, name);
+
+  @override
+  String toString() {
+    return 'CourseModel(id: $id, courseId: $courseId, duration: $duration, name: $name)';
   }
 }
 
 /// @nodoc
-abstract class _$$CourseModelImplCopyWith<$Res>
-    implements $CourseModelCopyWith<$Res> {
-  factory _$$CourseModelImplCopyWith(
-          _$CourseModelImpl value, $Res Function(_$CourseModelImpl) then) =
-      __$$CourseModelImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $CourseModelCopyWith<$Res> {
+  factory $CourseModelCopyWith(
+          CourseModel value, $Res Function(CourseModel) _then) =
+      _$CourseModelCopyWithImpl;
   @useResult
   $Res call(
       {String id,
-      @JsonKey(name: 'du') int? duration,
-      String? name,
-      List<String>? predecessors});
+      @JsonKey(name: "course_id") String? courseId,
+      int? duration,
+      @JsonKey(name: "course_name") String? name});
 }
 
 /// @nodoc
-class __$$CourseModelImplCopyWithImpl<$Res>
-    extends _$CourseModelCopyWithImpl<$Res, _$CourseModelImpl>
-    implements _$$CourseModelImplCopyWith<$Res> {
-  __$$CourseModelImplCopyWithImpl(
-      _$CourseModelImpl _value, $Res Function(_$CourseModelImpl) _then)
-      : super(_value, _then);
+class _$CourseModelCopyWithImpl<$Res> implements $CourseModelCopyWith<$Res> {
+  _$CourseModelCopyWithImpl(this._self, this._then);
+
+  final CourseModel _self;
+  final $Res Function(CourseModel) _then;
 
   /// Create a copy of CourseModel
   /// with the given fields replaced by the non-null parameter values.
@@ -119,124 +81,143 @@ class __$$CourseModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? courseId = freezed,
     Object? duration = freezed,
     Object? name = freezed,
-    Object? predecessors = freezed,
   }) {
-    return _then(_$CourseModelImpl(
+    return _then(_self.copyWith(
       id: null == id
-          ? _value.id
+          ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      courseId: freezed == courseId
+          ? _self.courseId
+          : courseId // ignore: cast_nullable_to_non_nullable
+              as String?,
       duration: freezed == duration
-          ? _value.duration
+          ? _self.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as int?,
       name: freezed == name
-          ? _value.name
+          ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String?,
-      predecessors: freezed == predecessors
-          ? _value._predecessors
-          : predecessors // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$CourseModelImpl implements _CourseModel {
-  const _$CourseModelImpl(
+class _CourseModel extends CourseModel {
+  _CourseModel(
       {required this.id,
-      @JsonKey(name: 'du') this.duration,
-      this.name,
-      final List<String>? predecessors})
-      : _predecessors = predecessors;
-
-  factory _$CourseModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CourseModelImplFromJson(json);
+      @JsonKey(name: "course_id") this.courseId,
+      this.duration,
+      @JsonKey(name: "course_name") this.name})
+      : super._();
+  factory _CourseModel.fromJson(Map<String, dynamic> json) =>
+      _$CourseModelFromJson(json);
 
   @override
   final String id;
   @override
-  @JsonKey(name: 'du')
+  @JsonKey(name: "course_id")
+  final String? courseId;
+  @override
   final int? duration;
   @override
+  @JsonKey(name: "course_name")
   final String? name;
-  final List<String>? _predecessors;
+
+  /// Create a copy of CourseModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  List<String>? get predecessors {
-    final value = _predecessors;
-    if (value == null) return null;
-    if (_predecessors is EqualUnmodifiableListView) return _predecessors;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$CourseModelCopyWith<_CourseModel> get copyWith =>
+      __$CourseModelCopyWithImpl<_CourseModel>(this, _$identity);
 
   @override
-  String toString() {
-    return 'CourseModel(id: $id, duration: $duration, name: $name, predecessors: $predecessors)';
+  Map<String, dynamic> toJson() {
+    return _$CourseModelToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CourseModelImpl &&
+            other is _CourseModel &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.courseId, courseId) ||
+                other.courseId == courseId) &&
             (identical(other.duration, duration) ||
                 other.duration == duration) &&
-            (identical(other.name, name) || other.name == name) &&
-            const DeepCollectionEquality()
-                .equals(other._predecessors, _predecessors));
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, duration, name,
-      const DeepCollectionEquality().hash(_predecessors));
+  int get hashCode => Object.hash(runtimeType, id, courseId, duration, name);
+
+  @override
+  String toString() {
+    return 'CourseModel(id: $id, courseId: $courseId, duration: $duration, name: $name)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$CourseModelCopyWith<$Res>
+    implements $CourseModelCopyWith<$Res> {
+  factory _$CourseModelCopyWith(
+          _CourseModel value, $Res Function(_CourseModel) _then) =
+      __$CourseModelCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String id,
+      @JsonKey(name: "course_id") String? courseId,
+      int? duration,
+      @JsonKey(name: "course_name") String? name});
+}
+
+/// @nodoc
+class __$CourseModelCopyWithImpl<$Res> implements _$CourseModelCopyWith<$Res> {
+  __$CourseModelCopyWithImpl(this._self, this._then);
+
+  final _CourseModel _self;
+  final $Res Function(_CourseModel) _then;
 
   /// Create a copy of CourseModel
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$CourseModelImplCopyWith<_$CourseModelImpl> get copyWith =>
-      __$$CourseModelImplCopyWithImpl<_$CourseModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CourseModelImplToJson(
-      this,
-    );
+  $Res call({
+    Object? id = null,
+    Object? courseId = freezed,
+    Object? duration = freezed,
+    Object? name = freezed,
+  }) {
+    return _then(_CourseModel(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      courseId: freezed == courseId
+          ? _self.courseId
+          : courseId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      duration: freezed == duration
+          ? _self.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
   }
 }
 
-abstract class _CourseModel implements CourseModel {
-  const factory _CourseModel(
-      {required final String id,
-      @JsonKey(name: 'du') final int? duration,
-      final String? name,
-      final List<String>? predecessors}) = _$CourseModelImpl;
-
-  factory _CourseModel.fromJson(Map<String, dynamic> json) =
-      _$CourseModelImpl.fromJson;
-
-  @override
-  String get id;
-  @override
-  @JsonKey(name: 'du')
-  int? get duration;
-  @override
-  String? get name;
-  @override
-  List<String>? get predecessors;
-
-  /// Create a copy of CourseModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CourseModelImplCopyWith<_$CourseModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

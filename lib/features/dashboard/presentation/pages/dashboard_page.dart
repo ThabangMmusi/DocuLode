@@ -1,14 +1,15 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/constants/responsive.dart';
+import 'package:doculode/core/data/models/src/app_stats_model.dart';
+import 'package:doculode/core/index.dart';
+import 'package:doculode/widgets/buttons/buttons.dart';
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/constants/responsive.dart';
-import 'package:its_shared/core/core.dart';
-import 'package:its_shared/core/data/models/src/app_stats_model.dart';
-import 'package:its_shared/styles.dart';
-import 'package:its_shared/widgets/buttons/styled_buttons.dart';
 
 import '../widgets/stats/stats_widget.dart';
 
@@ -44,14 +45,13 @@ class DashboardPage extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         SliverPersistentHeader(
-            pinned: true,
-            delegate: MySliverAppBar(title: "Dashboard")),
+            pinned: true, delegate: MySliverAppBar(title: "Dashboard")),
         SliverToBoxAdapter(
           child: Column(
             children: [
               Text(
                 "Hi..👋, Thabang Mmusi",
-                style: TextStyles.h1,
+                style: TextStyles.displayLarge,
               ),
               PrimaryBtn(onPressed: () {
                 context.go("/shared/454454");
@@ -65,7 +65,7 @@ class DashboardPage extends StatelessWidget {
                   children: [
                     Text(
                       "Recently Uploaded",
-                      style: TextStyles.title1,
+                      style: TextStyles.titleLarge,
                     ),
                   ],
                 ),
@@ -156,11 +156,12 @@ class _AppBar extends StatelessWidget {
             children: [
               Text(
                 "Hi..👋",
-                style: TextStyles.h3.copyWith(fontWeight: FontWeight.normal),
+                style: TextStyles.headlineSmall
+                    .copyWith(fontWeight: FontWeight.normal),
               ),
               Text(
                 "Thabang Mmusi",
-                style: TextStyles.h2,
+                style: TextStyles.headlineMedium,
               ),
             ],
           )
@@ -210,7 +211,7 @@ class _SearchButtonNativeState extends State<SearchButtonNative> {
               padding: EdgeInsets.symmetric(horizontal: Insets.lg),
               child: Text(
                 hint,
-                style: TextStyles.body2,
+                style: TextStyles.bodyMedium,
               ),
             )
           ]),
@@ -266,7 +267,7 @@ class SearchButton extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: Insets.lg),
                 child: Text(
                   "What event are you looking for?",
-                  style: TextStyles.body2,
+                  style: TextStyles.bodyMedium,
                 ),
               )
             ]),
@@ -368,7 +369,8 @@ class KSliverAppbar extends SliverPersistentHeaderDelegate {
             ),
             Container(
               decoration: BoxDecoration(
-                  color: Colors.amberAccent.withValues(alpha: (shrinkFactor) * 1),
+                  color:
+                      Colors.amberAccent.withValues(alpha: (shrinkFactor) * 1),
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(26),
                     bottomRight: Radius.circular(26),
@@ -390,11 +392,11 @@ class KSliverAppbar extends SliverPersistentHeaderDelegate {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(title,
-                            style: TextStyles.title1.copyWith(
+                            style: TextStyles.titleLarge.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold)),
                         Text(subtitle ?? "",
-                            style: TextStyles.body2.copyWith(
+                            style: TextStyles.bodyMedium.copyWith(
                                 color: Colors.white
                                     .withValues(alpha: (shrinkFactor) * 1),
                                 fontWeight: FontWeight.bold)),

@@ -3,17 +3,15 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  app_links
   bitsdojo_window_windows
-  cloud_firestore
   connectivity_plus
-  desktop_window
   file_selector_windows
-  firebase_auth
-  firebase_core
-  firebase_storage
   pdfx
   protocol_handler_windows
+  screen_retriever_windows
   url_launcher_windows
+  window_manager
   windows_single_instance
 )
 

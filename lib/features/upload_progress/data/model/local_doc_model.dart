@@ -1,4 +1,4 @@
-import 'package:its_shared/features/upload_progress/domain/domain.dart';
+import 'package:doculode/features/upload_progress/domain/domain.dart';
 
 class LocalDocModel extends LocalDoc {
   LocalDocModel({

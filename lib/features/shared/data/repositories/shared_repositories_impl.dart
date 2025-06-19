@@ -21,7 +21,7 @@ class SharedRepositoryImpl implements SharedRepository {
       });
       return right(uploads);
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(ServerFailure(e.message));
     }
   }
 
@@ -29,9 +29,11 @@ class SharedRepositoryImpl implements SharedRepository {
   Future<Either<Failure, RemoteDocModel>> getSharedFile(String id) async {
     try {
       final modules = await sharedSource.getSharedFile(id);
-      return modules == null ? left(Failure("File Not Found")) : right(modules);
+      return modules == null
+          ? left(ServerFailure("File Not Found"))
+          : right(modules);
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(ServerFailure(e.message));
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/core/domain/entities/module.dart';
-import 'package:its_shared/features/upload_edit/data/source/upload_edit_source.dart';
+import 'package:doculode/core/domain/entities/module.dart';
+import 'package:doculode/features/upload_edit/data/source/upload_edit_source.dart';
 
 import '../../../../core/core.dart';
 import '../../domain/repositories/upload_edit_repositories.dart';
@@ -28,7 +28,7 @@ class UploadEditRepositoryImpl implements UploadEditRepository {
       });
       return right(uploads);
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(ServerFailure(e.message));
     }
   }
 
@@ -38,7 +38,7 @@ class UploadEditRepositoryImpl implements UploadEditRepository {
       final modules = await uploadEditSource.getCourseModules();
       return right(modules);
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(ServerFailure(e.message));
     }
   }
 }

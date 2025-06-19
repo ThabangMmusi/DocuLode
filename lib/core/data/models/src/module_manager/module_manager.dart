@@ -6,7 +6,8 @@ part 'module_manager.freezed.dart';
 part 'module_manager.g.dart';
 
 @freezed
-sealed class ModuleManager  with _$ModuleManager {
+sealed class ModuleManager with _$ModuleManager {
+  const ModuleManager._();
   const factory ModuleManager({
     List<ModuleModel>? modules,
     List<String>? predecessors,

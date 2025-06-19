@@ -1,36 +1,40 @@
+import 'package:doculode/core/domain/repositories/database_service.dart';
+import 'package:doculode/core/index.dart';
+import 'package:doculode/core/utils/index.dart';
+
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:its_shared/_utils/logger.dart';
-import 'package:its_shared/core/core.dart';
-import 'package:its_shared/injection_container.dart';
-import 'package:its_shared/services/firebase/firebase_service.dart';
 
-import '../../domain/usecases/get_uploads.dart';
+import 'package:doculode/features/uploads/domain/usecases/get_uploads.dart';
 
 part 'uploads_event.dart';
 part 'uploads_state.dart';
 
 class UploadsBloc extends Bloc<UploadsEvent, UploadsState> {
-  final FirebaseService _repository = serviceLocator<FirebaseService>();
+  final DatabaseService _databaseService;
   final GetUploads _getUploads;
   bool _hasMore = true;
   late List<RemoteDocModel> _files;
   StreamSubscription<RemoteDocModel>? _editSubscription;
   StreamSubscription<int>? _uploadsSubscription;
-  UploadsBloc({required GetUploads getUploads})
-      : _getUploads = getUploads,
+  UploadsBloc(
+      {required GetUploads getUploads,
+      required DatabaseService databaseService})
+      : _databaseService = databaseService,
+        _getUploads = getUploads,
         super(DocumentsInitial()) {
     // on<UploadsEvent>((event, emit) => emit(DocumentsLoading()));
     on<FetchDocuments>(_onFetchDocuments);
     on<UpdateDocuments>(_onUpdateDocuments);
 
-    _editSubscription =
-        _repository.uploadEditStream.asBroadcastStream().listen((updatedFile) {
+    _editSubscription = _databaseService.uploadEditStream
+        .asBroadcastStream()
+        .listen((updatedFile) {
       add(UpdateDocuments([updatedFile]));
     });
 
-    _uploadsSubscription = _repository.uploadsStream.listen((file) async {
+    _uploadsSubscription = _databaseService.uploadsStream.listen((file) async {
       // List<RemoteDocModel> files = [];
       // for (var element in fileMap) {
       //   files.add(RemoteDocModel.fromJson(element));

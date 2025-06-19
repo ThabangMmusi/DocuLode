@@ -6,7 +6,7 @@ class AuthUser {
   final String? surname;
   final String? email;
   final String? photoUrl;
-  final int? level;
+  final int? year;
   final int? semester;
   final Course? course;
   final List<Module>? modules;
@@ -20,7 +20,7 @@ class AuthUser {
     this.surname,
     this.email,
     this.photoUrl,
-    this.level,
+    this.year,
     this.semester,
     this.course,
     this.modules,

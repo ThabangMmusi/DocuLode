@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/features/uploads/data/source/uploads_source.dart';
-import '../../../../core/core.dart';
-import '../../domain/repositories/uploads_repositories.dart';
+import 'package:doculode/features/uploads/data/source/uploads_source.dart';
+import 'package:doculode/core/core.dart';
+import 'package:doculode/features/uploads/domain/repositories/uploads_repositories.dart';
 
 class UploadsRepositoryImpl implements UploadsRepository {
   final UploadsSource uploadsSource;
@@ -13,7 +13,7 @@ class UploadsRepositoryImpl implements UploadsRepository {
       final uploads = await uploadsSource.getUploads();
       return right(uploads);
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(ServerFailure(e.message));
     }
   }
 

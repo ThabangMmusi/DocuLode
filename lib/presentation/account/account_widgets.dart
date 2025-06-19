@@ -1,18 +1,19 @@
+import 'package:doculode/config/index.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:doculode/config/styles.dart';
 
-import '../../styles.dart';
-import '../../widgets/labeled_text_input.dart';
+import 'package:doculode/widgets/styled_text_input.dart';
 
 Widget searchBox() {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Expanded(
-        child: LabeledTextInput(
-            filled: true,
+        child: StyledTextInput(
+            // : true,
             hintText: "Search",
-            style: TextStyles.title1,
+            style: TextStyles.titleLarge,
             prefixIcon: const Icon(
               Ionicons.search,
               // color: Colors.red,
@@ -41,6 +42,7 @@ Widget searchBox() {
     ],
   );
 }
+
 List<NavigationItem> get bottomTaps {
   return [
     NavigationItem(

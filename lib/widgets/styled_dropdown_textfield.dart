@@ -1,418 +1,589 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/domain/entities/app_list_item.dart';
+import 'package:doculode/core/components/custom_scroll_behavior.dart';
+import 'package:doculode/widgets/base_list_item_widget.dart';
+import 'package:doculode/core/utils/debouncer.dart';
+import 'package:doculode/widgets/styled_text_input.dart';
+import 'package:doculode/widgets/styled_load_spinner.dart';
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:its_shared/styles.dart';
-import 'package:its_shared/widgets/labeled_text_input.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:doculode/core/utils/logger.dart';
+import 'package:doculode/config/styles.dart';
+import 'package:doculode/core/constants/app_constants.dart';
+
+// Corrected and assumed paths based on your previous inputs
 
 class StyledDropDownTextfield<T> extends StatefulWidget {
   final List<AppListItem<T>>? initialList;
-  final double? radius;
+  final BorderRadiusGeometry? overlayBorderRadius;
   final String? hintText;
-  final Widget? suffix;
+  final Widget? suffixIconOverride;
   final Widget? prefixIcon;
-  final Widget? noItemFound;
+  final Widget? noItemFoundWidget;
   final String? label;
-  final Future<List<AppListItem<T>>> Function()? future;
+  final Future<List<AppListItem<T>>> Function(String query)? futureSearch;
   final T? value;
-  final ValueChanged<T>? onSelection;
-  final int minStringLength;
-  final int itemsInView;
-  final Function(String)? onChanged;
+  final ValueChanged<T?>? onSelectionChanged;
+  final int minStringLengthForFutureSearch;
+  final int maxItemsInView;
+  final ValueChanged<String>? onInputChanged;
+  final String? errorText;
 
   const StyledDropDownTextfield({
     super.key,
-    required this.initialList,
+    this.initialList,
     this.label,
-    this.future,
-    this.onSelection,
-    this.noItemFound,
-    this.radius,
-    this.suffix,
+    this.futureSearch,
+    this.onSelectionChanged,
+    this.noItemFoundWidget,
+    this.overlayBorderRadius = Corners.medBorder,
+    this.suffixIconOverride,
     this.prefixIcon,
-    this.itemsInView = 3,
-    this.minStringLength = 2,
+    this.maxItemsInView = 4,
+    this.minStringLengthForFutureSearch = 0,
     this.hintText,
     this.value,
-    this.onChanged,
-  });
+    this.onInputChanged,
+    this.errorText,
+  }) : assert(initialList != null || futureSearch != null,
+            'Either initialList or futureSearch must be provided.');
 
   @override
-  State<StyledDropDownTextfield> createState() =>
+  State<StyledDropDownTextfield<T>> createState() =>
       _StyledDropDownTextfieldState<T>();
 }
 
 class _StyledDropDownTextfieldState<T> extends State<StyledDropDownTextfield<T>>
     with WidgetsBindingObserver {
   late TextEditingController _controller;
-  final GlobalKey _key = GlobalKey(debugLabel: "StyledDropDownTextfield");
+  late GlobalKey _textFieldKey;
   final FocusNode _focusNode = FocusNode();
   final LayerLink _layerLink = LayerLink();
-  AppListItem<T>? _selected;
-  OverlayEntry? _overlay;
-  FocusScopeNode? _focusScopeNode;
-  List<AppListItem<T>>? filteredList = [];
-  bool hasFuture = false;
-  bool loading = false;
-  final _debouncer = Debouncer(milliseconds: 500);
-  bool? itemsFound;
+
+  OverlayEntry? _overlayEntry;
+  List<AppListItem<T>> _filteredList = [];
+  bool _isLoading = false;
+  final Debouncer _debouncer = Debouncer(const Duration(milliseconds: 300));
   late ScrollController _scrollController;
+  // This flag helps prevent _onTextChanged from re-filtering or deselecting
+  // when the text is being programmatically set by an item tap or value update.
+  bool _isProgrammaticallySettingText = false;
 
-  void resetList() {
-    setState(() {
-      filteredList = [];
-      loading = false;
-    });
-    _overlay?.markNeedsBuild();
-  }
-
-  void setLoading() {
-    if (!loading) {
-      setState(() {
-        loading = true;
-      });
+  AppListItem<T> _createDummyAppListItem() {
+    if (null is T) return AppListItem<T>("", value: null as T);
+    try {
+      return AppListItem<T>("", value: widget.value ?? (null as T));
+    } catch (e) {
+      throw Exception(
+          "Cannot create dummy AppListItem for non-nullable type T without a default value.");
     }
   }
 
-  void resetState(List<AppListItem<T>> tempList) {
-    setState(() {
-      filteredList = tempList;
-      loading = false;
-      itemsFound =
-          tempList.isEmpty && _controller.text.isNotEmpty ? false : true;
-    });
-    _overlay?.markNeedsBuild();
-  }
+  AppListItem<T>? get _currentlySelectedItem {
+    if (widget.value == null) return null;
+    final itemsToSearch = <AppListItem<T>>[];
+    if (widget.initialList != null) itemsToSearch.addAll(widget.initialList!);
+    if (_filteredList.isNotEmpty && _filteredList != widget.initialList)
+      itemsToSearch.addAll(_filteredList);
 
-  void updateGetItems() {
-    _overlay?.markNeedsBuild();
-    if (_controller.text.length > widget.minStringLength) {
-      setLoading();
-      widget.future!().then((value) {
-        filteredList = value;
-        List<AppListItem<T>> tempList = [];
-        for (AppListItem<T> item in filteredList!) {
-          if (item.title
-              .toLowerCase()
-              .contains(_controller.text.toLowerCase())) {
-            tempList.add(item);
-          }
-        }
-        resetState(tempList);
-      });
-    } else {
-      resetList();
+    for (var item in itemsToSearch.toSet()) {
+      // toSet to handle potential duplicates if filteredList can contain initialList items
+      if (item.value == widget.value) return item;
     }
-  }
-
-  void updateList() {
-    setLoading();
-    filteredList = widget.initialList;
-    List<AppListItem<T>> tempList = <AppListItem<T>>[];
-    for (AppListItem<T> item in filteredList!) {
-      if (item.title.toLowerCase().contains(_controller.text.toLowerCase())) {
-        tempList.add(item);
-      }
-    }
-    resetState(tempList);
-  }
-
-  void updateAllLists() {
-    setState(() {
-      if (hasFuture) {
-        updateGetItems();
-      } else {
-        updateList();
-      }
-    });
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive) {
-      _removeOverlay(); // Remove overlay when the app is paused or inactive
-    }
+    return null;
   }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this); // Add this widget as an observer
+    _textFieldKey =
+        GlobalKey(debugLabel: 'StyledDropDownTFKey_${identityHashCode(this)}');
+    WidgetsBinding.instance.addObserver(this);
     _controller = TextEditingController();
     _scrollController = ScrollController();
+    _updateControllerTextFromWidgetValue(isInit: true);
+    _focusNode.addListener(_handleFocusChange);
+    _controller.addListener(_onTextChanged);
 
-    if (widget.initialList == null && widget.future == null) {
-      throw ('Error: Missing required initial list or future that returns list');
+    if (widget.initialList != null &&
+        (widget.futureSearch == null ||
+            widget.minStringLengthForFutureSearch == 0)) {
+      _filteredList = List.from(widget.initialList!);
     }
-    if (widget.future != null) {
-      setState(() {
-        hasFuture = true;
+  }
+
+  @override
+  void didUpdateWidget(StyledDropDownTextfield<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    bool valueChanged = widget.value != oldWidget.value;
+    bool listChanged = widget.initialList != oldWidget.initialList;
+
+    if (valueChanged || listChanged) {
+      _updateControllerTextFromWidgetValue();
+    }
+    if (listChanged && _focusNode.hasFocus) {
+      _performSearchOrFilter(_controller.text, forceFilterInitial: true);
+    } else if (listChanged &&
+        widget.initialList != null &&
+        !_focusNode.hasFocus) {
+      _filteredList = widget.initialList
+              ?.where((item) => item.title
+                  .toLowerCase()
+                  .contains(_controller.text.toLowerCase()))
+              .toList() ??
+          [];
+    }
+  }
+
+  void _updateControllerTextFromWidgetValue({bool isInit = false}) {
+    final selectedItem = _currentlySelectedItem;
+    final String newText = selectedItem?.title ??
+        (isInit &&
+                widget.initialList?.any((i) => i.value == widget.value) ==
+                    false &&
+                _controller.text.isNotEmpty
+            ? _controller.text
+            : '');
+
+    if (_controller.text != newText) {
+      _isProgrammaticallySettingText = true;
+      _controller.text = newText;
+      if (mounted) {
+        _controller.selection = TextSelection.fromPosition(
+            TextPosition(offset: _controller.text.length));
+      }
+      _isProgrammaticallySettingText = false;
+    }
+  }
+
+  void _handleFocusChange() {
+    log('[_handleFocusChange] hasFocus: ${_focusNode.hasFocus}');
+    if (!mounted) return;
+    if (_focusNode.hasFocus) {
+      _showOverlay();
+      _performSearchOrFilter(_controller.text, forceFilterInitial: true);
+    } else {
+      final String textBeforeDelay =
+          _controller.text; // Capture text before delay
+      Future.delayed(const Duration(milliseconds: 250), () {
+        // Your working delay
+        if (mounted && !_focusNode.hasFocus) {
+          log('[_handleFocusChange] Removing overlay after delay. Text before delay: "$textBeforeDelay", current text: "${_controller.text}"');
+          // Only remove overlay and potentially clear text if the text hasn't changed
+          // (implying no successful item tap selection occurred during the delay)
+          if (_overlayEntry != null && _controller.text == textBeforeDelay) {
+            final selectedItemAfterDelay =
+                _currentlySelectedItem; // Re-check selected item
+            if (selectedItemAfterDelay == null &&
+                _controller.text.isNotEmpty &&
+                widget.value == null) {
+              log('[_handleFocusChange] Clearing text field as no selection was made.');
+              _isProgrammaticallySettingText = true;
+              _controller.clear();
+              _isProgrammaticallySettingText = false;
+              widget.onInputChanged?.call('');
+            } else if (selectedItemAfterDelay != null &&
+                _controller.text != selectedItemAfterDelay.title) {
+              // This case might be redundant if _updateControllerTextFromWidgetValue handles widget.value changes
+              log('[_handleFocusChange] Reverting text to selected item title after focus loss.');
+              _isProgrammaticallySettingText = true;
+              _controller.text = selectedItemAfterDelay.title;
+              if (mounted)
+                _controller.selection = TextSelection.fromPosition(
+                    TextPosition(offset: _controller.text.length));
+              _isProgrammaticallySettingText = false;
+            }
+            _removeOverlay();
+          } else if (_overlayEntry != null &&
+              _controller.text != textBeforeDelay) {
+            log('[_handleFocusChange] Text changed during delay (likely item selected), not clearing. Removing overlay.');
+            _removeOverlay(); // Still remove overlay if focus is lost
+          } else if (_overlayEntry != null) {
+            _removeOverlay(); // Default remove if conditions not met but overlay exists
+          }
+        }
       });
     }
-    _focusNode.addListener(() {
-      if (_focusNode.hasFocus) {
-        if (mounted) {
-          _overlay = _createOverlay();
-          Overlay.of(context).insert(_overlay!);
-          updateAllLists();
+  }
+
+  void _onTextChanged() {
+    if (_isProgrammaticallySettingText) {
+      log('[_onTextChanged] Suppressed: Programmatic text change.');
+      return;
+    }
+    log('[_onTextChanged] User typed: "${_controller.text}"');
+    if (!mounted) return;
+
+    widget.onInputChanged?.call(_controller.text);
+
+    if (_focusNode.hasFocus) {
+      _debouncer.run(() {
+        if (mounted) _performSearchOrFilter(_controller.text);
+      });
+    }
+
+    // If user types and text no longer matches the selected value's title, clear the selection
+    if (widget.value != null) {
+      final selected = _currentlySelectedItem;
+      if (selected == null ||
+          _controller.text.toLowerCase() != selected.title.toLowerCase()) {
+        log('[_onTextChanged] Text differs from selected value, calling onSelectionChanged(null)');
+        widget.onSelectionChanged?.call(null);
+      }
+    }
+  }
+
+  Future<void> _performSearchOrFilter(String query,
+      {bool forceFilterInitial = false}) async {
+    /* ... (same as your version) ... */
+    log('[_performSearchOrFilter] query: "$query", forceFilterInitial: $forceFilterInitial');
+    if (!_focusNode.hasFocus && query.isNotEmpty && !forceFilterInitial) {
+      _updateOverlayList([]);
+      return;
+    }
+    if (!mounted) return;
+    setState(() {
+      _isLoading = true;
+    });
+    if (_overlayEntry != null && mounted) {
+      try {
+        _overlayEntry!.markNeedsBuild();
+      } catch (e) {
+        logError('[Err] markNeedsBuild: $e');
+      }
+    }
+    List<AppListItem<T>> resultList = [];
+    try {
+      if (widget.futureSearch != null &&
+          query.length >= widget.minStringLengthForFutureSearch) {
+        resultList = await widget.futureSearch!(query);
+      } else if (widget.initialList != null) {
+        if (query.isEmpty &&
+            (forceFilterInitial ||
+                widget.minStringLengthForFutureSearch == 0)) {
+          resultList = List.from(widget.initialList!);
+        } else if (query.isNotEmpty) {
+          resultList = widget.initialList!
+              .where((item) =>
+                  item.title.toLowerCase().contains(query.toLowerCase()))
+              .toList();
         }
       }
+    } catch (e, s) {
+      _handleError(e, s);
+      if (mounted)
+        setState(() {
+          _isLoading = false;
+        });
+      _updateOverlayList([]);
+      return;
+    }
+    if (mounted) {
+      _isLoading = false;
+      _updateOverlayList(resultList);
+    }
+  }
+
+  void _updateOverlayList(List<AppListItem<T>> list) {
+    /* ... (same as your version) ... */
+    log('[_updateOverlayList] new list length: ${list.length}');
+    if (!mounted) return;
+    setState(() {
+      _filteredList = list;
     });
-    if (widget.initialList!.isNotEmpty && widget.initialList != null) {
-      if (widget.value != null) {
-        _selected = widget.initialList!
-            .firstWhere((listItem) => listItem.value == widget.value);
-        _controller.text = _selected!.title;
+    if (_overlayEntry != null && mounted) {
+      try {
+        _overlayEntry!.markNeedsBuild();
+      } catch (e) {
+        logError('[Err] markNeedsBuild in update: $e');
       }
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return CompositedTransformTarget(
-      link: _layerLink,
-      child: LabeledTextInput(
-        // text: _selected?.title,
-        key: _key,
-        focusNode: _focusNode,
-        suffix: widget.suffix,
-        prefixIcon: widget.prefixIcon,
-        controller: _controller,
-        label: widget.label ?? "",
-        hintText: widget.hintText,
-        onSubmit: (p0) {
-          if (mounted) {
-            _removeOverlay(true);
-          }
-        },
-        onChanged: (String value) {
-          _debouncer.run(() {
-            if (mounted) {
-              updateAllLists();
-              widget.onChanged?.call(value);
-            }
-          });
-        },
-      ),
-    );
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) _removeOverlay();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _controller.removeListener(_onTextChanged);
+    _focusNode.removeListener(_handleFocusChange);
     _focusNode.dispose();
-    _focusScopeNode?.dispose();
     _scrollController.dispose();
     _controller.dispose();
+    _debouncer.dispose();
+    _removeOverlay();
     super.dispose();
   }
 
-  OverlayEntry _createOverlay() {
-    _focusScopeNode = FocusScopeNode();
+  void _showOverlay() {
+    /* ... (same as your version, with check for stale overlay) ... */
+    log('[_showOverlay]');
+    if (_overlayEntry != null) {
+      _overlayEntry!.remove();
+      _overlayEntry = null;
+    }
+    if (mounted && _textFieldKey.currentContext != null) {
+      _overlayEntry = _createOverlayEntry();
+      Overlay.of(context).insert(_overlayEntry!);
+    } else if (mounted) {
+      log('[_showOverlay] TFKey context null, delaying');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _textFieldKey.currentContext != null) {
+          _overlayEntry = _createOverlayEntry();
+          Overlay.of(context).insert(_overlayEntry!);
+        } else {
+          log('[_showOverlay] TFKey context still null after frame');
+        }
+      });
+    }
+  }
+
+  void _removeOverlay() {
+    /* ... (same as your version) ... */
+    log('[_removeOverlay] overlay is ${_overlayEntry != null ? "present" : "null"}');
+    if (_overlayEntry != null) {
+      try {
+        _overlayEntry!.remove();
+      } catch (e) {
+        logError('[Err] Removing overlay: $e');
+      }
+      _overlayEntry = null;
+    }
+  }
+
+  OverlayEntry _createOverlayEntry() {
+    /* ... (same as your version, ParentData fix was good) ... */
+    log('[_createOverlayEntry]');
+    if (_textFieldKey.currentContext == null) {
+      log('[_createOverlayEntry] TFKey context null');
+      return OverlayEntry(builder: (context) => const SizedBox.shrink());
+    }
+    final RenderBox textFieldRenderBox =
+        _textFieldKey.currentContext!.findRenderObject() as RenderBox;
+    final Size textFieldSize = textFieldRenderBox.size;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return OverlayEntry(
-      builder: (context) => GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: _removeOverlay,
-        child: Stack(
-          children: [
-            CompositedTransformFollower(
-              link: _layerLink,
-              showWhenUnlinked: false,
-              targetAnchor: Alignment.bottomRight,
-              followerAnchor: Alignment.topRight,
+      opaque: false,
+      builder: (context) => Positioned(
+        width: textFieldSize.width,
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: Offset(0.0, textFieldSize.height + 2.0),
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              _focusNode.unfocus();
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHigh,
+                borderRadius: widget.overlayBorderRadius ?? Corners.medBorder,
+                boxShadow: Shadows.medium,
+                border: Border.all(
+                    color: colorScheme.outline.withValues(alpha: 0.5),
+                    width: Strokes.thin),
+              ),
               child: Material(
-                color: Colors.transparent,
-                child: FocusScope(
-                  node: _focusScopeNode!,
-                  child: loading ? _loadingIndicator() : _listViewContainer(),
-                  onKey: (node, event) {
-                    if (event.logicalKey == LogicalKeyboardKey.escape) {
-                      _removeOverlay();
-                    }
-                    return KeyEventResult.ignored;
-                  },
+                type: MaterialType.transparency,
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        widget.overlayBorderRadius ?? Corners.medBorder),
+                clipBehavior: Clip.antiAlias,
+                child: ConstrainedBox(
+                  constraints:
+                      BoxConstraints(maxHeight: _calculateOverlayHeight()),
+                  child: _isLoading
+                      ? _buildLoadingIndicator()
+                      : (_filteredList.isEmpty && _controller.text.isNotEmpty)
+                          ? (widget.noItemFoundWidget ??
+                              Center(
+                                  child: Padding(
+                                padding: EdgeInsets.all(Insets.med),
+                                child: Text("No results found",
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: colorScheme.onSurfaceVariant)),
+                              )))
+                          : _buildListView(),
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  void _removeOverlay([bool force = false]) {
-    if (mounted && (!_focusNode.hasFocus || force)) {
-      if (_overlay != null) {
-        _overlay!.remove();
-        _overlay = null;
-      }
-      if (mounted) {
-        _focusScopeNode?.dispose();
-        _focusScopeNode =
-            null; // Ensure focus scope node is nullified after disposal
-      }
-    }
+  double _calculateOverlayHeight() {
+    /* ... (same as your version) ... */
+    final double itemHeight = Sizes.listItem;
+    if (_isLoading) return itemHeight * 1.5;
+    if (_filteredList.isEmpty && _controller.text.isNotEmpty)
+      return itemHeight * 1.5;
+    if (_filteredList.isEmpty &&
+        _controller.text.isEmpty &&
+        widget.minStringLengthForFutureSearch > 0 &&
+        widget.futureSearch != null) return 0.0;
+    final itemCount = _filteredList.length;
+    if (itemCount == 0) return 0.0;
+    final displayCount =
+        itemCount > widget.maxItemsInView ? widget.maxItemsInView : itemCount;
+    return (displayCount * itemHeight) + (displayCount > 0 ? Insets.xs : 0.0);
   }
 
-  Widget _loadingIndicator() {
+  Widget _buildLoadingIndicator() {
+    /* ... (same as your version) ... */
     return SizedBox(
-      width: 50,
-      height: 50,
-      child: Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).colorScheme.secondary),
-        ),
+        height: Sizes.listItem * 1.5,
+        child: Center(
+            child: StyledLoadSpinner.small(
+                valueColor: Theme.of(context).colorScheme.primary)));
+  }
+
+  Widget _buildListView() {
+    return ScrollConfiguration(
+      behavior: const CustomScrollBehavior(),
+      child: ListView.builder(
+        controller: _scrollController,
+        padding: EdgeInsets.zero,
+        itemCount: _filteredList.length,
+        itemExtent: Sizes.listItem,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          final item = _filteredList[index];
+          bool isSelected = widget.value == item.value;
+          return BaseListItemWidget(
+            isSelected: isSelected,
+            child: Text(item.title,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primary
+                        : null),
+                overflow: TextOverflow.ellipsis),
+            onPress: () {
+              _handleItemSelection(item);
+            }, // Changed from _onListItemTap
+          );
+        },
       ),
     );
   }
 
-  Widget _listViewContainer() {
-    if ((itemsFound == true && filteredList!.isNotEmpty) ||
-        (itemsFound == false && widget.noItemFound != null)) {
-      return SizedBox(
-        height: calculateHeight().toDouble(),
-        child: _createListItems(),
-      );
+  // This is YOUR working version of item tap logic
+  void _handleItemSelection(AppListItem<T> item) {
+    log('[StyledDropDownTextfield] _handleItemSelection for: ${item.title}, (YOUR WORKING LOGIC)');
+    if (!mounted) return;
+
+    _isProgrammaticallySettingText =
+        true; // Prevent _onTextChanged from interfering
+    _controller.text = item.title;
+    // if (_controller.hasClients) {
+    _controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: _controller.text.length));
+    // }
+    _isProgrammaticallySettingText = false;
+
+    // Only call if value actually changes to prevent redundant BLoC events if tapping same item
+    if (widget.value != item.value) {
+      widget.onSelectionChanged?.call(item.value);
     }
-    return const SizedBox();
-  }
 
-  num heightByLength(int length) {
-    return richInputHeight * length;
-  }
-
-  num calculateHeight() {
-    if (filteredList!.length > 1) {
-      if (widget.itemsInView <= filteredList!.length) {
-        return heightByLength(widget.itemsInView);
+    // This was your key working part: microtask for unfocus AND immediate overlay removal
+    Future.microtask(() {
+      if (mounted) {
+        _focusNode
+            .unfocus(); // This will trigger _handleFocusChange which has its own delayed remove
+        _removeOverlay(); // But you also had an immediate remove here which seemed to be key for you
       }
-      return heightByLength(filteredList!.length);
-    }
-    return richInputHeight;
-  }
-
-  Widget _createListItems() {
-    RenderBox renderBox = _key.currentContext?.findRenderObject() as RenderBox;
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: widget.radius != null
-            ? BorderRadius.circular(widget.radius!)
-            : BorderRadius.zero,
-        boxShadow: const [
-          BoxShadow(
-              offset: Offset(0, 4),
-              blurRadius: 4,
-              spreadRadius: 0.6,
-              color: Colors.black26)
-        ],
-      ),
-      width: renderBox.size.width,
-      child: (itemsFound == false && widget.noItemFound != null)
-          ? BaseListItemWidget(showDivider: false, child: widget.noItemFound!)
-          : ScrollConfiguration(
-              behavior: const CustomScrollBehavior(),
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: filteredList!.length,
-                itemBuilder: (context, index) => BaseListItemWidget(
-                  showDivider: index != 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(filteredList![index].title),
-                    ],
-                  ),
-                  onPress: () => _onListItemTap(filteredList![index]),
-                ),
-              ),
-            ),
-    );
-  }
-
-  void _onListItemTap(AppListItem<T> listItem) {
-    setState(() {
-      if (widget.onSelection != null) {
-        widget.onSelection?.call(listItem.value);
-      }
-      _controller.text = listItem.title;
     });
-    _removeOverlay();
-    FocusScope.of(context).unfocus();
   }
-}
-
-class Debouncer {
-  final int? milliseconds;
-  VoidCallback? action;
-  Timer? _timer;
-
-  Debouncer({this.milliseconds});
-
-  run(VoidCallback action) {
-    _timer?.cancel();
-    _timer = Timer(Duration(milliseconds: milliseconds!), action);
-  }
-}
-
-const double richInputHeight = 44;
-
-class CustomScrollBehavior extends MaterialScrollBehavior {
-  const CustomScrollBehavior();
-
-  @override
-  Widget buildScrollbar(
-    BuildContext context,
-    Widget child,
-    ScrollableDetails details,
-  ) {
-    return Scrollbar(
-      thumbVisibility: true,
-      controller: details.controller,
-      child: child,
-    );
-  }
-}
-
-class AppListItem<T> {
-  final String title;
-  final T value;
-
-  const AppListItem(
-    this.title, {
-    required this.value,
-  });
-}
-
-class BaseListItemWidget extends StatelessWidget {
-  const BaseListItemWidget(
-      {super.key, required this.child, this.onPress, this.showDivider = true});
-  final VoidCallback? onPress;
-  final Widget child;
-  final bool showDivider;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onPress,
-        child: Container(
-            height: richInputHeight,
-            padding: EdgeInsets.symmetric(horizontal: Insets.med),
-            decoration: BoxDecoration(
-                border: Border(
-                    top: !showDivider
-                        ? BorderSide.none
-                        : BorderSide(color: Theme.of(context).dividerColor))),
-            child: Row(
-              children: [
-                child,
-              ],
-            )),
+    final theme = Theme.of(context);
+    return CompositedTransformTarget(
+      link: _layerLink,
+      child: StyledTextInput(
+        key: _textFieldKey,
+        controller: _controller,
+        focusNode: _focusNode,
+        label: widget.label,
+        hintText: widget.hintText ?? "Type to search...",
+        prefixIcon: widget.prefixIcon,
+        errorText: widget.errorText,
+        suffixWidget: widget.suffixIconOverride ??
+            (((widget.value != null) || _controller.text.isNotEmpty)
+                ? IconButton(
+                    icon: const Icon(Ionicons.close_circle_outline,
+                        size: IconSizes.sm - 2),
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    color: theme.colorScheme.onSurfaceVariant
+                        .withValues(alpha: 0.7),
+                    tooltip: "Clear",
+                    onPressed: () {
+                      _isProgrammaticallySettingText = true;
+                      _controller.clear();
+                      _isProgrammaticallySettingText = false;
+                      widget.onSelectionChanged?.call(null);
+                      _performSearchOrFilter('', forceFilterInitial: true);
+                    },
+                  )
+                : Padding(
+                    padding: EdgeInsets.only(right: Insets.xs / 2),
+                    child: Icon(
+                      Ionicons.chevron_down_outline,
+                      color: _focusNode.hasFocus
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant,
+                      size: IconSizes.sm,
+                    ),
+                  )),
+        onSubmitted: (value) {
+          log("[onSubmitted] value='$value', filteredListCount=${_filteredList.length}");
+          if (_filteredList.isNotEmpty) {
+            AppListItem<T> itemToSelect = _filteredList.first;
+            if (_controller.text.isNotEmpty) {
+              final exactMatch = _filteredList.firstWhere(
+                  (item) =>
+                      item.title.toLowerCase() ==
+                      _controller.text.toLowerCase(),
+                  orElse: () => _filteredList.first);
+              if (exactMatch.title.toLowerCase() ==
+                  _controller.text.toLowerCase()) {
+                itemToSelect = exactMatch;
+              }
+            }
+            _handleItemSelection(
+                itemToSelect); // Uses your working selection logic
+          } else if (_controller.text.isEmpty &&
+              widget.initialList != null &&
+              widget.initialList!.isNotEmpty) {
+            if (!_focusNode.hasFocus)
+              _focusNode.requestFocus();
+            else
+              _performSearchOrFilter('', forceFilterInitial: true);
+          } else {
+            _focusNode.unfocus();
+          }
+        },
       ),
     );
+  }
+
+  // Update error handling to use logger
+  void _handleError(dynamic error, StackTrace? stackTrace) {
+    logError('Error in StyledDropDownTextfield: $error');
+    if (stackTrace != null) {
+      logError('Stack trace: $stackTrace');
+    }
   }
 }

@@ -1,19 +1,20 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/commands/files/index.dart';
+import 'package:doculode/widgets/buttons/buttons.dart';
+import 'package:doculode/widgets/styled_load_spinner.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/commands/files/pick_file_command.dart';
-import 'package:its_shared/styles.dart';
-import 'package:its_shared/widgets/buttons/styled_buttons.dart';
-import 'package:its_shared/widgets/styled_load_spinner.dart';
 
-import '../../../../constants/responsive.dart';
-import '../../../../core/core.dart';
-import '../../../../presentation/account/shared/shared.dart';
-import '../../../upload_progress/presentation/bloc/upload_progress_bloc.dart';
-import '../bloc/uploads_bloc.dart';
-import '../components/dl_table_header.dart';
-import '../components/dl_table_row.dart';
-import '../uploads_constants.dart';
+import 'package:doculode/core/constants/responsive.dart';
+import 'package:doculode/core/core.dart';
+import 'package:doculode/presentation/account/shared/shared.dart';
+import 'package:doculode/features/upload_progress/presentation/bloc/upload_progress_bloc.dart';
+import 'package:doculode/features/uploads/presentation/bloc/uploads_bloc.dart';
+import 'package:doculode/features/uploads/presentation/components/dl_table_header.dart';
+import 'package:doculode/features/uploads/presentation/components/dl_table_row.dart';
+import 'package:doculode/features/uploads/presentation/uploads_constants.dart';
 
 class ColumnItem extends StatelessWidget {
   const ColumnItem({
@@ -56,7 +57,7 @@ class TableHeaderText extends StatelessWidget {
     return Text(
       text,
       overflow: TextOverflow.ellipsis,
-      style: TextStyles.body3.copyWith(
+      style: TextStyles.bodySmall.copyWith(
           fontSize: FontSizes.s11,
           color: Theme.of(context).colorScheme.tertiary),
     );
@@ -100,9 +101,7 @@ class _UploadFileViewState extends State<UploadFileView> {
                       //   onPressed: () {},
                       //   icon: Icon(Ionicons.filter),
                       // ),
-                      IconBtn(Ionicons.refresh,
-                          padding: EdgeInsets.all(Insets.sm),
-                          compact: true, onPressed: () {
+                      IconBtn(Ionicons.refresh, isCompact: true, onPressed: () {
                         BlocProvider.of<UploadsBloc>(context)
                             .add(FetchDocuments());
                       }),

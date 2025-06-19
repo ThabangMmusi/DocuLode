@@ -1,7 +1,21 @@
+import 'package:doculode/config/index.dart';
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
-import 'package:its_shared/styles.dart';
+
 
 class DlTableIconButton extends StatelessWidget {
   final IconData icon;
@@ -90,7 +104,8 @@ class DLFilledButton extends StatelessWidget {
             ],
             Text(
               title,
-              style: TextStyles.body2.copyWith(color: colorScheme.onPrimary),
+              style:
+                  TextStyles.bodyMedium.copyWith(color: colorScheme.onPrimary),
             )
           ],
         ),
@@ -114,7 +129,9 @@ class _DLButton extends StatefulWidget {
     required this.onPressed,
     required this.hoverFillColor,
     this.fillColor,
-    this.padding, this.hoverBorderColor, this.borderColor,
+    this.padding,
+    this.hoverBorderColor,
+    this.borderColor,
   });
 
   @override

@@ -1,8 +1,9 @@
-import 'package:its_shared/_utils/logger.dart';
-import 'package:its_shared/core/data/converters/converters.dart';
-import 'package:its_shared/core/domain/entities/auth_user.dart';
-import 'package:its_shared/services/firebase/firebase_service.dart';
+import 'package:doculode/core/domain/repositories/database_service.dart';
+import 'package:doculode/core/utils/logger.dart';
+import 'package:doculode/core/data/converters/converters.dart';
+import 'package:doculode/core/domain/entities/auth_user.dart';
 
+import 'package:doculode/services/services.dart';
 import '../../core.dart';
 
 abstract class UserDataSource {
@@ -10,21 +11,20 @@ abstract class UserDataSource {
 }
 
 class UserDataSourceImpl implements UserDataSource {
-  final FirebaseService _firebaseService;
+  final DatabaseService _databaseService;
 
-  UserDataSourceImpl({required FirebaseService firebaseService}) : _firebaseService = firebaseService;
-
+  UserDataSourceImpl({required DatabaseService databaseService})
+      : _databaseService = databaseService;
 
   @override
   Future<AuthUser?> getCurrentUser() async {
     try {
-      final firebaseUser = _firebaseService.currentUser;
+      final firebaseUser = _databaseService.currentUser;
       if (firebaseUser == null) return null;
       return firebaseUser.toEntity();
     } catch (e) {
       log(e.toString());
-      throw ServerException (e.toString());
+      throw ServerException(e.toString());
     }
   }
-
 }

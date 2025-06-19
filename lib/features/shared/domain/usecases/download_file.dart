@@ -1,11 +1,24 @@
+import 'package:doculode/config/index.dart';
+
+
+
+
+
+
+
+
+
+
+
+
+
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/injection_container.dart';
+
 import '../../../../core/core.dart';
 import '../repositories/shared_repositories.dart';
 
 class DownloadFile implements UseCase<void, DownloadFileParams> {
-  final SharedRepository uploadEditRepository =
-      serviceLocator<SharedRepository>();
+  final SharedRepository uploadEditRepository = sl<SharedRepository>();
 
   @override
   Future<Either<Failure, void>> call(DownloadFileParams params) async {

@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/features/upload_progress/domain/domain.dart';
-
-import '../../../../core/core.dart';
+import 'package:doculode/features/upload_progress/domain/domain.dart';
+import 'package:doculode/core/core.dart';
 
 class UploadFile {
   final UploadFileRepository uploadFileRepository;

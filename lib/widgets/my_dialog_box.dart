@@ -1,9 +1,11 @@
+import 'package:doculode/config/index.dart';
+
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/presentation/app_title_bar/app_title_bar.dart';
-import 'package:its_shared/styles.dart';
 
-import '../constants/app_constants.dart';
+import 'package:doculode/core/constants/app_constants.dart';
+
+import 'package:doculode/presentation/app_title_bar/index.dart';
 import 'loading_widget.dart';
 
 //todo : clean codebase
@@ -83,7 +85,7 @@ class CustomDialogNew extends StatelessWidget {
                         padding: EdgeInsets.all(Insets.xl),
                         child: Text(
                           header!,
-                          style: TextStyles.h2,
+                          style: TextStyles.headlineMedium,
                         ),
                       ),
                     ),

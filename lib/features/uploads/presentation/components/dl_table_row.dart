@@ -1,33 +1,27 @@
+import 'package:doculode/config/index.dart';
+import 'package:doculode/core/index.dart';
+import 'package:doculode/features/shared/presentation/bloc/shared_bloc.dart';
+import 'package:doculode/features/shared/presentation/views/shared_dialog.dart';
+import 'package:doculode/features/uploads/presentation/views/upload_share_dialog.dart';
+import 'package:doculode/widgets/buttons/buttons.dart';
+import 'package:doculode/widgets/index.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:its_shared/core/core.dart';
-import 'package:its_shared/features/shared/presentation/bloc/shared_bloc.dart';
-import 'package:its_shared/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
-import 'package:its_shared/features/uploads/presentation/components/uploaded_status.dart';
-import 'package:its_shared/features/upload_edit/presentation/views/update_file_dialog.dart';
-import 'package:its_shared/features/uploads/presentation/views/upload_file_view.dart';
-import 'package:its_shared/routes/app_pages.dart';
-import 'package:its_shared/styles.dart';
 import 'package:timeago/timeago.dart' as time_ago;
 
-import '../../../../themes.dart';
-import '../../../../widgets/buttons/styled_buttons.dart';
-import '../../../../widgets/styled_bottom_sheet.dart';
-import '../../../../widgets/styled_horizontal_name_list.dart';
-import '../../../shared/presentation/views/shared_dialog.dart';
-import '../../../upload_edit/presentation/views/upload_edit_view.dart';
-import '../uploads_constants.dart';
-import '../views/upload_share_dialog.dart';
+import 'package:doculode/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
+import 'package:doculode/features/upload_edit/presentation/views/update_file_dialog.dart';
+import 'package:doculode/features/upload_edit/presentation/views/upload_edit_view.dart';
+import 'package:doculode/features/uploads/presentation/uploads_constants.dart';
+import 'package:doculode/features/uploads/presentation/views/upload_file_view.dart';
+import 'uploaded_status.dart';
 
 class DLTableRow extends StatefulWidget {
-  const DLTableRow(
-    this.document, {
-    super.key,
-  });
-
+  const DLTableRow(this.document, {super.key});
   final RemoteDocModel document;
 
   @override
@@ -38,125 +32,99 @@ class _DLTableRowState extends State<DLTableRow> {
   bool _hovered = false;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
-    const borderRadius = Corners.medBorder;
-    // final padding = EdgeInsets.symmetric(horizontal: Insets.med, vertical: 0);
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
+    final BorderRadius borderRadius = Corners.medBorder;
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Insets.xl),
+      padding: EdgeInsets.symmetric(horizontal: Insets.lg, vertical: Insets.xs),
       child: InkWell(
         onHover: (value) => setState(() => _hovered = value),
         onTap: () => widget.document.isPublished
             ? _handleDefaultClick(context)
             : _handleEditClick(context),
-        highlightColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        focusColor: Colors.transparent,
         borderRadius: borderRadius,
+        hoverColor: colorScheme.primary.withOpacity(0.04),
+        splashColor: colorScheme.primary.withOpacity(0.08),
+        highlightColor: colorScheme.primary.withOpacity(0.06),
         child: Container(
           padding:
-              EdgeInsets.symmetric(horizontal: Insets.sm, vertical: Insets.xs),
+              EdgeInsets.symmetric(horizontal: Insets.med, vertical: Insets.sm),
           decoration: BoxDecoration(
-              // borderRadius: borderRadius,
-              color: _hovered ? AppTheme.bg1 : Colors.transparent),
+            borderRadius: borderRadius,
+            color: _hovered
+                ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                : Colors.transparent,
+          ),
           child: Stack(
             children: [
               Row(children: [
                 ColumnItem(
                   child: Row(children: [
                     SizedBox(
-                      height: 38,
-                      child: Stack(
-                        children: [
-                          Container(
-                            color: colorScheme.error,
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Icon(Ionicons.document_outline),
-                          ),
-                        ],
+                      width: IconSizes.lg + Insets.xs,
+                      height: IconSizes.lg + Insets.xs,
+                      child: Center(
+                        child: Icon(
+                          Ionicons.document_text_outline,
+                          size: IconSizes.lg * 0.8,
+                          color: colorScheme.primary,
+                        ),
                       ),
                     ),
-                    HSpace.xs,
+                    HSpace.sm,
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(widget.document.name),
-                          Row(
-                            children: [
-                              // buildTimeAgoSmall(colorScheme),
-                              // HSpace.sm,
-                              if (!widget.document.isPublic)
-                                Text(
-                                  "Not yet published",
-                                  style: TextStyles.caption
-                                      .copyWith(color: colorScheme.error),
-                                )
-                              else
-                                StyledHorizontalNameList(
-                                  widget.document.modules!
-                                      .map((p) => p.name!)
-                                      .toList(),
-                                  style: TextStyles.caption,
-                                  maxWidth: 440,
-                                ),
-                            ],
+                          Text(
+                            widget.document.name,
+                            style: textTheme.titleSmall
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
+                          VSpace.xs,
+                          if (!widget.document.isPublic)
+                            Text(
+                              "Not yet published",
+                              style: textTheme.bodySmall
+                                  ?.copyWith(color: colorScheme.error),
+                            )
+                          else if ((widget.document.modules ?? []).isNotEmpty)
+                            StyledHorizontalNameList(
+                              (widget.document.modules ?? [])
+                                  .map((p) => p.name)
+                                  .whereType<String>()
+                                  .toList(),
+                              style: textTheme.labelSmall!.copyWith(
+                                  color: colorScheme.onSurfaceVariant),
+                              maxWidth: 440,
+                            )
+                          else
+                            _buildTimeAgoSmall(
+                                context, widget.document.uploaded),
                         ],
                       ),
                     ),
-                    // if (_hovered)
-                    //   Row(
-                    //     children: [
-                    //       DlTableIconButton(
-                    //         icon: Icons.publish_outlined,
-                    //         onPressed: () {
-                    //           context.read<UploadEditBloc>().add(
-                    //                 UploadEditStart(widget.document),
-                    //               );
-                    //           showDialog(
-                    //             context: context,
-                    //             barrierDismissible: false,
-                    //             builder: (context) => const UpdateFileDialog(),
-                    //           );
-                    //         },
-                    //       ),
-                    //       DlTableIconButton(
-                    //         icon: Ionicons.trash_bin_outline,
-                    //         onPressed: () {},
-                    //       ),
-                    //       HSpace.sm
-                    //     ],
-                    //   ),
                   ]),
                 ),
                 ColumnItem(
                   width: TableColumnSizes.fileSize,
-                  child: buildDownload(),
+                  child: _buildDownloadInfo(context, widget.document.size),
                 ),
                 ColumnItem(
                     width: TableColumnSizes.fileUploaded,
-                    child: buildRating(colorScheme)),
-
-                //  ColumnItem(
-                //   width: TableColumnSizes.fileUploaded,
-                //   child: TableText(timeAgo.format(widget.document.uploaded)),
-                // ),
+                    child: _buildRatingInfo(context, "None")),
                 ColumnItem(
                   width: TableColumnSizes.fileStatus,
                   child: UploadedStatus(widget.document.access),
                 ),
               ]),
-              if (_hovered) buildOnHover(colorScheme, context)
+              if (_hovered) _buildActionButtons(context, colorScheme),
             ],
           ),
         ),
@@ -164,56 +132,52 @@ class _DLTableRowState extends State<DLTableRow> {
     );
   }
 
-  Align buildOnHover(ColorScheme colorScheme, BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomRight,
+  Widget _buildActionButtons(BuildContext context, ColorScheme colorScheme) {
+    return Positioned(
+      right: 0,
+      top: 0,
+      bottom: 0,
       child: Container(
-        padding: EdgeInsets.all(Insets.xs),
-        decoration:
-            BoxDecoration(color: _hovered ? AppTheme.bg1 : colorScheme.surface),
+        padding:
+            EdgeInsets.symmetric(horizontal: Insets.sm, vertical: Insets.xs),
+        decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest
+                .withOpacity(_hovered ? 0.8 : 0.0),
+            borderRadius: const BorderRadius.only(
+              topRight: Corners.medRadius,
+              bottomRight: Corners.medRadius,
+            )),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (widget.document.isPublished) ...[
-              RawBtn(
-                enableShadow: false,
-                normalColors: BtnColors(
-                    bg: colorScheme.onSurface, fg: colorScheme.onPrimary),
-                hoverColors: BtnColors(
-                    bg: colorScheme.primary, fg: colorScheme.onPrimary),
-                child: const BtnContent(
-                  isCompact: true,
-                  label: "Share",
-                ),
+              TextBtn(
+                "Share",
+                isCompact: true,
                 onPressed: () => _handleShareClick(context),
               ),
-              HSpace.sm,
-              // RawBtn(
-              //   enableShadow: false,
-              //   normalColors: BtnColors(
-              //       bg: colorScheme.onSurface, fg: colorScheme.onPrimary),
-              //   hoverColors: BtnColors(
-              //       bg: colorScheme.primary, fg: colorScheme.onPrimary),
-              //   child: const BtnContent(
-              //     isCompact: true,
-              //     label: "Edit",
-              //   ),
-              //   onPressed: () => _handleEditClick(context),
-              // ),
+              HSpace.xs,
               IconBtn(
-                Icons.edit_note,
+                Ionicons.create_outline,
+                isCompact: true,
+                tooltip: "Edit",
                 onPressed: () => _handleEditClick(context),
               ),
-              // HSpace.sm,
-              // IconBtn(Icons.more_vert, onPressed: () {}),
             ] else ...[
               PrimaryBtn(
                 label: "Publish",
                 isCompact: true,
                 onPressed: () => _handleEditClick(context),
               ),
-              HSpace.sm,
-              IconBtn(Ionicons.trash_bin_outline, onPressed: () {})
+              HSpace.xs,
+              IconBtn(
+                Ionicons.trash_bin_outline,
+                isCompact: true,
+                tooltip: "Delete",
+                color: colorScheme.error,
+                onPressed: () {/* Implement delete logic */},
+              )
             ],
           ],
         ),
@@ -221,210 +185,214 @@ class _DLTableRowState extends State<DLTableRow> {
     );
   }
 
-  Row buildTimeAgoSmall(ColorScheme colorScheme) {
+  Widget _buildTimeAgoSmall(BuildContext context, DateTime? dateTime) {
+    if (dateTime == null) return const SizedBox.shrink();
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme colorScheme = theme.colorScheme;
     return Row(
       children: [
         Icon(
           Ionicons.calendar_outline,
-          color: colorScheme.primary,
-          size: 12,
+          color: colorScheme.onSurfaceVariant,
+          size: textTheme.labelSmall!.fontSize ?? 12,
         ),
         HSpace.xs,
         Text(
-          time_ago.format(widget.document.uploaded!),
-          style: TextStyles.caption.copyWith(fontWeight: FontWeight.w400),
+          time_ago.format(dateTime),
+          style: textTheme.labelSmall!
+              .copyWith(color: colorScheme.onSurfaceVariant),
         ),
       ],
     );
   }
 
-  Row buildCategorySmall(ColorScheme colorScheme) {
+  Widget _buildCategorySmall(BuildContext context, String categoryName) {
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme colorScheme = theme.colorScheme;
     return Row(
       children: [
         Icon(
-          Ionicons.school,
-          color: colorScheme.primary,
-          size: 12,
+          Ionicons.folder_open_outline,
+          color: colorScheme.onSurfaceVariant,
+          size: textTheme.labelSmall!.fontSize ?? 12,
         ),
         HSpace.xs,
         Text(
-          widget.document.type!.asString,
-          style: TextStyles.caption.copyWith(fontWeight: FontWeight.w400),
+          categoryName,
+          style: textTheme.labelSmall!
+              .copyWith(color: colorScheme.onSurfaceVariant),
         ),
       ],
     );
   }
 
-  Row buildRating(ColorScheme colorScheme) {
+  Widget _buildRatingInfo(BuildContext context, String rating) {
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme colorScheme = theme.colorScheme;
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Icon(
-          Icons.thumb_up,
-          // color: colorScheme.primary,
-          size: 16,
+        Icon(
+          Ionicons.star_outline,
+          color: colorScheme.onSurfaceVariant,
+          size: IconSizes.med * 0.85,
         ),
         HSpace.xs,
         Text(
-          "None",
-          style: TextStyles.body2.copyWith(fontWeight: FontWeight.w400),
+          rating,
+          style: textTheme.bodyMedium
+              ?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
       ],
     );
   }
 
-  Row buildDownload() {
+  Widget _buildDownloadInfo(BuildContext context, String downloadCount) {
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme colorScheme = theme.colorScheme;
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Icon(
-          Icons.download,
-          // color: colorScheme.primary,
-          size: 18,
+        Icon(
+          Ionicons.download_outline,
+          color: colorScheme.onSurfaceVariant,
+          size: IconSizes.med * 0.85,
         ),
         HSpace.xs,
         Text(
-          "0",
-          style: TextStyles.body2.copyWith(fontWeight: FontWeight.w400),
+          downloadCount,
+          style: textTheme.bodyMedium
+              ?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
       ],
     );
   }
 
   void _handleDefaultClick(BuildContext context) {
-    context.read<SharedBloc>().add(
-          SharedShowFile(widget.document),
-        );
-    // context.go('/uploads/${widget.document.id}');
+    context.read<SharedBloc>().add(SharedShowFile(widget.document));
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const SharedFileDialog(),
+      builder: (dialogContext) => const SharedFileDialog(),
     );
   }
 
   void _handleEditClick(BuildContext context) {
-    context.read<UploadEditBloc>().add(
-          UploadEditStart(widget.document),
-        );
-    // context.go('/uploads/${widget.document.id}');
+    context.read<UploadEditBloc>().add(UploadEditStart(widget.document));
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const UpdateFileDialog(),
+      builder: (dialogContext) => const UpdateFileDialog(),
     );
   }
 
   void _handleShareClick(BuildContext context) {
+    final String baseUrl =
+        kDebugMode ? "http://localhost:3000" : "https://doculode.com";
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => UpdateShareDialog(
-          "${kDebugMode ? "http://localhost:23429" : "https://spushare-2023.web.app"}/shared/${widget.document.id}"),
+      builder: (dialogContext) =>
+          UpdateShareDialog("$baseUrl/shared/${widget.document.id}"),
     );
   }
 }
 
 class DLResourceListItem extends StatelessWidget {
-  const DLResourceListItem(
-    this.document, {
-    super.key,
-  });
-
+  const DLResourceListItem(this.document, {super.key});
   final RemoteDocModel document;
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
-    const borderRadius = Corners.medBorder;
-    // final padding = EdgeInsets.symmetric(horizontal: Insets.med, vertical: 0);
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
+    final BorderRadius borderRadius = Corners.medBorder;
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Insets.lg),
+      padding: EdgeInsets.symmetric(horizontal: Insets.lg, vertical: Insets.xs),
       child: InkWell(
         onTap: () {
-          context.read<UploadEditBloc>().add(
-                UploadEditStart(document),
-              );
+          context.read<UploadEditBloc>().add(UploadEditStart(document));
           _handleOnTap(context);
-          // context.go(Routes.uploadsEdit(document.id!));
         },
-        highlightColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        focusColor: Colors.transparent,
         borderRadius: borderRadius,
+        hoverColor: colorScheme.primary.withOpacity(0.04),
         child: Container(
           padding:
-              EdgeInsets.symmetric(horizontal: Insets.sm, vertical: Insets.xs),
-          decoration: const BoxDecoration(
-              borderRadius: borderRadius, color: Colors.transparent),
+              EdgeInsets.symmetric(horizontal: Insets.med, vertical: Insets.sm),
+          decoration: BoxDecoration(
+            borderRadius: borderRadius,
+          ),
           child: Row(children: [
             ColumnItem(
               child: Row(children: [
                 Container(
-                  height: 38,
-                  width: 38,
+                  height: IconSizes.lg,
+                  width: IconSizes.lg,
                   decoration: BoxDecoration(
-                      borderRadius: borderRadius,
-                      border: Border.all(color: Colors.grey)),
-                  child: const Center(
-                    child: Icon(Ionicons.document_outline),
+                      borderRadius: Corners.smBorder,
+                      color: colorScheme.surfaceContainer),
+                  child: Center(
+                    child: Icon(
+                      Ionicons.document_text_outline,
+                      size: IconSizes.lg * 0.75,
+                      color: colorScheme.primary,
+                    ),
                   ),
                 ),
-                HSpace.xs,
+                HSpace.med,
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: Insets.xs),
-                        child: Text(
-                          document.name,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyles.body2,
-                        ),
+                      Text(
+                        document.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: textTheme.titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Insets.xs,
-                          vertical: Insets.xs,
-                        ),
-                        // decoration: BoxDecoration(
-                        // borderRadius: Corners.xlBorder,
-                        // color: Colors.red[50]),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              !document.isPublished
-                                  ? Ionicons.lock_closed
-                                  : Ionicons.calendar_outline,
-                              color: colorScheme.primary,
-                              size: 12,
+                      VSpace.xs,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            !document.isPublished
+                                ? Ionicons.lock_closed_outline
+                                : Ionicons.calendar_clear_outline,
+                            color: !document.isPublished
+                                ? colorScheme.onSurfaceVariant
+                                : colorScheme.primary,
+                            size: textTheme.labelSmall!.fontSize ?? 12,
+                          ),
+                          HSpace.xs,
+                          Text(
+                            !document.isPublished
+                                ? "Private"
+                                : (document.modules!.isNotEmpty
+                                    ? document.modules![0].name
+                                    : "Published")!,
+                            style: textTheme.labelSmall!.copyWith(
+                              color: colorScheme.onSurfaceVariant,
                             ),
-                            HSpace.xs,
-                            if (!document.isPublished)
-                              Text(
-                                "Private",
-                                style: TextStyles.callout2.copyWith(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.grey,
-                                ),
-                              )
-                            else
-                              Text(document.modules![1].id),
-                            HSpace.xs,
-                            const DotWidget(),
-                            HSpace.xs,
-                            Text(
-                              document.size,
-                              style: TextStyles.callout2.copyWith(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey,
-                              ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          HSpace.xs,
+                          const DotWidget(),
+                          HSpace.xs,
+                          Text(
+                            document.size,
+                            style: textTheme.labelSmall!.copyWith(
+                              color: colorScheme.onSurfaceVariant,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       )
                     ],
                   ),
@@ -437,43 +405,15 @@ class DLResourceListItem extends StatelessWidget {
     );
   }
 
-  Future<void> _handleOnTapOld(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    ColorScheme colorScheme = theme.colorScheme;
-    return showStyledBottomSheet(context,
-        child: Padding(
-          padding: EdgeInsets.all(Insets.med),
-          child: Column(
-            children: [
-              BottomSheetButton(
-                onPressed: () {
-                  context.read<UploadEditBloc>().add(
-                        UploadEditStart(document),
-                      );
-                  context.go(Routes.uploadsEdit(document.id!));
-                },
-                label: "Publish Resource",
-                icon: Ionicons.cloud_upload_outline,
-              ),
-              BottomSheetButton(
-                onPressed: () {},
-                label: "Remove",
-                icon: Ionicons.trash_bin_outline,
-                normalColors:
-                    BtnColors(bg: Colors.transparent, fg: colorScheme.error),
-              ),
-            ],
-          ),
-        ));
-  }
-
   Future<void> _handleOnTap(BuildContext context) {
     return showStyledBottomSheet(context,
         child: Padding(
-          padding: EdgeInsets.all(Insets.med),
-          child: Container(
-              constraints: const BoxConstraints(maxHeight: 500),
-              child: const UploadEditView()),
+          padding: EdgeInsets.only(
+              top: Insets.med,
+              left: Insets.med,
+              right: Insets.med,
+              bottom: Insets.med + MediaQuery.of(context).viewInsets.bottom),
+          child: const UploadEditView(),
         ));
   }
 }
@@ -484,46 +424,58 @@ class BottomSheetButton extends StatelessWidget {
     this.icon,
     required this.label,
     required this.onPressed,
-    this.normalColors,
+    this.isDestructive = false,
+    this.style,
   });
   final IconData? icon;
   final String label;
   final VoidCallback onPressed;
-  final BtnColors? normalColors;
+  final bool isDestructive;
+  final ButtonStyle? style;
+
   @override
   Widget build(BuildContext context) {
-    return SimpleBtn(
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
+
+    return TextButton.icon(
+      icon: icon != null
+          ? Icon(icon, size: IconSizes.med)
+          : const SizedBox.shrink(),
+      label: Text(label),
       onPressed: () {
-        onPressed.call();
-        Navigator.of(context).pop();
+        onPressed();
       },
-      normalColors: normalColors,
-      child: Row(
-        children: [
-          BtnContent(
-            leadingIcon: true,
-            icon: icon,
-            label: label,
-            labelStyle: TextStyles.body2.copyWith(fontWeight: FontWeight.w400),
+      style: style ??
+          TextButton.styleFrom(
+            foregroundColor:
+                isDestructive ? colorScheme.error : colorScheme.primary,
+            padding: EdgeInsets.symmetric(
+                horizontal: Insets.med, vertical: Insets.lg),
+            textStyle: textTheme.labelLarge,
+            alignment: Alignment.centerLeft,
+          ).copyWith(
+            minimumSize: WidgetStateProperty.all(
+                const Size(double.infinity, kMinInteractiveDimension)),
           ),
-        ],
-      ),
     );
   }
 }
 
 class DotWidget extends StatelessWidget {
-  const DotWidget({
-    super.key,
-  });
+  const DotWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme colorScheme = theme.colorScheme;
     return Text(
       "•",
-      style: TextStyles.body3.copyWith(
+      style: textTheme.bodySmall?.copyWith(
         fontWeight: FontWeight.w800,
-        color: Colors.grey,
+        color: colorScheme.onSurfaceVariant.withOpacity(0.6),
       ),
     );
   }

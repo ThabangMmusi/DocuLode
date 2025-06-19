@@ -1,5 +1,6 @@
-import '../../../../core/core.dart';
-import '../../../../services/firebase/firebase_service.dart';
+import 'package:doculode/core/domain/repositories/database_service.dart';
+
+import 'package:doculode/core/core.dart';
 
 abstract interface class UploadsSource {
   Future<FetchedRemoteDocs> getUploads();
@@ -8,16 +9,19 @@ abstract interface class UploadsSource {
 }
 
 class UploadsSourceImpl implements UploadsSource {
-  final FirebaseService firebaseService;
-  UploadsSourceImpl(this.firebaseService);
+  final DatabaseService _databaseService;
+
+  UploadsSourceImpl({required DatabaseService databaseService})
+      : _databaseService = databaseService;
 
   @override
   Future<FetchedRemoteDocs> getUploads() async {
     try {
-      final files = await firebaseService.getUserUploads();
+      final files = await _databaseService.getUserUploads();
       List<RemoteDocModel> finalFiles = [];
       for (RemoteDocModel file in files.docs!) {
-        final modules = await firebaseService.getModuleNames(file.modules);
+        final modules = await _databaseService
+            .getModulesByIds(file.modules!.map((e) => e.id).toList());
         finalFiles.add(file.copyWith(modules: modules));
       }
       return FetchedRemoteDocs(docs: finalFiles);
@@ -29,7 +33,7 @@ class UploadsSourceImpl implements UploadsSource {
   @override
   Future<String> deleteDoc(RemoteDocModel file) {
     // try {
-    //   yield * firebaseService.uploadFile(file.name, file.path, file.asset);
+    //   yield * databaseService.uploadFile(file.name, file.path, file.asset);
     // } catch (e) {
     // throw ServerException(e.toString());
     // }

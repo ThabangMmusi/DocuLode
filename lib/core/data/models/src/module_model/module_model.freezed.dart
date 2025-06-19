@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,110 +10,74 @@ part of 'module_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-ModuleModel _$ModuleModelFromJson(Map<String, dynamic> json) {
-  return _ModuleModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ModuleModel {
-  String get id => throw _privateConstructorUsedError;
-  @JsonKey(name: 'lvl')
-  int? get level => throw _privateConstructorUsedError;
-  @JsonKey(name: 'sem')
-  int? get semester => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
-
-  /// Serializes this ModuleModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String get id;
+  @JsonKey(name: "module_id")
+  String? get moduleId;
+  int? get year;
+  int? get semester;
+  @JsonKey(name: "module_name")
+  String? get name;
 
   /// Create a copy of ModuleModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ModuleModelCopyWith<ModuleModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ModuleModelCopyWith<$Res> {
-  factory $ModuleModelCopyWith(
-          ModuleModel value, $Res Function(ModuleModel) then) =
-      _$ModuleModelCopyWithImpl<$Res, ModuleModel>;
-  @useResult
-  $Res call(
-      {String id,
-      @JsonKey(name: 'lvl') int? level,
-      @JsonKey(name: 'sem') int? semester,
-      String? name});
-}
-
-/// @nodoc
-class _$ModuleModelCopyWithImpl<$Res, $Val extends ModuleModel>
-    implements $ModuleModelCopyWith<$Res> {
-  _$ModuleModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of ModuleModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $ModuleModelCopyWith<ModuleModel> get copyWith =>
+      _$ModuleModelCopyWithImpl<ModuleModel>(this as ModuleModel, _$identity);
+
+  /// Serializes this ModuleModel to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? id = null,
-    Object? level = freezed,
-    Object? semester = freezed,
-    Object? name = freezed,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      level: freezed == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
-              as int?,
-      semester: freezed == semester
-          ? _value.semester
-          : semester // ignore: cast_nullable_to_non_nullable
-              as int?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is ModuleModel &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.moduleId, moduleId) ||
+                other.moduleId == moduleId) &&
+            (identical(other.year, year) || other.year == year) &&
+            (identical(other.semester, semester) ||
+                other.semester == semester) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, id, moduleId, year, semester, name);
+
+  @override
+  String toString() {
+    return 'ModuleModel(id: $id, moduleId: $moduleId, year: $year, semester: $semester, name: $name)';
   }
 }
 
 /// @nodoc
-abstract class _$$ModuleModelImplCopyWith<$Res>
-    implements $ModuleModelCopyWith<$Res> {
-  factory _$$ModuleModelImplCopyWith(
-          _$ModuleModelImpl value, $Res Function(_$ModuleModelImpl) then) =
-      __$$ModuleModelImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $ModuleModelCopyWith<$Res> {
+  factory $ModuleModelCopyWith(
+          ModuleModel value, $Res Function(ModuleModel) _then) =
+      _$ModuleModelCopyWithImpl;
   @useResult
   $Res call(
       {String id,
-      @JsonKey(name: 'lvl') int? level,
-      @JsonKey(name: 'sem') int? semester,
-      String? name});
+      @JsonKey(name: "module_id") String? moduleId,
+      int? year,
+      int? semester,
+      @JsonKey(name: "module_name") String? name});
 }
 
 /// @nodoc
-class __$$ModuleModelImplCopyWithImpl<$Res>
-    extends _$ModuleModelCopyWithImpl<$Res, _$ModuleModelImpl>
-    implements _$$ModuleModelImplCopyWith<$Res> {
-  __$$ModuleModelImplCopyWithImpl(
-      _$ModuleModelImpl _value, $Res Function(_$ModuleModelImpl) _then)
-      : super(_value, _then);
+class _$ModuleModelCopyWithImpl<$Res> implements $ModuleModelCopyWith<$Res> {
+  _$ModuleModelCopyWithImpl(this._self, this._then);
+
+  final ModuleModel _self;
+  final $Res Function(ModuleModel) _then;
 
   /// Create a copy of ModuleModel
   /// with the given fields replaced by the non-null parameter values.
@@ -120,25 +85,30 @@ class __$$ModuleModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? level = freezed,
+    Object? moduleId = freezed,
+    Object? year = freezed,
     Object? semester = freezed,
     Object? name = freezed,
   }) {
-    return _then(_$ModuleModelImpl(
+    return _then(_self.copyWith(
       id: null == id
-          ? _value.id
+          ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      level: freezed == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
+      moduleId: freezed == moduleId
+          ? _self.moduleId
+          : moduleId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      year: freezed == year
+          ? _self.year
+          : year // ignore: cast_nullable_to_non_nullable
               as int?,
       semester: freezed == semester
-          ? _value.semester
+          ? _self.semester
           : semester // ignore: cast_nullable_to_non_nullable
               as int?,
       name: freezed == name
-          ? _value.name
+          ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
@@ -147,50 +117,54 @@ class __$$ModuleModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ModuleModelImpl with DiagnosticableTreeMixin implements _ModuleModel {
-  const _$ModuleModelImpl(
+class _ModuleModel extends ModuleModel {
+  _ModuleModel(
       {required this.id,
-      @JsonKey(name: 'lvl') this.level,
-      @JsonKey(name: 'sem') this.semester,
-      this.name});
-
-  factory _$ModuleModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ModuleModelImplFromJson(json);
+      @JsonKey(name: "module_id") this.moduleId,
+      this.year,
+      this.semester,
+      @JsonKey(name: "module_name") this.name})
+      : super._();
+  factory _ModuleModel.fromJson(Map<String, dynamic> json) =>
+      _$ModuleModelFromJson(json);
 
   @override
   final String id;
   @override
-  @JsonKey(name: 'lvl')
-  final int? level;
+  @JsonKey(name: "module_id")
+  final String? moduleId;
   @override
-  @JsonKey(name: 'sem')
+  final int? year;
+  @override
   final int? semester;
   @override
+  @JsonKey(name: "module_name")
   final String? name;
 
+  /// Create a copy of ModuleModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ModuleModel(id: $id, level: $level, semester: $semester, name: $name)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ModuleModelCopyWith<_ModuleModel> get copyWith =>
+      __$ModuleModelCopyWithImpl<_ModuleModel>(this, _$identity);
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'ModuleModel'))
-      ..add(DiagnosticsProperty('id', id))
-      ..add(DiagnosticsProperty('level', level))
-      ..add(DiagnosticsProperty('semester', semester))
-      ..add(DiagnosticsProperty('name', name));
+  Map<String, dynamic> toJson() {
+    return _$ModuleModelToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ModuleModelImpl &&
+            other is _ModuleModel &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.level, level) || other.level == level) &&
+            (identical(other.moduleId, moduleId) ||
+                other.moduleId == moduleId) &&
+            (identical(other.year, year) || other.year == year) &&
             (identical(other.semester, semester) ||
                 other.semester == semester) &&
             (identical(other.name, name) || other.name == name));
@@ -198,49 +172,72 @@ class _$ModuleModelImpl with DiagnosticableTreeMixin implements _ModuleModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, level, semester, name);
-
-  /// Create a copy of ModuleModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ModuleModelImplCopyWith<_$ModuleModelImpl> get copyWith =>
-      __$$ModuleModelImplCopyWithImpl<_$ModuleModelImpl>(this, _$identity);
+  int get hashCode =>
+      Object.hash(runtimeType, id, moduleId, year, semester, name);
 
   @override
-  Map<String, dynamic> toJson() {
-    return _$$ModuleModelImplToJson(
-      this,
-    );
+  String toString() {
+    return 'ModuleModel(id: $id, moduleId: $moduleId, year: $year, semester: $semester, name: $name)';
   }
 }
 
-abstract class _ModuleModel implements ModuleModel {
-  const factory _ModuleModel(
-      {required final String id,
-      @JsonKey(name: 'lvl') final int? level,
-      @JsonKey(name: 'sem') final int? semester,
-      final String? name}) = _$ModuleModelImpl;
+/// @nodoc
+abstract mixin class _$ModuleModelCopyWith<$Res>
+    implements $ModuleModelCopyWith<$Res> {
+  factory _$ModuleModelCopyWith(
+          _ModuleModel value, $Res Function(_ModuleModel) _then) =
+      __$ModuleModelCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String id,
+      @JsonKey(name: "module_id") String? moduleId,
+      int? year,
+      int? semester,
+      @JsonKey(name: "module_name") String? name});
+}
 
-  factory _ModuleModel.fromJson(Map<String, dynamic> json) =
-      _$ModuleModelImpl.fromJson;
+/// @nodoc
+class __$ModuleModelCopyWithImpl<$Res> implements _$ModuleModelCopyWith<$Res> {
+  __$ModuleModelCopyWithImpl(this._self, this._then);
 
-  @override
-  String get id;
-  @override
-  @JsonKey(name: 'lvl')
-  int? get level;
-  @override
-  @JsonKey(name: 'sem')
-  int? get semester;
-  @override
-  String? get name;
+  final _ModuleModel _self;
+  final $Res Function(_ModuleModel) _then;
 
   /// Create a copy of ModuleModel
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ModuleModelImplCopyWith<_$ModuleModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = null,
+    Object? moduleId = freezed,
+    Object? year = freezed,
+    Object? semester = freezed,
+    Object? name = freezed,
+  }) {
+    return _then(_ModuleModel(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      moduleId: freezed == moduleId
+          ? _self.moduleId
+          : moduleId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      year: freezed == year
+          ? _self.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as int?,
+      semester: freezed == semester
+          ? _self.semester
+          : semester // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
+
+// dart format on

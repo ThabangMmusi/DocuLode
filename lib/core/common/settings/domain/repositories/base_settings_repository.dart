@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/core/error/failures.dart';
+import 'package:doculode/core/error/failures.dart';
 
 import '../../../../domain/entities/entities.dart';
 import '../../../../domain/repositories/user_repository.dart';
@@ -19,5 +19,14 @@ abstract interface class BaseSettingsRepository extends UserRepository {
     required List<Module> modules,
     required int level,
     required String courseId,
+  });
+
+  /// Sign out user (mirrors AuthRepository)
+  Future<Either<Failure, void>> signOut();
+
+  /// Update user profile information
+  Future<Either<Failure, void>> updateUserProfile({
+    required String names,
+    required String surname,
   });
 }

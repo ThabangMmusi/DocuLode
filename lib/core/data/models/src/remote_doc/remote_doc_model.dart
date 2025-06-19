@@ -1,24 +1,37 @@
-// ignore_for_file: invalid_annotation_target
+import 'package:doculode/core/index.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+
+
+
+
+
+
+
+
+
+
+
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:its_shared/core/core.dart';
+
 
 import '../../models.dart';
 
 part 'remote_doc_model.freezed.dart';
 part 'remote_doc_model.g.dart';
 
-class TimestampConverter implements JsonConverter<DateTime, Timestamp> {
+class TimestampConverter implements JsonConverter<DateTime, String> {
   const TimestampConverter();
 
   @override
-  DateTime fromJson(Timestamp timestamp) {
-    return timestamp.toDate();
+  DateTime fromJson(String dateStr) {
+    return DateTime.parse(dateStr);
   }
 
   @override
-  Timestamp toJson(DateTime date) => Timestamp.fromDate(date);
+  String toJson(DateTime date) {
+    return date.toUtc().toIso8601String();
+  }
 }
 
 class AccessConverter implements JsonConverter<AccessType, int> {
@@ -43,7 +56,7 @@ class CategoryConverter implements JsonConverter<UploadCategory, int> {
 }
 
 @freezed
-class RemoteDocModel extends RemoteDoc with _$RemoteDocModel {
+sealed class RemoteDocModel extends RemoteDoc with _$RemoteDocModel {
   const RemoteDocModel._();
   const factory RemoteDocModel({
     String? id,

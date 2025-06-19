@@ -25,7 +25,7 @@
 //             padding: EdgeInsets.only(bottom: Insets.med),
 //             child: Text(
 //               "Recently Uploaded",
-//               style: TextStyles.title1,
+//               style: TextStyles.titleLarge,
 //             ),
 //           ),
 //           RUiDataTableWidget(

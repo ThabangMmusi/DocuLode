@@ -1,21 +1,19 @@
 import 'dart:async';
 
+import 'package:doculode/core/domain/repositories/database_service.dart';
+import 'package:doculode/core/utils/logger.dart';
+import 'package:doculode/features/azure_sign_in/presentation/pages/sign_in_screen.dart';
+import 'package:doculode/features/profile_setup/presentation/pages/profile_setup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:its_shared/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:its_shared/features/shell/presentation/pages/shell_page.dart';
-import 'package:its_shared/features/upload_preview/presentation/views/upload_preview.dart';
+import 'package:doculode/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:doculode/features/shell/presentation/pages/shell_page.dart';
+import 'package:doculode/features/upload_preview/presentation/views/upload_preview.dart';
 
-import '../core/common/auth/presentation/bloc/auth_bloc.dart';
-import '../features/settings/settings.dart';
-import '../features/setup/presentation/views/course_settings_view.dart';
-import '../features/shared/presentation/views/shared_view.dart';
-import '../features/uploads/presentation/views/upload_file_view.dart';
-import '../presentation/auth/desktop_auth.dart';
-import '../presentation/auth/login_screen.dart';
-import '../presentation/auth/successful_web_auth.dart';
-import '../presentation/loaders/splash_screen.dart';
-import '../services/firebase/firebase_service.dart';
+import 'package:doculode/features/settings/presentation/views/views.dart';
+import 'package:doculode/features/shared/presentation/views/shared_view.dart';
+import 'package:doculode/features/uploads/presentation/views/upload_file_view.dart';
+import 'package:doculode/presentation/loaders/splash_screen.dart';
 part 'app_routes.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
@@ -24,13 +22,12 @@ final GlobalKey<NavigatorState> _sectionANavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'sectionANav');
 
 class AppRouter {
-  AppRouter({required this.fireService, required this.authBloc});
-  final FirebaseService fireService;
-  final AuthBloc authBloc;
+  AppRouter({required this.dataService});
+  final DatabaseService dataService;
   String? intendedRoute;
   late final GoRouter router = GoRouter(
     initialLocation: Routes.splash,
-    debugLogDiagnostics: true,
+    // debugLogDiagnostics: true,
     navigatorKey: _rootNavigatorKey,
     routes: <RouteBase>[
       StatefulShellRoute.indexedStack(
@@ -48,7 +45,6 @@ class AppRouter {
               ),
             ],
           ),
-
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
@@ -58,13 +54,13 @@ class AppRouter {
                   GoRoute(
                     path: ":id",
                     builder: (context, state) => const UploadPreview(
-                        url: "https://storage.googleapis.com/spushare-2023.appspot.com/uploads/5ZxhOl3PGTbPIvKUJPaKBn0UHe72/00206BF92355240717090418.pdf"),
+                        url:
+                            "https://storage.googleapis.com/spushare-2023.appspot.com/uploads/5ZxhOl3PGTbPIvKUJPaKBn0UHe72/00206BF92355240717090418.pdf"),
                   ),
                 ],
               ),
             ],
           ),
-
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
@@ -75,7 +71,6 @@ class AppRouter {
               ),
             ],
           ),
-          
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
@@ -86,7 +81,6 @@ class AppRouter {
               ),
             ],
           ),
-
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
@@ -97,7 +91,6 @@ class AppRouter {
               ),
             ],
           ),
-          
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
@@ -110,7 +103,6 @@ class AppRouter {
           ),
         ],
       ),
-      
       GoRoute(
         path: Routes.shared,
         builder: (context, state) {
@@ -124,74 +116,85 @@ class AppRouter {
       ),
       GoRoute(
         path: Routes.setup,
-        builder: (context, state) => const SetupView(),
+        builder: (context, state) => const ProfileSetupScreen(),
       ),
       GoRoute(
         path: Routes.signIn,
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) => const SignInWithAzureScreen(),
       ),
-      GoRoute(
-        path: Routes.webAuth,
-        builder: (context, state) => const LoginScreen(
-          isDesktopAuth: true,
-        ),
-      ),
-      GoRoute(
-        path: Routes.awaitingWebAuth,
-        builder: (context, state) => const DesktopAuthScreen(),
-      ),
-      GoRoute(
-        path: Routes.webAuthSuccessful,
-        builder: (context, state) => const SuccessfulWebAuth(),
-      ),
+      // GoRoute(
+      //   path: Routes.webAuth,
+      //   builder: (context, state) => const LoginScreen(
+      //     isDesktopAuth: true,
+      //   ),
+      // ),
     ],
     redirect: (context, state) {
-      final bool authUnknown = authBloc.state.status == AuthStatus.unknown;
-      final bool loggedIn = fireService.currentUser != null;
+      // Use only fireService (DatabaseService) for user state
+      final bool authUnknown =
+          dataService.currentUser == null && !dataService.hasCheckedInitialUser;
+      final bool loggedIn = dataService.currentUser != null;
       final bool loggingIn = state.fullPath == Routes.signIn;
-      final bool onAuthUnknown = state.fullPath == Routes.splash;
-      final bool webAuth = state.fullPath == Routes.webAuth;
-      final bool desktopLoggingIn = state.fullPath == Routes.awaitingWebAuth;
-
-      if (desktopLoggingIn) {
-        return loggedIn ? Routes.home : null;
-      }
-      if (webAuth && loggedIn) {
-        return Routes.webAuthSuccessful;
-      }
-      if (webAuth && !loggedIn) {
+      final bool onSplash = state.fullPath == Routes.splash;
+      log("current path: ${state.fullPath}");
+      // 1. Wait for auth state to be known before redirecting
+      if (authUnknown) {
+        // Only allow splash while waiting for auth
+        if (!onSplash) {
+          intendedRoute = state.matchedLocation;
+          return Routes.splash;
+        }
         return null;
       }
-      if (authUnknown && onAuthUnknown) return null;
-      if (authUnknown) {
-        intendedRoute = state.matchedLocation;
-        return Routes.splash;
+
+      // 2. Not logged in: redirect to sign in, but don't loop
+      if (!loggedIn) {
+        if (state.fullPath != Routes.signIn) {
+          Future.delayed(const Duration(milliseconds: 600), () {
+            router.go(Routes.signIn);
+          });
+        }
+        return null;
       }
 
-      if (!loggedIn) {
-        return loggingIn ? null : Routes.signIn;
-      }
-      if (loggedIn && intendedRoute != null) {
-        final intendedRouteFinal = intendedRoute;
+      // 3. Logged in: handle post-login redirection
+      if (loggedIn &&
+          intendedRoute != null &&
+          intendedRoute != state.fullPath) {
+        final route = intendedRoute;
         intendedRoute = null;
-        return intendedRouteFinal;
+        return route;
       }
-      if (loggedIn && fireService.currentUser!.needSetup) {
-        return Routes.setup;
+
+      // 4. Require setup if needed
+      if (loggedIn && dataService.currentUser!.needSetup && state.fullPath != Routes.setup) {
+        // Introduce a delay before navigating to setup
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          router.go(Routes.setup);
+        });
+        return null; // Return null to prevent immediate redirection
       }
+
+      // 5. Prevent logged-in users from seeing the sign-in page
       if (loggedIn && loggingIn) {
-        return Routes.home;
+        // Introduce a delay before navigating to home
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          router.go(Routes.home);
+        });
+        return null; // Return null to prevent immediate redirection
       }
+
+      // 6. Default: no redirect
       return null;
     },
-    refreshListenable: GoRouterRefreshStream(fireService.onUserChanged),
+    refreshListenable: GoRouterRefreshStream(dataService.onUserChanged),
   );
 }
 
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
-    notifyListeners();
-    _subscription = stream.asBroadcastStream().listen((currentUser) => notifyListeners());
+    _subscription =
+        stream.asBroadcastStream().listen((currentUser) => notifyListeners());
   }
 
   late final StreamSubscription<dynamic> _subscription;

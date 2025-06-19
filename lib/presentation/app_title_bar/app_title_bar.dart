@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../_utils/native_window_utils/window_utils.dart';
+import 'package:doculode/core/utils/native_window_utils/window_utils.dart';
 
 class AppTitleBar extends StatelessWidget {
   const AppTitleBar({super.key});
@@ -87,7 +87,7 @@ class _AdaptiveTitleBarContent extends StatelessWidget {
 //         child: Row(
 //           children: [
 //             const Icon(Icons.chevron_left),
-//             Text("Back", style: TextStyles.body2.copyWith(color: theme.greyStrong)),
+//             Text("Back", style: TextStyles.bodyMedium.copyWith(color: theme.greyStrong)),
 //             HSpace.med
 //           ],
 //         ),

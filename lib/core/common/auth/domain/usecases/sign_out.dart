@@ -1,5 +1,6 @@
+import 'package:doculode/core/index.dart';
+
 import 'package:fpdart/fpdart.dart';
-import 'package:its_shared/core/core.dart';
 
 import '../repositories/auth_repository.dart';
 

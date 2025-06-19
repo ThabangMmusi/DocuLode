@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:its_shared/core/data/models/src/module_model/module_model.dart';
+import 'package:doculode/core/data/models/src/module_model/module_model.dart';
 
 class ModuleConverter implements JsonConverter<ModuleModel, String> {
   const ModuleConverter();

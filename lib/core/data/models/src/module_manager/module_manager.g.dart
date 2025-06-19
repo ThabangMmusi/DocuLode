@@ -6,8 +6,8 @@ part of 'module_manager.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ModuleManagerImpl _$$ModuleManagerImplFromJson(Map<String, dynamic> json) =>
-    _$ModuleManagerImpl(
+_ModuleManager _$ModuleManagerFromJson(Map<String, dynamic> json) =>
+    _ModuleManager(
       modules: (json['modules'] as List<dynamic>?)
           ?.map((e) => ModuleModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -16,7 +16,7 @@ _$ModuleManagerImpl _$$ModuleManagerImplFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$ModuleManagerImplToJson(_$ModuleManagerImpl instance) =>
+Map<String, dynamic> _$ModuleManagerToJson(_ModuleManager instance) =>
     <String, dynamic>{
       if (instance.modules?.map((e) => e.toJson()).toList() case final value?)
         'modules': value,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:its_shared/_utils/string_utils.dart';
+import 'package:doculode/core/utils/string_utils.dart';
 
 class InlineTextEditor extends StatefulWidget {
   const InlineTextEditor(this.text,
