@@ -1,9 +1,9 @@
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:doculode/config/styles.dart';
+import 'package:doculode/app/config/styles.dart';
 
-import 'package:doculode/widgets/styled_text_input.dart';
+import 'package:doculode/core/widgets/styled_text_input.dart';
 
 Widget searchBox() {
   return Row(

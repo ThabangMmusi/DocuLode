@@ -7,7 +7,7 @@ import 'package:doculode/services/services.dart';
 import '../../core.dart';
 
 abstract class UserDataSource {
-  Future<AuthUser?> getCurrentUser();
+  Future<AppUser?> getCurrentUser();
 }
 
 class UserDataSourceImpl implements UserDataSource {
@@ -17,7 +17,7 @@ class UserDataSourceImpl implements UserDataSource {
       : _databaseService = databaseService;
 
   @override
-  Future<AuthUser?> getCurrentUser() async {
+  Future<AppUser?> getCurrentUser() async {
     try {
       final firebaseUser = _databaseService.currentUser;
       if (firebaseUser == null) return null;

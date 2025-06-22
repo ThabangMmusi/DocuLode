@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/domain/entities/entities.dart';
 import '../../../../core/common/settings/domain/usecases/usecases.dart';
 import '../../../../core/common/settings/presentation/bloc/base_settings_bloc.dart';
-import '../../../../core/domain/usecases/get_current_user.dart';
+import '../../../../app/auth/domain/usecases/get_current_user.dart';
 import '../../../../core/usecase/usecase.dart';
 
 part 'settings_state.dart';

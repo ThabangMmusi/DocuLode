@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:doculode/widgets/buttons/primary_btn.dart';
+import 'package:doculode/core/widgets/buttons/primary_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +9,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:doculode/core/constants/responsive.dart';
 import 'package:doculode/core/data/models/src/app_stats_model.dart';
 import 'package:doculode/core/core.dart';
-import 'package:doculode/config/styles.dart';
+import 'package:doculode/app/config/styles.dart';
 import 'package:doculode/presentation/account/home/home.dart';
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {

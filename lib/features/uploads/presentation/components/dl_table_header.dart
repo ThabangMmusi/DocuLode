@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:doculode/config/styles.dart';
+import 'package:doculode/app/config/styles.dart';
 
 class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   SliverAppBarDelegate({

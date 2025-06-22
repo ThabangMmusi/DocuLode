@@ -6,7 +6,7 @@ import 'package:doculode/core/domain/entities/auth_user.dart';
 import 'package:doculode/core/data/models/models.dart';
 
 abstract interface class BaseSettingsDataSource {
-  Future<AuthUser?> getCurrentUser();
+  Future<AppUser?> getCurrentUser();
 
   ///get courses
   Future<List<CourseModel>> getAllCourses();
@@ -43,7 +43,7 @@ class BaseSettingsDataSourceImpl implements BaseSettingsDataSource {
   DatabaseService get firebaseService => _firebaseService;
 
   @override
-  Future<AuthUser?> getCurrentUser() async {
+  Future<AppUser?> getCurrentUser() async {
     try {
       final firebaseUser = _firebaseService.currentUser;
       if (firebaseUser == null) return null;

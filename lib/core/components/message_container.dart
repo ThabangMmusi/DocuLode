@@ -1,5 +1,5 @@
-import 'package:doculode/config/index.dart';
-import 'package:doculode/widgets/ui_text.dart';
+import 'package:doculode/app/config/index.dart';
+import 'package:doculode/core/widgets/ui_text.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 

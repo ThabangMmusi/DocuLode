@@ -7,7 +7,7 @@ import 'package:doculode/core/utils/logger.dart';
 import '../../../utils/debouncer.dart';
 import '../../../utils/device_info.dart';
 import '../../../utils/universal_file/universal_file.dart';
-import 'app_user/app_user.dart';
+import 'app_user_model/app_user_model.dart';
 
 // abstract class AbstractModel extends EasyNotifier {}
 
@@ -45,7 +45,7 @@ class AppModel {
 
   /// Auth
   // Current User
-  AppUser? currentUser;
+  AppUserModel? currentUser;
 
   bool get hasUser => currentUser != null;
   bool get isAuthenticated => hasUser;
@@ -84,7 +84,7 @@ class AppModel {
 
   void fromJson(Map<String, dynamic> json) {
     currentUser = json["currentUser"] != null
-        ? AppUser.fromJson(json["currentUser"] as Map<String, dynamic>)
+        ? AppUserModel.fromJson(json["currentUser"] as Map<String, dynamic>)
         : null;
     if (json["enableTouchMode"] != null) {
       _enableTouchMode = json["enableTouchMode"] as bool;

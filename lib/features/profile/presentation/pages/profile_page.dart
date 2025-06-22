@@ -1,12 +1,12 @@
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 import 'package:doculode/core/constants/index.dart';
-import 'package:doculode/widgets/animated/animated.dart';
+import 'package:doculode/core/widgets/animated/animated.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 
-import 'package:doculode/core/common/auth/presentation/bloc/auth_bloc.dart';
+import 'package:doculode/app/auth/presentation/bloc/auth_bloc.dart';
 import 'package:doculode/features/profile/presentation/widgets/profile_stats_widget.dart';
 
 class ProfilePage extends StatefulWidget {

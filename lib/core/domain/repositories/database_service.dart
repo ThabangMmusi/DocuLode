@@ -20,28 +20,28 @@ class DatabaseFactory {
   // static bool get useNative =>
   //     DeviceOS.isMobileOrWeb; // || UniversalPlatform.isMacOS;
 
-  static DatabaseService create() {
+  static DatabaseService? create() {
     // FirebaseService service =
     //     useNative ? NativeFirebaseService() : DartFirebaseService();
     // FirebaseService service = NativeFirebaseService();
-    DatabaseService service = SupabaseServiceImpl();
-    if (_initComplete == false) {
-      _initComplete = true;
-      service.init();
-    }
-    // log("firestore-${useNative ? "NATIVE" : "DART"} Initialized");
-    return service;
+    // DatabaseService service = SupabaseServiceImpl();
+    // if (_initComplete == false) {
+    //   _initComplete = true;
+    //   service.init();
+    // }
+    // // log("firestore-${useNative ? "NATIVE" : "DART"} Initialized");
+    // return service;
   }
 }
 
 abstract class DatabaseService {
   // --- Shared State & Controllers ---
-  final StreamController<AppUser?> _userController =
-      StreamController<AppUser?>.broadcast();
-  late Stream<AppUser?> onUserChanged;
+  final StreamController<AppUserModel?> _userController =
+      StreamController<AppUserModel?>.broadcast();
+  late Stream<AppUserModel?> onUserChanged;
 
-  AppUser? _currentUser;
-  AppUser? get currentUser => _currentUser;
+  AppUserModel? _currentUser;
+  AppUserModel? get currentUser => _currentUser;
 
   /// Indicates whether the initial user check (auth state) has completed.
   /// This is false until the first auth state event is processed.
@@ -86,7 +86,7 @@ abstract class DatabaseService {
 
   // --- Shared User Management Logic ---
   @protected
-  void setCurrentUser(AppUser? newUser, String? rawAuthId) {
+  void setCurrentUser(AppUserModel? newUser, String? rawAuthId) {
     _currentUser = newUser;
     _currentAuthUserId = rawAuthId;
     _userController.add(_currentUser);
@@ -116,13 +116,13 @@ abstract class DatabaseService {
         setCurrentUser(null, null);
         return;
       }
-      AppUser? appUser = await fetchAppUserData(rawId, email);
+      AppUserModel? appUser = await fetchAppUserData(rawId, email);
       setCurrentUser(appUser, rawId);
     }
   }
 
   @protected
-  Future<AppUser?> fetchAppUserData(String rawAuthId, String? email);
+  Future<AppUserModel?> fetchAppUserData(String rawAuthId, String? email);
 
   @mustCallSuper
   Future<void> signOut() async {
@@ -138,7 +138,7 @@ abstract class DatabaseService {
   String? get getRefreshToken;
 
   // --- Abstract User Profile / Data Methods ---
-  Future<AppUser?> getUserData();
+  Future<AppUserModel?> getUserData();
   Future<void> updateUserPublicProfile(Map<String, dynamic> jsonDataToUpdate);
   Future<void> updateUserEducationProfile({
     List<String>? selectedModuleIds,
@@ -236,7 +236,7 @@ abstract class DatabaseService {
   }
 
   // --- User Stream: Emit current value on listen ---
-  // Stream<AppUser?> get onUserChangedWithInitial async* {
+  // Stream<AppUserModel?> get onUserChangedWithInitial async* {
   //   yield _currentUser;
   //   yield* _userController.stream;
   // }

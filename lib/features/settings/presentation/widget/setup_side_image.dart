@@ -1,5 +1,5 @@
-import 'package:doculode/config/index.dart';
-import 'package:doculode/widgets/index.dart';
+import 'package:doculode/app/config/index.dart';
+import 'package:doculode/core/widgets/index.dart';
 
 
 

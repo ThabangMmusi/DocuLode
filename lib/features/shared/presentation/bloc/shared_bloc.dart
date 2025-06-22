@@ -1,4 +1,4 @@
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 import 'package:doculode/core/index.dart';
 
 
@@ -24,7 +24,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 
-import '../../../../core/common/auth/presentation/bloc/auth_bloc.dart';
+import '../../../../app/auth/presentation/bloc/auth_bloc.dart';
 import '../../../../core/domain/entities/entities.dart';
 import '../../../../core/data/models/models.dart';
 import '../../domain/usecases/get_shared_file.dart';

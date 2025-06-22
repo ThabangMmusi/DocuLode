@@ -1,4 +1,4 @@
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 import 'package:doculode/core/data/models/src/app_model.dart';
 import 'package:doculode/core/utils/logger.dart';
 import 'package:doculode/core/utils/time_utils.dart';
@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_single_instance/flutter_single_instance.dart';
 import 'package:protocol_handler/protocol_handler.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:system_info_plus/system_info_plus.dart';
 
 class BootstrapCommand {
@@ -23,6 +24,7 @@ class BootstrapCommand {
     int startTime = TimeUtils.nowMillis;
     log("Bootstrap Started, v$tAppVersion");
     log("BootstrapCommand - Registering AppModel");
+    _initializeSupabase();
     sl.registerLazySingleton(() => AppModel());
     appModel = sl<AppModel>();
 
@@ -50,7 +52,20 @@ class BootstrapCommand {
     }
     log("BootstrapCommand - Complete");
   }
-
+ 
+ Future<void> _initializeSupabase() async {
+    try {
+      await Supabase.initialize(
+        url: AppKeys.supabaseUrl,
+        anonKey: AppKeys.supabaseAnonKey,
+      );
+      debugPrint("Supabase initialized successfully.");
+    } catch (e) {
+      debugPrint("FATAL: Error initializing Supabase: $e");
+      // Re-throw the error to halt the app launch if Supabase is critical
+      rethrow; 
+    }
+  }
   Future<void> _configureMemoryCache() async {
     log("BootstrapCommand - Starting memory cache configuration");
     // Use more memory by default on desktop

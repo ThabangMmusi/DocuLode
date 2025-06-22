@@ -1,16 +1,16 @@
 import 'dart:ui';
 
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 import 'package:doculode/core/components/components.dart';
 import 'package:doculode/core/constants/app_enums.dart';
 import 'package:doculode/core/constants/app_text.dart';
-import 'package:doculode/widgets/index.dart';
+import 'package:doculode/core/widgets/index.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 
-import '../../../../../widgets/buttons/buttons.dart';
+import '../../../../../core/widgets/buttons/buttons.dart';
 import '../../bloc/bloc.dart';
 part 'microsoft_login_step.dart';
 part 'browser_sign_in_step.dart';

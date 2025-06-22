@@ -1,12 +1,12 @@
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 import 'package:doculode/core/common/settings/presentation/bloc/base_settings_bloc.dart';
 import 'package:doculode/features/settings/presentation/widgets/course_settings.dart';
-import 'package:doculode/widgets/buttons/buttons.dart';
-import 'package:doculode/widgets/index.dart';
+import 'package:doculode/core/widgets/buttons/buttons.dart';
+import 'package:doculode/core/widgets/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../widgets/styled_text_input.dart';
+import '../../../../core/widgets/styled_text_input.dart';
 import '../bloc/settings_bloc.dart';
 
 class ProfileView extends StatefulWidget {

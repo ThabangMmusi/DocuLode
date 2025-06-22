@@ -3,14 +3,14 @@ import 'package:doculode/core/constants/index.dart';
 import 'package:doculode/core/domain/entities/app_list_item.dart';
 import 'package:doculode/core/index.dart';
 import 'package:doculode/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
-import 'package:doculode/widgets/buttons/buttons.dart';
-import 'package:doculode/widgets/index.dart';
+import 'package:doculode/core/widgets/buttons/buttons.dart';
+import 'package:doculode/core/widgets/index.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:doculode/config/styles.dart';
-import '../../../../widgets/styled_dropdown_textfield.dart';
+import 'package:doculode/app/config/styles.dart';
+import '../../../../core/widgets/styled_dropdown_textfield.dart';
 
 class UploadEditView extends StatelessWidget {
   const UploadEditView({super.key});

@@ -1,9 +1,9 @@
+import 'package:doculode/app/app.dart';
 import 'package:doculode/features/azure_sign_in/presentation/bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:doculode/routes/app_pages.dart';
-import 'package:doculode/core/domain/repositories/database_service.dart';
+import 'package:doculode/app/routing/app_router.dart';
 import 'package:doculode/core/data/models/src/app_model.dart';
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:protocol_handler/protocol_handler.dart';
 import 'package:doculode/core/utils/logger.dart';
@@ -45,7 +45,7 @@ class _AppBootStrapperState extends State<AppBootStrapper>
       title: "SPU Share",
       debugShowCheckedModeBanner: false,
       routerConfig:
-          AppRouter(dataService: context.read<DatabaseService>()).router,
+          AppRouter(context.read<AuthBloc>()).router,
       theme: AppTheme.light,
     );
   }

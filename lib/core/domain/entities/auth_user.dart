@@ -1,7 +1,7 @@
 import 'entities.dart';
 
-class AuthUser {
-  final String? id;
+class AppUser {
+  final String id;
   final String? names;
   final String? surname;
   final String? email;
@@ -10,12 +10,9 @@ class AuthUser {
   final int? semester;
   final Course? course;
   final List<Module>? modules;
-  final String? type;
-  final String? token;
-  final String? refreshToken;
 
-  AuthUser({
-    this.id,
+  AppUser({
+    required this.id,
     this.names,
     this.surname,
     this.email,
@@ -24,8 +21,5 @@ class AuthUser {
     this.semester,
     this.course,
     this.modules,
-    this.type,
-    this.token,
-    this.refreshToken,
   });
 }

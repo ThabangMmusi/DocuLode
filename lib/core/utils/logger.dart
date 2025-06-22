@@ -1,20 +1,28 @@
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 var logHistory = _Dispatcher("");
 
-void log(String? value) {
+void _log(String? value, {Color? color}) {
   String v = value ?? "";
   logHistory.value = "$v\n${logHistory.value}";
   if (kDebugMode) {
-    print(v);
+    if (color != null) {
+      // ANSI escape codes for colored output in terminals
+      // This might not work in all IDE consoles, but works in a true terminal.
+      print('\x1B[${color.toARGB32()}m$v\x1B[0m');
+    } else {
+      print(v);
+    }
   }
 }
 
-void logSuccess(String? value) => log("✅ ${value ?? ""}");
+void log(String? value) => _log("💡 ${value ?? ""}", color: Colors.blue);
 
-void logError(String? value) => log("[ERROR] ${value ?? ""}");
+void logSuccess(String? value) => _log("✅ ${value ?? ""}", color: Colors.green);
+
+void logError(String? value) => _log("❌ ${value ?? ""}", color: Colors.red);
 
 // Take from: https://flutter.dev/docs/testing/errors
 void initLogger(VoidCallback runApp) {

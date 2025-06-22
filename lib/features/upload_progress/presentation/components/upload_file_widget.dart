@@ -1,4 +1,4 @@
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 import 'package:doculode/core/utils/utils.dart';
 import 'package:doculode/features/upload_progress/presentation/bloc/upload_progress_bloc.dart';
 
@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 
-import 'package:doculode/config/styles.dart';
+import 'package:doculode/app/config/styles.dart';
 
 class UploadFileWidget extends StatelessWidget {
   const UploadFileWidget({

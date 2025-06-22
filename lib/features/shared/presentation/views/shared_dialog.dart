@@ -1,8 +1,8 @@
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 
 import 'package:flutter/material.dart';
 
-import '../../../../widgets/my_dialog_box.dart';
+import '../../../../core/widgets/my_dialog_box.dart';
 import 'base_shared_view.dart';
 
 class SharedFileDialog extends StatelessWidget {

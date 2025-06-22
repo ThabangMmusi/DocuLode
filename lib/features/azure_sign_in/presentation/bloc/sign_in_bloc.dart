@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:doculode/core/common/auth/domain/usecases/get_user_stream.dart';
+import 'package:doculode/app/auth/domain/usecases/get_user_stream.dart';
 import 'package:doculode/core/constants/app_enums.dart';
 import 'package:doculode/core/usecase/usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

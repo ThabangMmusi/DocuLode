@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 
 import 'dart:async';
 

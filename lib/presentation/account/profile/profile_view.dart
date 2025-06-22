@@ -1,12 +1,12 @@
-import 'package:doculode/config/index.dart';
-import 'package:doculode/widgets/animated/slide_fade_animated.dart';
-import 'package:doculode/widgets/index.dart';
+import 'package:doculode/app/config/index.dart';
+import 'package:doculode/core/widgets/animated/slide_fade_animated.dart';
+import 'package:doculode/core/widgets/index.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 
-import 'package:doculode/core/common/auth/presentation/bloc/auth_bloc.dart';
+import 'package:doculode/app/auth/presentation/bloc/auth_bloc.dart';
 import 'package:doculode/core/constants/responsive.dart';
 
 class UserProfileView extends StatefulWidget {

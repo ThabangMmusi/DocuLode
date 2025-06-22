@@ -1,6 +1,6 @@
 import 'dart:ui';
-import 'package:doculode/config/index.dart';
-import 'package:doculode/widgets/buttons/secondary_btn.dart';
+import 'package:doculode/app/config/index.dart';
+import 'package:doculode/core/widgets/buttons/secondary_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 

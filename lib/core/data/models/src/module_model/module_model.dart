@@ -10,8 +10,6 @@ sealed class ModuleModel extends Module with _$ModuleModel {
   factory ModuleModel({
     required String id,
     @JsonKey(name: "module_id") String? moduleId,
-    int? year,
-    int? semester,
     @JsonKey(name: "module_name") String? name,
   }) = _ModuleModel;
 

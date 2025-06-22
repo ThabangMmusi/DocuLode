@@ -1,6 +1,6 @@
-import 'package:doculode/config/index.dart';
-import 'package:doculode/widgets/buttons/buttons.dart';
-import 'package:doculode/widgets/index.dart';
+import 'package:doculode/app/config/index.dart';
+import 'package:doculode/core/widgets/buttons/buttons.dart';
+import 'package:doculode/core/widgets/index.dart';
 
 import 'package:flutter/material.dart';
 

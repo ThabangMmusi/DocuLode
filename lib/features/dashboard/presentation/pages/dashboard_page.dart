@@ -1,8 +1,8 @@
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 import 'package:doculode/core/constants/responsive.dart';
 import 'package:doculode/core/data/models/src/app_stats_model.dart';
 import 'package:doculode/core/index.dart';
-import 'package:doculode/widgets/buttons/buttons.dart';
+import 'package:doculode/core/widgets/buttons/buttons.dart';
 
 import 'dart:math';
 

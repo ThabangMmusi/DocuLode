@@ -1,6 +1,6 @@
 import 'package:doculode/core/constants/responsive.dart';
-import 'package:doculode/widgets/buttons/buttons.dart';
-import 'package:doculode/widgets/index.dart';
+import 'package:doculode/core/widgets/buttons/buttons.dart';
+import 'package:doculode/core/widgets/index.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +10,7 @@ import 'package:doculode/core/common/settings/settings.dart';
 import 'package:doculode/core/core.dart';
 import 'package:doculode/presentation/account/shared/view_title.dart';
 import 'package:doculode/features/settings/settings.dart';
-import 'package:doculode/config/styles.dart';
+import 'package:doculode/app/config/styles.dart';
 import 'profile_view.dart';
 
 class SettingsView extends StatefulWidget {

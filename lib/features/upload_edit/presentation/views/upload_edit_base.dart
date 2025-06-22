@@ -4,12 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:doculode/core/components/module_selector.dart';
 import 'package:doculode/features/upload_edit/presentation/bloc/upload_edit_bloc.dart';
-import 'package:doculode/widgets/styled_text_input.dart';
-import 'package:doculode/widgets/styled_load_spinner.dart';
+import 'package:doculode/core/widgets/styled_text_input.dart';
+import 'package:doculode/core/widgets/styled_load_spinner.dart';
 
 import 'package:doculode/core/core.dart';
-import 'package:doculode/config/styles.dart';
-import 'package:doculode/widgets/styled_dropdown_textfield.dart';
+import 'package:doculode/app/config/styles.dart';
+import 'package:doculode/core/widgets/styled_dropdown_textfield.dart';
 import 'package:doculode/features/uploads/presentation/components/dl_button.dart';
 
 class UploadEditBase extends StatelessWidget {

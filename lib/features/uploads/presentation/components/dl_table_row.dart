@@ -1,10 +1,10 @@
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 import 'package:doculode/core/index.dart';
 import 'package:doculode/features/shared/presentation/bloc/shared_bloc.dart';
 import 'package:doculode/features/shared/presentation/views/shared_dialog.dart';
 import 'package:doculode/features/uploads/presentation/views/upload_share_dialog.dart';
-import 'package:doculode/widgets/buttons/buttons.dart';
-import 'package:doculode/widgets/index.dart';
+import 'package:doculode/core/widgets/buttons/buttons.dart';
+import 'package:doculode/core/widgets/index.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

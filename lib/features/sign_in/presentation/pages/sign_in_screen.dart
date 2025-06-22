@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 import 'package:doculode/core/components/components.dart';
 
 import 'package:flutter/material.dart';

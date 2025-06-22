@@ -1,13 +1,13 @@
 import 'package:doculode/core/components/app_logo.dart';
 import 'package:doculode/core/index.dart';
 import 'package:doculode/features/shared/presentation/views/base_shared_view.dart';
-import 'package:doculode/widgets/index.dart';
+import 'package:doculode/core/widgets/index.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 
-import 'package:doculode/config/styles.dart';
+import 'package:doculode/app/config/styles.dart';
 
 import '../bloc/shared_bloc.dart';
 

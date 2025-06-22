@@ -1,10 +1,8 @@
+import 'package:doculode/core/domain/entities/entities.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:doculode/core/error/failures.dart';
 
-import '../../../../domain/entities/entities.dart';
-import '../../../../domain/repositories/user_repository.dart';
-
-abstract interface class BaseSettingsRepository extends UserRepository {
+abstract interface class BaseSettingsRepository {
   ///get courses
   Future<Either<Failure, List<Course>>> getAllCourses();
 

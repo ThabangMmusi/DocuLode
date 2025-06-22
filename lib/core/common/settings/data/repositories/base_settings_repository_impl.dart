@@ -26,7 +26,7 @@ class BaseSettingsRepositoryImpl implements BaseSettingsRepository {
   BaseSettingsRepositoryImpl({required BaseSettingsDataSource dataSource})
       : _dataSource = dataSource;
   @override
-  Future<Either<Failure, AuthUser?>> getCurrentUser() async {
+  Future<Either<Failure, AppUser?>> getCurrentUser() async {
     try {
       return right(await _dataSource.getCurrentUser());
     } on ServerException catch (e) {

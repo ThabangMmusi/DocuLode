@@ -167,7 +167,7 @@ class BaseSettingsBloc<T extends BaseSettingsState>
     res.fold(
       (l) => error(emit, l.message),
       (r) {
-        final selected = r.where((e) => e.year == state.selectedLevel).toList();
+        final selected = r.where((e) =>  2== state.selectedLevel).toList();
         emit(state.copyWith(
           status: SettingsStatus.success,
           modules: r,

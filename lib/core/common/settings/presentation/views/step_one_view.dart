@@ -1,15 +1,15 @@
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:doculode/widgets/styled_load_spinner.dart';
+import 'package:doculode/core/widgets/styled_load_spinner.dart';
 import 'package:doculode/core/components/module_selector.dart';
 import 'package:doculode/core/common/settings/presentation/bloc/base_settings_bloc.dart';
-import 'package:doculode/widgets/styled_dropdown.dart';
+import 'package:doculode/core/widgets/styled_dropdown.dart';
 import 'package:doculode/core/domain/entities/app_list_item.dart';
 import 'package:doculode/core/utils/string_utils.dart';
-import 'package:doculode/widgets/styled_dropdown_textfield.dart';
+import 'package:doculode/core/widgets/styled_dropdown_textfield.dart';
 
 class CourseSettings<T extends BaseSettingsBloc> extends StatelessWidget {
   const CourseSettings({super.key});

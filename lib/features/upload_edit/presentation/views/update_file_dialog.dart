@@ -1,9 +1,9 @@
-import 'package:doculode/config/index.dart';
+import 'package:doculode/app/config/index.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../widgets/my_dialog_box.dart';
+import '../../../../core/widgets/my_dialog_box.dart';
 import '../bloc/upload_edit_bloc.dart';
 import 'upload_edit_view.dart';
 

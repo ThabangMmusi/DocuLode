@@ -18,8 +18,6 @@ mixin _$ModuleModel {
   String get id;
   @JsonKey(name: "module_id")
   String? get moduleId;
-  int? get year;
-  int? get semester;
   @JsonKey(name: "module_name")
   String? get name;
 
@@ -41,20 +39,16 @@ mixin _$ModuleModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.moduleId, moduleId) ||
                 other.moduleId == moduleId) &&
-            (identical(other.year, year) || other.year == year) &&
-            (identical(other.semester, semester) ||
-                other.semester == semester) &&
             (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, moduleId, year, semester, name);
+  int get hashCode => Object.hash(runtimeType, id, moduleId, name);
 
   @override
   String toString() {
-    return 'ModuleModel(id: $id, moduleId: $moduleId, year: $year, semester: $semester, name: $name)';
+    return 'ModuleModel(id: $id, moduleId: $moduleId, name: $name)';
   }
 }
 
@@ -67,8 +61,6 @@ abstract mixin class $ModuleModelCopyWith<$Res> {
   $Res call(
       {String id,
       @JsonKey(name: "module_id") String? moduleId,
-      int? year,
-      int? semester,
       @JsonKey(name: "module_name") String? name});
 }
 
@@ -86,8 +78,6 @@ class _$ModuleModelCopyWithImpl<$Res> implements $ModuleModelCopyWith<$Res> {
   $Res call({
     Object? id = null,
     Object? moduleId = freezed,
-    Object? year = freezed,
-    Object? semester = freezed,
     Object? name = freezed,
   }) {
     return _then(_self.copyWith(
@@ -99,14 +89,6 @@ class _$ModuleModelCopyWithImpl<$Res> implements $ModuleModelCopyWith<$Res> {
           ? _self.moduleId
           : moduleId // ignore: cast_nullable_to_non_nullable
               as String?,
-      year: freezed == year
-          ? _self.year
-          : year // ignore: cast_nullable_to_non_nullable
-              as int?,
-      semester: freezed == semester
-          ? _self.semester
-          : semester // ignore: cast_nullable_to_non_nullable
-              as int?,
       name: freezed == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -121,8 +103,6 @@ class _ModuleModel extends ModuleModel {
   _ModuleModel(
       {required this.id,
       @JsonKey(name: "module_id") this.moduleId,
-      this.year,
-      this.semester,
       @JsonKey(name: "module_name") this.name})
       : super._();
   factory _ModuleModel.fromJson(Map<String, dynamic> json) =>
@@ -133,10 +113,6 @@ class _ModuleModel extends ModuleModel {
   @override
   @JsonKey(name: "module_id")
   final String? moduleId;
-  @override
-  final int? year;
-  @override
-  final int? semester;
   @override
   @JsonKey(name: "module_name")
   final String? name;
@@ -164,20 +140,16 @@ class _ModuleModel extends ModuleModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.moduleId, moduleId) ||
                 other.moduleId == moduleId) &&
-            (identical(other.year, year) || other.year == year) &&
-            (identical(other.semester, semester) ||
-                other.semester == semester) &&
             (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, moduleId, year, semester, name);
+  int get hashCode => Object.hash(runtimeType, id, moduleId, name);
 
   @override
   String toString() {
-    return 'ModuleModel(id: $id, moduleId: $moduleId, year: $year, semester: $semester, name: $name)';
+    return 'ModuleModel(id: $id, moduleId: $moduleId, name: $name)';
   }
 }
 
@@ -192,8 +164,6 @@ abstract mixin class _$ModuleModelCopyWith<$Res>
   $Res call(
       {String id,
       @JsonKey(name: "module_id") String? moduleId,
-      int? year,
-      int? semester,
       @JsonKey(name: "module_name") String? name});
 }
 
@@ -211,8 +181,6 @@ class __$ModuleModelCopyWithImpl<$Res> implements _$ModuleModelCopyWith<$Res> {
   $Res call({
     Object? id = null,
     Object? moduleId = freezed,
-    Object? year = freezed,
-    Object? semester = freezed,
     Object? name = freezed,
   }) {
     return _then(_ModuleModel(
@@ -224,14 +192,6 @@ class __$ModuleModelCopyWithImpl<$Res> implements _$ModuleModelCopyWith<$Res> {
           ? _self.moduleId
           : moduleId // ignore: cast_nullable_to_non_nullable
               as String?,
-      year: freezed == year
-          ? _self.year
-          : year // ignore: cast_nullable_to_non_nullable
-              as int?,
-      semester: freezed == semester
-          ? _self.semester
-          : semester // ignore: cast_nullable_to_non_nullable
-              as int?,
       name: freezed == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable

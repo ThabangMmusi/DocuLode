@@ -2,12 +2,12 @@ import 'package:doculode/core/domain/entities/app_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
-import '../../widgets/styled_dropdown.dart';
-import '../../widgets/styled_dropdown_textfield.dart';
-import '../../widgets/styled_load_spinner.dart';
+import '../widgets/styled_dropdown.dart';
+import '../widgets/styled_dropdown_textfield.dart';
+import '../widgets/styled_load_spinner.dart';
 import '../domain/entities/entities.dart';
-import 'package:doculode/config/styles.dart';
-import '../../widgets/styled_text_input.dart';
+import 'package:doculode/app/config/styles.dart';
+import '../widgets/styled_text_input.dart';
 
 // To pass module on press
 typedef ModuleCallback = void Function(Module module);
