@@ -22,13 +22,15 @@ class ShellPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-        body: BlocBuilder<UploadProgressBloc, UploadState>(
-          builder: (context, state) {
-            return Padding(
-              padding: Responsive.isMobile(context)
-                  ? EdgeInsets.zero
-                  : EdgeInsets.all(padding),
-              child: Stack(children: [
+        body: 
+        // BlocBuilder<UploadProgressBloc, UploadState>(
+        //   builder: (context, state) {
+        //     return Padding(
+        //       padding: Responsive.isMobile(context)
+        //           ? EdgeInsets.zero
+        //           : EdgeInsets.all(padding),
+        //       child: Stack(children: [
+                
                 Row(
                   children: [
                     if (!Responsive.isMobile(context)) ...[
@@ -62,15 +64,15 @@ class ShellPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                if ((state.uploading && !state.close))
-                  const Align(
-                    alignment: Alignment.bottomRight,
-                    child: UploadProgressView(),
-                  )
-              ]),
-            );
-          },
-        ),
+          //       if ((state.uploading && !state.close))
+          //         const Align(
+          //           alignment: Alignment.bottomRight,
+          //           child: UploadProgressView(),
+          //         )
+          //     ]),
+            // );
+          // },
+        // ),
         bottomNavigationBar: !Responsive.isMobile(context)
             ? null
             : BottomNavigationBar(

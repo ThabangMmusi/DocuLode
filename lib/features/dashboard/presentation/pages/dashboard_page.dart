@@ -53,9 +53,9 @@ class DashboardPage extends StatelessWidget {
                 "Hi..👋, Thabang Mmusi",
                 style: TextStyles.displayLarge,
               ),
-              PrimaryBtn(onPressed: () {
-                context.go("/shared/454454");
-              }),
+              // PrimaryBtn(onPressed: () {
+              //   context.go("/shared/454454");
+              // }),
               SizedBox(height: Responsive.sidePadding(context)),
               searchBar(context),
               SizedBox(height: Responsive.sidePadding(context)),
